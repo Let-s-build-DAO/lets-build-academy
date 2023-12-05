@@ -1,6 +1,6 @@
 import Image from "next/image";
-import Button from "../_components/Button";
-import InputField from "../_components/InputField";
+import Button from "../../_components/Button";
+import InputField from "../../_components/InputField";
 
 const PersonalInfo = () => {
   return (
@@ -44,6 +44,7 @@ const PersonalInfo = () => {
             <Button
               bg="bg-[transparent]"
               text="Back"
+              to={"/auth"}
               border="border-[#8F0FBA]"
               width="w-[320px]"
               height={"h-[45px]"}
@@ -55,6 +56,7 @@ const PersonalInfo = () => {
               bg="bg-[#8F0FBA]"
               width="w-[320px]"
               height={"h-[45px]"}
+              to={"/auth/about"}
               text="Next"
               additionalClasses={"group"}
               hover="hover:bg-[transparent]"
