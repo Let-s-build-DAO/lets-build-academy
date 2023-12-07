@@ -35,7 +35,7 @@ const Button = ({
       ) : (
         <button
           onClick={onClick}
-          className={`${height} ${width} ${additionalClasses} flex gap-4 m-2 focus:border-blue-300 transition duration-300 ${hover} hover:border-gray-300 px-6 py-2 ${bgColor} rounded-[10px] border ${border} backdrop-blur-[400px] justify-center items-center gap-2 inline-flex`}
+          className={`${height} ${width} ${additionalClasses} flex gap-4 m-2 focus:border-blue-300 transition duration-300 ${hover} hover:border-gray-300 px-6 py-2 ${bgColor} rounded-[10px] backdrop-blur-[400px] justify-center items-center gap-2 inline-flex`}
         >
           {icon}
 
