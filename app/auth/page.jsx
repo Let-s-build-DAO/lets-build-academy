@@ -1,15 +1,14 @@
-import Button from "../_components/Button";
 
 const Auth = () => {
   return (
-    <div className="w-full bg-gray-200 justify-start items-center overflow-y-hidden md:inline-flex">
+    <div className="w-full bg-gray-200 justify-start items-center flex">
       <div className="w-1/2 md:flex justify-between items-center gap-4 inline-flex hidden">
         <img className="h-screen w-full object-cover" src={"/auth-img.png"} />
         {/* <Image src={"/auth-img.png"} alt="auth-img" width={650} height={200} /> */}
       </div>
       <div className="lg:w-1/2 p-10">
         <div className="">
-          <h1 className="w-[468px] text-black text-3xl md:text-5xl font-bold font-['Poppins'] leading-[44px] md:leading-[64px]">
+          <h1 className=" text-black text-3xl md:text-5xl font-bold font-['Poppins'] leading-[44px] md:leading-[64px]">
             Connect Your <br />
             wallet
           </h1>

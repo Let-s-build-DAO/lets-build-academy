@@ -6,13 +6,13 @@ const PersonalInfo = () => {
   const [next, setNext] = useState(false)
 
   return (
-    <div className="w-full bg-gray-200 justify-start items-center overflow-hidden md:inline-flex">
+    <div className="w-full bg-gray-200 justify-start items-center overflow-hidden flex">
       <div className="w-1/2 md:flex justify-between items-center gap-4 inline-flex hidden">
         <img className="h-screen w-full object-cover" src={"/auth-img.png"} />
       </div>
       <div className="lg:w-1/2 p-10">
         <div className="">
-          <h1 className="w-[468px] text-black text-3xl md:text-5xl font-bold font-['Poppins'] leading-[44px] md:leading-[64px]">
+          <h1 className="lg:w-[468px] text-black text-3xl md:text-5xl font-bold font-['Poppins'] leading-[44px] md:leading-[64px]">
             Personal Details
           </h1>
           <p className=" text-black text-sm font-normal">
