@@ -45,23 +45,23 @@ const Dashboard = () => {
               <thead className='text-sm text-[#5C555E]'>
                 <td className='w-40'>Rank</td>
                 <td>Name</td>
-                <td>Percentage</td>
+                <td className='text-center'>Percentage</td>
               </thead>
               <tbody>
                 <tr className='text-sm'>
-                  <td className='py-2'>1</td>
+                  <td className='py-4'>1</td>
                   <td className='font-bold'>Sunday Kingsley Uchenna</td>
-                  <td className='text-purple'>95%</td>
+                  <td className='text-purple text-center'>95%</td>
                 </tr>
                 <tr className='text-sm'>
                   <td className='py-2'>1</td>
                   <td className='font-bold'>Sunday Kingsley Uchenna</td>
-                  <td className='text-purple'>95%</td>
+                  <td className='text-purple text-center'>95%</td>
                 </tr>
                 <tr className='text-sm'>
                   <td className='py-2'>1</td>
                   <td className='font-bold'>Sunday Kingsley Uchenna</td>
-                  <td className='text-purple'>95%</td>
+                  <td className='text-purple text-center'>95%</td>
                 </tr>
               </tbody>
             </table>
