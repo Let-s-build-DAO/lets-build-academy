@@ -3,7 +3,7 @@ import React from 'react';
 
 const CoursesPage = () => {
   return (
-    <AdminLayout>
+    <AdminLayout header={false}>
       <section>
         <div className='flex justify-between'>
           <div className='w-[48%]'>
