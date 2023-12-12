@@ -1,13 +1,13 @@
-import React from 'react';
 import Image from 'next/image'
 import './SectionOne.css'
 
+
 function SectionOne() {
   return (
-    <div className="section-one-bg" >
-      <header className="flex justify-between ">
-        <Image src= '/Images/Logo.jpg' width={50} height={50}/>
-        <nav>
+    <div className="section-one-bg pt-5 pl-20" >
+      <header className="flex items-center px-4 ">
+        <Image src= '/Logo.jpg' width={231} height={79}/>
+        <nav className='flex-1 flex justify-center'>
           <ul className="flex">
            <li className="mr-6"><a href="#home" className="text-black ">Home</a></li>
             <li className="mr-6"><a href="#courses" className="text-black ">Courses</a></li>
@@ -16,21 +16,21 @@ function SectionOne() {
           </ul>
         </nav>
       </header>
-      <section className='flex justify-between'>
+      <section className='flex items-center px-4 '>
         <div>
-            <h1>Unlocking the Future of <br />
-                Learning with Web3 <br />
-                Technology 
-            </h1>
-            <p>Empower yourself with knowledge of <br />
+            <h1 className='text-5xl font-bold mb-5'>  Unlock the Future of </h1> 
+            <h1 className='text-5xl font-bold mb-5'>  Learning with Web3 </h1> 
+            <h1 className='text-5xl font-bold mb-5'> Technology </h1>
+            
+            <p className='mb-5'>Empower yourself with knowledge of <br />
                 Decentralized Web and Blockchain
             </p>
-            <button>
+            <button className="bg-custom-purple text-white font-medium rounded-md px-4 py-5 w-223 h-72">
                 Get Started
             </button>
         </div>
-        <div>
-            <p>Hello</p>
+        <div className='flex-1 flex justify-center'>
+        <Image src= '/Group1.png' width={700} height={700}/>
         </div>
       </section>
     </div>
