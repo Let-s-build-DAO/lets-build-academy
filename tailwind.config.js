@@ -20,6 +20,10 @@ module.exports = {
         '223': '223px',
       },
     },
+    colors: {
+      white: "#F8F8F8",
+      purple: "#8F0FBA",
+    }
   },
   plugins: [],
 }
