@@ -19,7 +19,9 @@ const MainHeader = () => {
             <li className="mr-6"><Link href={'/about'}>About Us</Link></li>
             <li><Link href={'/contact'}>Contact Us</Link></li>
           </ul>
-          <button className='bg-custom-purple text-white font-medium p-2 px-8 rounded-md ml-5'>Connect Wallet</button>
+          <Link href={'/auth'}>
+            <button className='bg-custom-purple text-white font-medium p-2 px-8 rounded-md ml-5'>Connect Wallet</button>
+          </Link>
         </nav>
         <button onClick={() => setOpen(!open)} className='bg-primary h-10 w-10 my-auto lg:hidden block'>
           <img src="/images/icons/menu.png" className='w-8 h-8 mx-auto' alt="" />

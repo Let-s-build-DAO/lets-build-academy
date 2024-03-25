@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 const MainFooter = () => {
   return (
-    <div>
+    <div className='content'>
       <CommunitySection />
       <footer className='lg:m-20 m-4 lg:flex justify-between'>
         <div className='sm:my-4'>
