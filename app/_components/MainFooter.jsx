@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React from 'react';
 import CommunitySection from './CommunitySection';
+import Link from 'next/link';
 
 const MainFooter = () => {
   return (
@@ -12,9 +13,15 @@ const MainFooter = () => {
         </div>
         <div className='sm:my-4'>
           <h1 className='font-bold text-xl'>Quick Links</h1>
-          <p className='text-sm my-1'>Home</p>
-          <p className='text-sm my-1'>About Us</p>
-          <p className='text-sm my-1'>Contact Us</p>
+          <p className='text-sm my-1'>
+            <Link href={'/'}>Home</Link>
+          </p>
+          <p className='text-sm my-1'>
+            <Link href={'/about'}>About Us</Link>
+          </p>
+          <p className='text-sm my-1'>Courses</p>
+          <p className='text-sm my-1'><Link href={'/contact'}>Contact Us</Link></p>
+
         </div>
         <div className='sm:my-4'>
           <h1 className='font-bold text-xl'>Connect with Us</h1>

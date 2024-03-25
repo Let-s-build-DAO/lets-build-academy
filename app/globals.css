@@ -6,6 +6,7 @@
 
 
 body {
-  background-color: #EDEDED;
+  /* background-color: #EDEDED; */
+  overflow-x: hidden;
   font-family: 'Poppins' !important;
 }

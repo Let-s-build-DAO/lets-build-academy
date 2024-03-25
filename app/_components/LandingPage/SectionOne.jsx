@@ -4,8 +4,8 @@ import SectionTwo from './SectionTwo/SectionTwo';
 function SectionOne() {
   return (
     <section className='relative'>
-      <img className='h-[80vh] w-full' src="/BackgroundImage.jpg" alt="" />
-      <div className="absolute h-[80vh] top-0 bottom-0 mb-0 lg:px-20 px-4" >
+      <img className='lg:h-[100vh] h-[80vh] w-full' src="/BackgroundImage.jpg" alt="" />
+      <div className="absolute lg:h-[100vh] h-[80vh] top-0 bottom-0 mb-0 lg:px-20 px-4" >
         <section className='px-4'>
           <div className='lg:mt-44 mt-40 lg:w-1/2'>
             <h1 className='lg:text-5xl text-3xl font-bold leading-tight'>Unlock the Future of Learning with Web3 Technology</h1>
@@ -17,7 +17,7 @@ function SectionOne() {
               <img src="/east.png" alt="" />
             </button>
           </div>
-          <div className='lg:w-1/2 lg:absolute hidden right-0 bottom-0'>
+          <div className='lg:w-1/2 absolute sm:hidden right-0 bottom-0'>
             <img className='w-[80%]' src='/Group1.png' alt="" />
           </div>
         </section>

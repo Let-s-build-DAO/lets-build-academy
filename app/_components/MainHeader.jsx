@@ -1,5 +1,6 @@
 "use client"
 
+import Link from 'next/link';
 /* eslint-disable @next/next/no-img-element */
 import React, { useState } from 'react';
 
@@ -9,14 +10,14 @@ const MainHeader = () => {
   return (
 
     <>
-      <header className="flex z-10 fixed justify-between top-0 w-full items-center lg:px-24 px-4 py-4 ">
+      <header className="flex z-50 fixed justify-between top-0 w-full items-center lg:px-24 px-4 py-4 ">
         <img src="/logo.png" className='w-32' alt="" />
         <nav className='lg:flex hidden justify-between'>
           <ul className="flex my-auto">
-            <li className="mr-6"><a href="#home" className="text-black ">Home</a></li>
-            <li className="mr-6"><a href="#courses" className="text-black ">Courses</a></li>
-            <li className="mr-6"><a href="#about" className="text-black ">About Us</a></li>
-            <li><a href="#contact" className="text-black ">Contact Us</a></li>
+            <li className="mr-6 text-black"> <Link href={'/'}>Home</Link> </li>
+            <li className="mr-6">Courses</li>
+            <li className="mr-6"><Link href={'/about'}>About Us</Link></li>
+            <li><Link href={'/contact'}>Contact Us</Link></li>
           </ul>
           <button className='bg-custom-purple text-white font-medium p-2 px-8 rounded-md ml-5'>Connect Wallet</button>
         </nav>
@@ -28,10 +29,12 @@ const MainHeader = () => {
         <div className='fixed z-50 top-24 left-0 right-0 p-6 bg-[#8F0FBA] text-white w-[90%] mx-auto rounded-md'>
           <p onClick={() => setOpen(!open)} className="float-right text-4xl cursor-pointer">&times;</p>
 
-          <p className='my-4 mt-20 font-bold'>Home</p>
-          <p className='my-4 font-bold'>About Us</p>
+          <p className='my-4 mt-20 font-bold'>
+            <Link href={'/'}>Home</Link>
+          </p>
+          <p className='my-4 font-bold'><Link href={'/about'}>About Us</Link></p>
           <p className='my-4 font-bold'>Courses</p>
-          <p className='my-4 font-bold'>Contact</p>
+          <p className='my-4 font-bold'><Link href={'/contact'}>Contact</Link></p>
           <button className='bg-white text-[#8F0FBA] font-medium p-2 px-8 rounded-md w-full'>Connect Wallet</button>
         </div>
       }
