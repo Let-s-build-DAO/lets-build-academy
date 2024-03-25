@@ -3,6 +3,7 @@ import AdminLayout from '../_layouts/AdminLayout';
 import { Progress } from 'antd';
 import UserCountCard from '../_components/cards/UserCountCard';
 import ProfileCard from '../_components/cards/ProfileCard';
+import Link from 'next/link';
 
 const Dashboard = () => {
   const twoColors = { '0%': '#8F0FBA', '100%': '#8F0FBA' };
@@ -14,10 +15,12 @@ const Dashboard = () => {
           <h1 className='text-4xl font-bold'>Hey Alabo 👋 </h1>
           <p className='text-sm'>Let’s Learn something new today!!</p>
         </div>
-        <button className='text-purple flex my-auto'>
-          <p className='text-sm'>Courses</p>
-          <img className='h-3 w-3 my-auto ml-3' src="./images/icons/arrow.svg" alt="" />
-        </button>
+        <Link href={'/user/courses '}>
+          <button className='text-purple flex my-auto'>
+            <p className='text-sm'>Courses</p>
+            <img className='h-3 w-3 my-auto ml-3' src="./images/icons/arrow.svg" alt="" />
+          </button>
+        </Link>
       </section>
       <section className='flex'>
         <div className='w-[75%]'>

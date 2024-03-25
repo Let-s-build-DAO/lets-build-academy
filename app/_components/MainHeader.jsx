@@ -8,7 +8,6 @@ const MainHeader = () => {
   const [open, setOpen] = useState(false)
 
   return (
-
     <>
       <header className="flex z-50 fixed justify-between top-0 w-full items-center lg:px-24 px-4 py-4 ">
         <img src="/logo.png" className='w-32' alt="" />
