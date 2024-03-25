@@ -1,10 +1,11 @@
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable react/no-unescaped-entities */
 import Image from "next/image"
 
 function SectionTwo() {
   return (
     <div className='bg-white'>
-         <div className="flex justify-evenly bg-customPurple items-center w-[80%] h-[130px] rounded-md  mx-auto text-white text-center">
+      <div className="flex justify-evenly bg-customPurple items-center h-[130px] rounded-md  lg:mx-20 text-white text-center">
         <div className=''>
           <p className=' font-bold'>2</p>
           <p>Years <br /> Experience</p>
@@ -25,54 +26,34 @@ function SectionTwo() {
           <p>Awards <br /> Received</p>
         </div>
       </div>
-      <div className="flex pt-[100px] bg-white ">
-        <div >
-            <Image src= '/Rectangle 4.png' width={2500} height={600} />
+      <div className="lg:flex lg:mr-20 py-[100px] bg-white ">
+        <div className="lg:w-[48%]">
+          <Image src='/Rectangle 4.png' width={2500} height={600} />
         </div>
-        <div className="pl-[20px]">
-            <h1 className="font-bold text-3xl ">Why Choose <br /> Let's Build Labs</h1>
-            <div className="flex justify-evenly">
-                <div className="text-center">
-                    <div>
-                        <h2 className="font-bold">CUTTING-EDGE COURSES</h2>
-                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. 
-                            Rem velit at repudiandae consectetur, suscipit quam fuga nisi 
-                            dolorem eveniet, 
-                            ab ducimus quae illum dicta veniam id natus rerum. Ab, laboriosam.</p>
-                    </div>
-                    <div>
-                        <h2 className="font-bold">CUTTING-EDGE COURSES</h2>
-                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. 
-                            Rem velit at repudiandae consectetur, suscipit quam fuga nisi 
-                            dolorem eveniet, 
-                            ab ducimus quae illum dicta veniam id natus rerum. Ab, laboriosam.</p>
-                    </div>
-                    <div>
-                        <h2 className="font-bold">CUTTING-EDGE COURSES</h2>
-                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. 
-                            Rem velit at repudiandae consectetur, suscipit quam fuga nisi 
-                            dolorem eveniet, 
-                            ab ducimus quae illum dicta veniam id natus rerum. Ab, laboriosam.</p>
-                    </div>
-                </div>
-
-                <div>
-                <div>
-                        <h2 className="font-bold">CUTTING-EDGE COURSES</h2>
-                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. 
-                            Rem velit at repudiandae consectetur, suscipit quam fuga nisi 
-                            dolorem eveniet, 
-                            ab ducimus quae illum dicta veniam id natus rerum. Ab, laboriosam.</p>
-                    </div>
-                    <div>
-                        <h2 className="font-bold">CUTTING-EDGE COURSES</h2>
-                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. 
-                            Rem velit at repudiandae consectetur, suscipit quam fuga nisi 
-                            dolorem eveniet, 
-                            ab ducimus quae illum dicta veniam id natus rerum. Ab, laboriosam.</p>
-                    </div>
-                </div>
+        <div className="lg:w-[52%] px-6 ">
+          <h1 className="font-bold my-3 text-3xl ">Why Choose <br /> Let's Build Labs</h1>
+          <div className="flex flex-wrap justify-between">
+            <div className="shadow-md my-3 text-center py-8 p-3 lg:w-[49%] rounded-md">
+              <h2 className="font-bold my-2">Cutting-Edge Courses</h2>
+              <p className="text-sm">Our curriculum is designed to stay ahead of industry trends, ensuring that our students graduate with the latest skills and knowledge.</p>
             </div>
+            <div className="shadow-md p-3 my-3 text-center py-8 lg:w-[49%] rounded-md">
+              <h2 className="font-bold my-2">Web3 Expertise</h2>
+              <p className="text-sm">We specialize in web3 technologies, blockchain, decentralized applications (DApps), and more. Prepare for the future of the internet.</p>
+            </div>
+            <div className="shadow-md p-3 my-3 text-center py-8 lg:w-[49%] rounded-md">
+              <h2 className="font-bold my-2">Expert Instructors</h2>
+              <p className="text-sm">Learn from seasoned professionals who are passionate about tech and dedicated to your success.</p>
+            </div>
+            <div className="shadow-md p-3 my-3 text-center py-8 lg:w-[49%] rounded-md">
+              <h2 className="font-bold my-2"> Real-World Projects</h2>
+              <p className="text-sm">Put your skills to the test with hands-on projects that mirror the challenges of the tech world.</p>
+            </div>
+            <div className="shadow-md my-3 p-3 text-center py-8 lg:w-[49%] rounded-md">
+              <h2 className="font-bold my-2">Inclusivity</h2>
+              <p className="text-sm">We welcome students from all backgrounds, fostering a diverse and vibrant learning community.</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

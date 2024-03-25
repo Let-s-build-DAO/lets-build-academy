@@ -35,6 +35,12 @@ module.exports = {
         '223': '223px',
       },
     },
+    screens: {
+      sm: { max: "700px" },
+      md: "700px",
+      lg: "1024px",
+      xl: "1280px",
+    },
     colors: {
       white: "#F8F8F8",
       purple: "#8F0FBA",

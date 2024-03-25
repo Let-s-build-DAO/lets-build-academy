@@ -1,43 +1,29 @@
-import Image from 'next/image'
+/* eslint-disable @next/next/no-img-element */
 import SectionTwo from './SectionTwo/SectionTwo';
-import './SectionOne.css'
-
 
 function SectionOne() {
   return (
-    <>
-    <div className="section-one-bg pt-5 pl-20" >
-      <header className="flex items-center px-4 ">
-        <Image src= '/Logo.jpg' width={231} height={79}/>
-        <nav className='flex-1 flex justify-center'>
-          <ul className="flex">
-           <li className="mr-6"><a href="#home" className="text-black ">Home</a></li>
-            <li className="mr-6"><a href="#courses" className="text-black ">Courses</a></li>
-            <li className="mr-6"><a href="#about" className="text-black ">About Us</a></li>
-            <li><a href="#contact" className="text-black ">Contact Us</a></li>
-          </ul>
-        </nav>
-      </header>
-      <section className='flex items-center px-4'>
-       <div>
-          <h1 className='text-5xl font-bold mb-5'>Unlock the Future of</h1> 
-          <h1 className='text-5xl font-bold mb-5'>Learning with Web3</h1> 
-          <h1 className='text-5xl font-bold mb-5'>Technology</h1>
-    
-          <p className='mb-5'>Empower yourself with knowledge of 
-            <span aria-hidden="true">Decentralized Web and Blockchain</span>
-          </p>
-        <button className="bg-custom-purple text-white font-medium rounded-md px-4 py-5 w-223 h-72">
-          Get Started
-        </button>
+    <section className='relative'>
+      <img className='h-[80vh] w-full' src="/BackgroundImage.jpg" alt="" />
+      <div className="absolute h-[80vh] top-0 bottom-0 mb-0 lg:px-20 px-4" >
+        <section className='px-4'>
+          <div className='lg:mt-44 mt-40 lg:w-1/2'>
+            <h1 className='lg:text-5xl text-3xl font-bold leading-tight'>Unlock the Future of Learning with Web3 Technology</h1>
+            <p className='my-5'>Empower yourself with knowledge of <br />
+              Decentralized Web and Blockchain
+            </p>
+            <button className="bg-custom-purple flex justify-evenly text-white font-medium rounded-md px-4 py-5 w-52">
+              Get Started
+              <img src="/east.png" alt="" />
+            </button>
+          </div>
+          <div className='lg:w-1/2 lg:absolute hidden right-0 bottom-0'>
+            <img className='w-[80%]' src='/Group1.png' alt="" />
+          </div>
+        </section>
       </div>
-      <div className='flex-1 flex justify-center'>
-      <Image src='/Group1.png' alt="Group Image" width={700} height={700}/>
-    </div>
-  </section>
-</div>
-<SectionTwo />
-</>
+      <SectionTwo />
+    </section>
   )
 }
 

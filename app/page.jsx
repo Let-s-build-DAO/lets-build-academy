@@ -1,9 +1,10 @@
 import SectionOne from './_components/LandingPage/SectionOne'
+import MainLayout from './_layouts/MainLayout'
 
 export default function Home() {
   return (
-    <div>
-      <SectionOne/>
-    </div>
+    <MainLayout>
+      <SectionOne />
+    </MainLayout>
   )
 }
