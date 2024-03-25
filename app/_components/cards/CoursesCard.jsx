@@ -1,4 +1,6 @@
+/* eslint-disable @next/next/no-img-element */
 import { Progress } from 'antd';
+import Link from 'next/link';
 import React from 'react';
 
 const CoursesCard = () => {
@@ -18,7 +20,7 @@ const CoursesCard = () => {
         {mint ? <Progress type="circle" percent={90} strokeColor={twoColors} size={60} /> : <button className='p-2 h-10 my-auto bg-white border border-purple rounded-md text-purple text-sm px-6'>Purchase</button>
         }
       </div>
-      {mint ? <button className='p-2 h-10 float-right my-auto bg-white border border-purple rounded-md text-purple text-sm px-6'>Continue</button> : null
+      {mint ? <Link href={'/user/courses/1'}><button className='p-2 h-10 float-right my-auto bg-white border border-purple rounded-md text-purple text-sm px-6'>Continue</button></Link> : null
       }
     </div>
   );

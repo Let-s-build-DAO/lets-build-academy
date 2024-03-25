@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react';
 
 const MentorCourse = () => {
@@ -17,7 +18,9 @@ const MentorCourse = () => {
         </div>
 
       </div>
-      <button className='p-2 w-40 h-10 float-right my-auto bg-white border border-purple rounded-md text-purple text-sm px-6'>View</button>
+      <Link href={'/mentor/1'}>
+        <button className='p-2 w-40 h-10 float-right my-auto bg-white border border-purple rounded-md text-purple text-sm px-6'>View</button>
+      </Link>
     </div>
   );
 };

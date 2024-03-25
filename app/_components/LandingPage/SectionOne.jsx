@@ -7,7 +7,7 @@ function SectionOne() {
     <section className='relative'>
       <img className='lg:h-[100vh] h-[80vh] w-full' src="/BackgroundImage.jpg" alt="" />
       <section className='content'>
-        <div className="absolute flex items-center lg:h-[100vh] h-[80vh] top-0 bottom-0 mb-0 lg:px-20 px-4" >
+        <div className="absolute lg:flex items-center lg:h-[100vh] h-[80vh] top-0 bottom-0 mb-0 lg:px-20 px-4" >
           <div className='mt-40 lg:w-1/2'>
             <h1 className='lg:text-5xl text-3xl font-bold leading-tight'>Unlock the Future of Learning with Web3 Technology</h1>
             <p className='my-5'>Empower yourself with knowledge of <br />
