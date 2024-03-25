@@ -10,3 +10,9 @@ body {
   overflow-x: hidden;
   font-family: 'Poppins' !important;
 }
+
+main {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}

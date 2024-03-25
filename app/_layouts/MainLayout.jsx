@@ -6,8 +6,9 @@ const MainLayout = ({ children }) => {
   return (
     <div>
       <MainHeader />
-      <main>{children}</main>
-      <MainFooter />
+      <main>{children}
+        <MainFooter />
+      </main>
     </div>
   );
 };
