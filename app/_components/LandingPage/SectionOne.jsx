@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import Link from 'next/link';
 import SectionTwo from './SectionTwo/SectionTwo';
 
 function SectionOne() {
@@ -13,10 +14,12 @@ function SectionOne() {
               <p className='my-5'>Empower yourself with knowledge of <br />
                 Decentralized Web and Blockchain
               </p>
-              <button className="bg-custom-purple flex justify-evenly text-white font-medium rounded-md px-4 py-5 w-52">
-                Get Started
-                <img src="/east.png" alt="" />
-              </button>
+              <Link href={'/auth'}>
+                <button className="bg-custom-purple flex justify-evenly text-white font-medium rounded-md px-4 py-5 w-52">
+                  Get Started
+                  <img src="/east.png" alt="" />
+                </button>
+              </Link>
             </div>
             <div className='lg:w-1/2 absolute sm:hidden right-0 bottom-0'>
               <img className='w-[80%]' src='/Group1.png' alt="" />

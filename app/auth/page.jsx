@@ -1,3 +1,7 @@
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable @next/next/no-img-element */
+
+import Link from "next/link";
 
 const Auth = () => {
   return (
@@ -20,12 +24,14 @@ const Auth = () => {
           <h3 className="text-black text-lg font-bold font-['Poppins'] leading-loose">
             Blockchain
           </h3>
-          <div className="flex my-6 justify-between">
-            <button className="flex justify-center bg-[#E9CFF1] w-52 p-3 rounded-md">
-              <img src="/images/eth.png" alt="" />
-              <p className="my-auto mx-3">Ethereum</p>
-            </button>
-            <button className="flex justify-center bg-[#E9CFF1] w-52 ml-10 p-3 rounded-md">
+          <div className="lg:flex my-6 justify-between">
+            <Link href={'/auth/personal-info'}>
+              <button className="flex justify-center bg-[#E9CFF1] lg:w-52 w-full p-3 rounded-md">
+                <img src="/images/eth.png" alt="" />
+                <p className="my-auto mx-3">Ethereum</p>
+              </button>
+            </Link>
+            <button className="flex justify-center bg-[#E9CFF1] lg:w-52 w-full sm:mt-3 lg:ml-10 p-3 rounded-md">
               <img src="/images/deso.png" alt="" />
               <p className="my-auto mx-3">DeSo</p>
             </button>
