@@ -1,9 +1,9 @@
-
+import SectionOne from './_components/LandingPage/SectionOne'
 
 export default function Home() {
   return (
     <div>
-      <p>Hello world</p>
+      <SectionOne/>
     </div>
   )
 }
