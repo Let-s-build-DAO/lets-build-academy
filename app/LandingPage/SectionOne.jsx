@@ -1,6 +1,9 @@
 import Image from 'next/image'
 import SectionTwo from './SectionTwo/SectionTwo';
 import './SectionOne.css'
+import SectionThree from './SectionThree/SectionThree';
+import SectionFour from './SectionFour/SectionFour';
+import SectionFive from './SectionFive/SectionFive';
 
 
 function SectionOne() {
@@ -37,6 +40,9 @@ function SectionOne() {
   </section>
 </div>
 <SectionTwo />
+<SectionThree />
+<SectionFour />
+<SectionFive />
 </>
   )
 }

@@ -2,8 +2,8 @@ import Image from "next/image"
 
 function SectionTwo() {
   return (
-    <div className='bg-white'>
-         <div className="flex justify-evenly bg-customPurple items-center w-[80%] h-[130px] rounded-md  mx-auto text-white text-center">
+    <div className='bg-white pb-[150px]'>
+         <div className="flex justify-evenly bg-customPurple items-center w-[80%] h-[130px] rounded-md mx-auto text-white text-center">
         <div className=''>
           <p className=' font-bold'>2</p>
           <p>Years <br /> Experience</p>
@@ -32,21 +32,21 @@ function SectionTwo() {
             <h1 className="font-bold text-3xl ">Why Choose <br /> Let's Build Labs</h1>
             <div className="flex justify-evenly">
                 <div className="text-center">
-                    <div>
+                    <div className="border border-black rounded p-4 text-center my-2 mr-2 mt-12  h-[180px] w-[400px]">
                         <h2 className="font-bold">CUTTING-EDGE COURSES</h2>
                         <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. 
                             Rem velit at repudiandae consectetur, suscipit quam fuga nisi 
                             dolorem eveniet, 
                             ab ducimus quae illum dicta veniam id natus rerum. Ab, laboriosam.</p>
                     </div>
-                    <div>
+                    <div className="border border-black rounded p-4 text-center my-2 mr-2 h-[180px] w-[400px]" >
                         <h2 className="font-bold">CUTTING-EDGE COURSES</h2>
                         <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. 
                             Rem velit at repudiandae consectetur, suscipit quam fuga nisi 
                             dolorem eveniet, 
                             ab ducimus quae illum dicta veniam id natus rerum. Ab, laboriosam.</p>
                     </div>
-                    <div>
+                    <div className="border border-black rounded p-4 text-center my-2 mr-2 h-[180px] w-[400px]">
                         <h2 className="font-bold">CUTTING-EDGE COURSES</h2>
                         <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. 
                             Rem velit at repudiandae consectetur, suscipit quam fuga nisi 
@@ -56,14 +56,14 @@ function SectionTwo() {
                 </div>
 
                 <div>
-                <div>
+                <div className="border border-black rounded p-4 text-center my-2 mr-12 mt-12 h-[180px] w-[400px]">
                         <h2 className="font-bold">CUTTING-EDGE COURSES</h2>
                         <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. 
                             Rem velit at repudiandae consectetur, suscipit quam fuga nisi 
                             dolorem eveniet, 
                             ab ducimus quae illum dicta veniam id natus rerum. Ab, laboriosam.</p>
                     </div>
-                    <div>
+                    <div className="border border-black rounded p-4 text-center my-2 mr-12 h-[180px] w-[400px]">
                         <h2 className="font-bold">CUTTING-EDGE COURSES</h2>
                         <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. 
                             Rem velit at repudiandae consectetur, suscipit quam fuga nisi 
