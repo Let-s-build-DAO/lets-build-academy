@@ -1,9 +1,9 @@
 import Image from 'next/image'
 import SectionTwo from './SectionTwo/SectionTwo';
 import './SectionOne.css'
-import SectionThree from './SectionThree/SectionThree';
-import SectionFour from './SectionFour/SectionFour';
-import SectionFive from './SectionFive/SectionFive';
+import SectionThree from '../_components/LandingPage/SectionThree/SectionThree';
+import SectionFour from '../_components/LandingPage/SectionFour/SectionFour';
+import SectionFive from '../_components/LandingPage/SectionFive/SectionFive';
 
 
 function SectionOne() {

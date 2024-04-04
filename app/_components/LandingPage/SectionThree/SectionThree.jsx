@@ -4,11 +4,11 @@ import Image from 'next/image'
 function SectionThree() {
   return (
     <section className="section-three-bg pt-12 pb-12 sm:pt-16 sm:pb-16">
-    <header className="flex justify-between text-white px-8 sm:px-20">
-        <h1 className="font-bold text-2xl sm:text-3xl">EXPLORE OUR <br />COURSES</h1>
+    <header className="lg:flex justify-between text-white px-4 lg:px-10">
+        <h1 className="font-bold text-2xl lg:w-52 lg:text-3xl">EXPLORE OUR COURSES</h1>
         <p className="text-base sm:text-lg">EXPLORE ALL COURSES</p>
     </header>
-    <main className="flex flex-col sm:flex-row items-center justify-evenly mt-12">
+    <main className="flex sm:flex-col items-center justify-evenly sm:p-4 mt-12">
         {[1, 2, 3].map((item) => (
             <article key={item} className="first-div text-white mb-8 sm:mb-0">
                 <Image src='/Rectangle 5.png' alt='Course Image' width={400} height={179}/>
