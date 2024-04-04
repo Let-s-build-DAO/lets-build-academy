@@ -3,12 +3,12 @@ import Image from 'next/image'
 function SectionFour() {
   return (
     <section className='text-center pt-12 pb-12 sm:pt-16 sm:pb-16'>
-    <header>
+    <div>
         <h1 className='font-bold text-3xl sm:text-4xl pb-12'>What Our <br /> Students Say</h1>
-    </header>
+    </div>
     <main className='flex flex-col sm:flex-row justify-between px-4'>
         <div className="hidden sm:block">1</div>
-        <article className='bg-white p-12 items-center'>
+        <article className=' p-12 items-center'>
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. <br />
             Eveniet quod officiis perferendis voluptate unde non est <br />
             quo aut inventore magnam qui labore iusto, maxime asperiores <br />
