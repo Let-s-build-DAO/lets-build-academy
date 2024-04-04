@@ -13,10 +13,10 @@ function SectionFour() {
             Eveniet quod officiis perferendis voluptate unde non est <br />
             quo aut inventore magnam qui labore iusto, maxime asperiores <br />
             quos doloribus cum omnis aspernatur.</p>
-            <footer className='flex justify-center items-center mt-8'>
+            <div className='flex justify-center items-center mt-8'>
                 <Image src='/Ellipse 1.png' alt='Student Image' width={50} height={50}/>
                 <p className='font-bold ml-2'>Sarah L.</p>
-            </footer>
+            </div>
         </article>
         <div className="hidden sm:block">3</div>
     </main>
