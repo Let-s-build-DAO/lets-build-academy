@@ -18,7 +18,7 @@ function SectionThree() {
                     </div>
                     <div className="ml-4">
                         <h1 className='font-bold'>Web 3 Development</h1>
-                        <p>Let's Build Labs</p>
+                        <p>Lets Build Labs</p>
                     </div>
                 </div>
             </article>
