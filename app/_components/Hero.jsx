@@ -3,7 +3,7 @@ import React from 'react';
 
 const Hero = ({ text }) => {
   return (
-    <section className='relative'>
+    <section className='relative' >
       <img className='lg:h-[80vh] h-[60vh] object-cover w-full' src="/BackgroundImage.jpg" alt="" />
       <div className="absolute z-10 lg:h-[80vh] top-0 w-full" >
         <div className='text-center absolute top-52 w-full mx-auto'>

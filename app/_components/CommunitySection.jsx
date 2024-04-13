@@ -3,7 +3,7 @@ import React from 'react';
 
 const CommunitySection = () => {
   return (
-    <div className='bg-[#8F0FBA] relative'>
+    <div className='bg-[#8F0FBA] relative ' >
       <img className='sm:h-[50vh] object-cover' src="/pattern.png" alt="" />
       <div className='lg:w-1/2 p-8 absolute lg:top-20 top-0 lg:p-10 text-center text-white left-0 right-0 mx-auto'>
         <h1 className='text-3xl font-bold'>Join Our Community</h1>

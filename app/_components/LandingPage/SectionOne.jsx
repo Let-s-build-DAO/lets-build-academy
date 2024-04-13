@@ -4,7 +4,7 @@ import SectionTwo from './SectionTwo/SectionTwo';
 
 function SectionOne() {
   return (
-    <section className='relative'>
+    <section className='relative'style={{backgroundColor:"#FBF7FD"}}>
       <img className='lg:h-[100vh] h-[80vh] object-cover w-full' src="/BackgroundImage.jpg" alt="" />
       <section className='content'>
         <div className="absolute lg:flex items-center lg:h-[100vh] h-[80vh] top-0 bottom-0 mb-0 lg:px-20 px-4" >
