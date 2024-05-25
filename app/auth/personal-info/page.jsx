@@ -25,8 +25,8 @@ const PersonalInfo = () => {
             <div>
               <textarea className="p-3 w-full h-32 rounded-md" placeholder="Tell us about yourself"></textarea>
               <div className="my-6">
-                <Link href={'/user'}>
-                  <button className="bg-purple rounded-md w-full text-white p-3">Proceed to Dashboard</button>
+                <Link href={'/auth/otp'}>
+                  <button className="bg-purple rounded-md w-full text-white p-3">Continue</button>
                 </Link>
               </div>
             </div>
