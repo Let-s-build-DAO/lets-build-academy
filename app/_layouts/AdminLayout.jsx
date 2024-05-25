@@ -8,7 +8,7 @@ const AdminLayout = ({ children, header }) => {
   const [showBar, setShowBar] = useState(true)
   return (
     <div className='flex'>
-      <div className={showBar ? 'block' : 'hidden'}>
+      <div className={showBar ? 'block ' : 'hidden'}>
         <AdminSideNav setShowBar={() => setShowBar(false)} />
       </div>
       <section className='lg:w-[80%] lg:ml-auto lg:p-6 p-4'>

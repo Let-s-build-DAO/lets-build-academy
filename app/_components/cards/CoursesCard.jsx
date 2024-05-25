@@ -4,7 +4,7 @@ import Link from 'next/link';
 import React from 'react';
 
 const CoursesCard = () => {
-  const mint = true
+  const mint = false
   const twoColors = { '0%': '#40196C', '100%': '#40196C' };
 
   return (
