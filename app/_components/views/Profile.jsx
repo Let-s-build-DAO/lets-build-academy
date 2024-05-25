@@ -1,6 +1,6 @@
 import React from 'react';
-import AdminLayout from '../_layouts/AdminLayout';
-import ProfileCard from '../_components/cards/ProfileCard';
+import AdminLayout from '../../_layouts/AdminLayout';
+import ProfileCard from '../../_components/cards/ProfileCard';
 
 const Profile = () => {
   return (
