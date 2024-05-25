@@ -15,7 +15,7 @@ const Mentor = () => {
         <Link href={'/mentor/new'}>
           <button className='bg-purple p-3 px-6 sm:mt-4 rounded-md text-white flex my-auto'>
             <p className='text-sm'>Add Course</p>
-            <img className='h-3 w-3 my-auto ml-3' src="./images/icons/arrow-white.svg" alt="" />
+            <img className='h-3 w-3 my-auto ml-3' src="/images/icons/arrow-white.svg" alt="" />
           </button>
         </Link>
       </section>

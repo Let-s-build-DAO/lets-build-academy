@@ -18,7 +18,7 @@ const Dashboard = () => {
         <Link href={'/user/courses '}>
           <button className='text-purple sm:my-3 flex my-auto'>
             <p className='text-sm'>Courses</p>
-            <img className='h-3 w-3 my-auto ml-3' src="./images/icons/arrow.svg" alt="" />
+            <img className='h-3 w-3 my-auto ml-3' src="/images/icons/arrow.svg" alt="" />
           </button>
         </Link>
       </section>
@@ -76,9 +76,9 @@ const Dashboard = () => {
             <h3 className='text-sm font-bold'>Performance</h3>
 
             <div className='flex my-4 justify-between'>
-              <img className='w-6 h-6 my-auto' src="./images/disappointed-face.png" alt="" />
+              <img className='w-6 h-6 my-auto' src="/images/disappointed-face.png" alt="" />
               <Progress type="dashboard" percent={75} strokeColor={twoColors} />
-              <img className='w-6 h-6 my-auto' src="./images/savouring-food.png" alt="" />
+              <img className='w-6 h-6 my-auto' src="/images/savouring-food.png" alt="" />
             </div>
             <p className='text-xs text-center'>Your Progress: 80%</p>
           </div>

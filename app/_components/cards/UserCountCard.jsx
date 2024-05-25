@@ -7,7 +7,7 @@ const UserCountCard = ({ text, count }) => {
         <h3 className='text-sm w-20 font-bold'>{text}</h3>
         <h1 className='text-2xl font-bold'>{count}</h1>
       </div>
-      <img className='ml-auto my-2' src="./images/metrics.png" alt="" />
+      <img className='ml-auto my-2' src="/images/metrics.png" alt="" />
     </div>
   );
 };
