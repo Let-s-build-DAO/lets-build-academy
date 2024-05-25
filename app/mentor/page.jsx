@@ -20,7 +20,7 @@ const Mentor = () => {
         </Link>
       </section>
       <section className='flex justify-between'>
-        <MentorStatCard text={"Total Users"} count={"300"} img={"#8F0FBA"} color={"text-purple"} bg={"bg-[#E9CFF1]"} />
+        <MentorStatCard text={"Total Users"} count={"300"} img={"#40196C"} color={"text-purple"} bg={"bg-[#E9CFF1]"} />
         <MentorStatCard text={"Graduated"} count={"50"} img={"#22A845"} color={"text-[#22A845]"} bg={"bg-[#22A8451A]"} />
         <MentorStatCard text={"Ongoing"} count={"150"} img={"#302C8B"} color={"text-[#302C8B]"} bg={"bg-[#302C8B1A]"} />
         <MentorStatCard text={"Not Active"} count={"100"} img={"#EB1C1C"} color={"text-[#EB1C1C]"} bg={"bg-[#EB1C1C1A]"} />

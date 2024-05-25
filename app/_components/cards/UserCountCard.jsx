@@ -2,7 +2,7 @@ import React from 'react';
 
 const UserCountCard = ({ text, count }) => {
   return (
-    <div className='bg-white rounded-md p-4 w-[32%]'>
+    <div className='bg-white rounded-md p-4 lg:w-[32%] w-full'>
       <div className='flex justify-between'>
         <h3 className='text-sm w-20 font-bold'>{text}</h3>
         <h1 className='text-2xl font-bold'>{count}</h1>

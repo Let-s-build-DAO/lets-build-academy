@@ -5,10 +5,10 @@ import React from 'react';
 
 const CoursesCard = () => {
   const mint = true
-  const twoColors = { '0%': '#8F0FBA', '100%': '#8F0FBA' };
+  const twoColors = { '0%': '#40196C', '100%': '#40196C' };
 
   return (
-    <div className='bg-white rounded-md p-4 w-[49%] my-3'>
+    <div className='bg-white rounded-md p-4 lg:w-[49%] my-3'>
       <div className='flex justify-between'>
         <div className='flex'>
           <img className='h-4 w-4 my-auto mx-4' src="../images/icons/local_library.svg" alt="" />

@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 
-const AdminSideNav = () => {
+const AdminSideNav = ({ setShowBar }) => {
   const pathname = usePathname()
   const [nav, setNav] = useState([])
 
@@ -90,19 +90,21 @@ const AdminSideNav = () => {
   }, [])
 
   return (
-    <aside className='p-6 bg-white h-screen fixed w-[20%]'>
-      <img src="/images/logo.png" className='mb-10' alt="" />
-      {
-        nav?.map((item, idx) => (
-          <Link href={item.href} key={idx}>
-            <div className={item.href === pathname ? "bg-purple flex my-3 text-white p-3 rounded-md" : "flex my-3 p-3"}>
-              {item.icon}
-              <p className='ml-4'>{item.name}</p>
-            </div>
-          </Link>
-        ))
-      }
-      {/* <Link href={'/profile'}>
+    <>
+      <div onClick={() => setShowBar()} className='bg-[#000] lg:hidden opacity-20 w-full h-screen sm:fixed top-0 right-0 left-0'></div>
+      <aside className='p-6 bg-white h-screen fixed lg:w-[20%] z-10 w-[70%]'>
+        <img src="/images/logo.png" className='mb-10' alt="" />
+        {
+          nav?.map((item, idx) => (
+            <Link href={item.href} key={idx}>
+              <div className={item.href === pathname ? "bg-purple flex my-3 text-white p-3 rounded-md" : "flex my-3 p-3"}>
+                {item.icon}
+                <p className='ml-4'>{item.name}</p>
+              </div>
+            </Link>
+          ))
+        }
+        {/* <Link href={'/profile'}>
         <div className={pathname === '/profile' ? "bg-purple flex my-3 text-white p-3 rounded-md" : "flex my-3 p-3"}>
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-person" viewBox="0 0 16 16">
             <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
@@ -110,15 +112,16 @@ const AdminSideNav = () => {
           <p className='ml-4'>Profile</p>
         </div>
       </Link> */}
-      <Link href={'/auth'}>
-        <div className='text-[#EB1515] p-3 flex mt-44'>
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#EB1515" className="w-6 h-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-          </svg>
-          <p className='ml-4'>Logout</p>
-        </div>
-      </Link>
-    </aside>
+        <Link href={'/auth'}>
+          <div className='text-[#EB1515] p-3 flex mt-44'>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#EB1515" className="w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+            </svg>
+            <p className='ml-4'>Logout</p>
+          </div>
+        </Link>
+      </aside>
+    </>
   );
 };
 
