@@ -37,10 +37,10 @@ const Auth = () => {
             </button>
           </div>
         </div>
-        {/* <button className="bg-purple w-full my-4 p-2 rounded-md text-white flex justify-center">
+        <button className="bg-purple w-full my-4 p-2 rounded-md text-white flex justify-center">
           <img src="/images/icons/MetaMask.svg" alt="" />
           <p className="my-auto mx-3">Connect with Metamask</p>
-        </button> */}
+        </button>
       </div>
     </div>
   );
