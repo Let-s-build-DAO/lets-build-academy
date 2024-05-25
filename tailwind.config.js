@@ -43,7 +43,7 @@ module.exports = {
     },
     colors: {
       white: "#F8F8F8",
-      purple: "#8F0FBA",
+      purple: "#40196C",
       customPurple: '#8F0FBA'
     }
    

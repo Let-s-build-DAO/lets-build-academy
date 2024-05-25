@@ -17,9 +17,9 @@ export default function ResponsiveCarousel() {
           {items.bootstrap.map((item) => (
             <div key={item.id} style={{ backgroundColor: "white", maxWidth: '60rem', margin: "0 auto" }}>
               <p style={{ width: '450px', margin: '0 auto', paddingTop: "3rem" }}>{item.body}</p>
-              <div className='flex justify-around items-center mt-8'>
-                <img src={item.imageUrl} className="carouselImage" />
-                <h3 className="font-bold w-100px mb-12" style={{ marginRight: "50%", whiteSpace: "nowrap" }}>{item.text}</h3>
+              <div className='flex justify-center items-center mt-8'>
+                <img src={item.imageUrl}  className="carouselImage " />
+                <h3 className="font-bold ml-3 mb-12" style={{ marginRight: "50%", whiteSpace: "nowrap" }}>{item.text}</h3>
               </div>
             </div>
           ))}

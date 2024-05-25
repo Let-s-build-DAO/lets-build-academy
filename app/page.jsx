@@ -6,7 +6,7 @@ import Slider from './_components/LandingPage/SectionFour/Slider'
 
 export default function Home() {
   return (
-    <MainLayout style={{backgroundColor:"#FBF7FD"}}>
+    <MainLayout style={{backgroundColor:"#F3F3F3"}}>
       <SectionOne />
       <SectionThree />
       <Slider />

@@ -15,7 +15,7 @@ const contact = () => {
             <input type="text" placeholder='Full Name' className='p-3 rounded-sm my-3 text-sm w-full border border-[#CECCCF]' />
             <input type="text" placeholder='Email Address' className='p-3 rounded-sm my-3 text-sm w-full border border-[#CECCCF]' />
             <textarea placeholder='Leave a message' className='h-40 p-3 rounded-sm my-3 text-sm w-full border border-[#CECCCF]'></textarea>
-            <button className='p-3 rounded-sm my-3 bg-[#8F0FBA] text-white text-sm w-full'>Send Message</button>
+            <button className='p-3 rounded-sm my-3 bg-purple text-white text-sm w-full'>Send Message</button>
           </div>
         </section>
       </section>
