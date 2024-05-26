@@ -14,14 +14,14 @@ const SingleCourse = () => {
 
   const lesson = useSearchParams().get('lesson')
   return (
-    lesson ? <section>
+    lesson ? <section className=''>
       <div className='flex my-3 justify-between'>
         <button>
           <img src="/arrow_circle_left.png" alt="" />
         </button>
-        <div className='text-center'>
+        <div className='text-center lg:w-1/2 w-[70%]'>
           <p className='font-bold'>Lesson {lesson}</p>
-          <h1 className='font-bold text-3xl'>The Basics</h1>
+          <h1 className='font-bold lg:text-3xl'>The Basics</h1>
           <p>The basics of Javascript</p>
         </div>
         <button>
@@ -31,8 +31,8 @@ const SingleCourse = () => {
       <MdPreview editorId={id} modelValue={text} />
       {/* <MdCatalog editorId={id} scrollElement={scrollElement} /> */}
     </section> : <section>
-      <div className='flex justify-between'>
-        <div className='w-[48%]'>
+      <div className='lg:flex justify-between'>
+        <div className='lg:w-[48%]'>
           <h1 className='text-4xl font-bold'>Javascript</h1>
           <div className='my-3'>
             <video controls>
@@ -53,7 +53,7 @@ const SingleCourse = () => {
             </Link>
           </div>
         </div>
-        <div className='w-[48%] mt-10'>
+        <div className='lg:w-[48%] mt-10'>
           <h3 className='font-bold text-lg my-2'>Introduction</h3>
           <p className='text-sm'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla lobortis libero eget suscipit laoreet. Maecenas risus metus, imperdiet et vestibulum vel, scelerisque id velit. Duis lacinia nibh sed maximus venenatis. Duis sed mi molestie, maximus metus eu, tincidunt velit.
             <br /> <br />
@@ -62,15 +62,15 @@ const SingleCourse = () => {
       </div>
       <div className='mt-10'>
         <h3 className='text-xl my-4 font-bold text-center'>Syllabus</h3>
-        <div className='flex flex-wrap justify-between'>
-          <div className='p-4 rounded-md bg-white flex justify-between w-[48%]'>
+        <div className='lg:flex flex-wrap justify-between'>
+          <div className='p-4 rounded-md bg-white flex justify-between sm:my-3 lg:w-[48%]'>
             <p className='font-bold'>Lesson 1</p>
             <div>
               <h3 className='font-bold text-lg'>The Basics</h3>
               <p className='text-xs'>The basics of Javascript</p>
             </div>
           </div>
-          <div className='p-4 rounded-md bg-white flex justify-between w-[48%]'>
+          <div className='p-4 rounded-md bg-white flex justify-between sm:my-3 lg:w-[48%]'>
             <p className='font-bold'>Lesson 1</p>
             <div>
               <h3 className='font-bold text-lg'>The Basics</h3>

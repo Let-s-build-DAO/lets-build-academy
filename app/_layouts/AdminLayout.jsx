@@ -7,7 +7,7 @@ import AdminSideNav from '../_components/AdminSideNav';
 const AdminLayout = ({ children, header }) => {
   const [showBar, setShowBar] = useState(true)
   return (
-    <div className='flex'>
+    <div className='lg:flex'>
       <div className={showBar ? 'block ' : 'hidden'}>
         <AdminSideNav setShowBar={() => setShowBar(false)} />
       </div>
