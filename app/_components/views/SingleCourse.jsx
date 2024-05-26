@@ -1,8 +1,36 @@
-import React from 'react';
+"use client"
+
+import React, { useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { MdPreview, MdCatalog } from 'md-editor-rt';
+import 'md-editor-rt/lib/preview.css';
+
+const scrollElement = document.documentElement;
 
 const SingleCourse = () => {
+  const [text] = useState('# Hello Editor ');
+  const [id] = useState('preview-only');
+
+  const lesson = useSearchParams().get('lesson')
   return (
-    <section>
+    lesson ? <section>
+      <div className='flex my-3 justify-between'>
+        <button>
+          <img src="/arrow_circle_left.png" alt="" />
+        </button>
+        <div className='text-center'>
+          <p className='font-bold'>Lesson {lesson}</p>
+          <h1 className='font-bold text-3xl'>The Basics</h1>
+          <p>The basics of Javascript</p>
+        </div>
+        <button>
+          <img src="/arrow_circle_right.png" alt="" />
+        </button>
+      </div>
+      <MdPreview editorId={id} modelValue={text} />
+      {/* <MdCatalog editorId={id} scrollElement={scrollElement} /> */}
+    </section> : <section>
       <div className='flex justify-between'>
         <div className='w-[48%]'>
           <h1 className='text-4xl font-bold'>Javascript</h1>
@@ -20,7 +48,9 @@ const SingleCourse = () => {
               <p className='text-sm'>Skill Level</p>
               <h3 className='font-bold text-sm'> Beginners</h3>
             </div>
-            <button className='p-3 rounded-md bg-purple text-white px-10'>Continue</button>
+            <Link href={'?lesson=1'}>
+              <button className='p-3 rounded-md bg-purple text-white px-10'>Continue</button>
+            </Link>
           </div>
         </div>
         <div className='w-[48%] mt-10'>

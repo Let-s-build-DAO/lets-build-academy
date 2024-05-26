@@ -18,7 +18,7 @@ const MentorCourse = () => {
         </div>
 
       </div>
-      <Link href={'/mentor/1'}>
+      <Link href={'/mentor/course/1'}>
         <button className='p-2 w-40 h-10 float-right my-auto bg-white border border-purple rounded-md text-purple text-sm px-6'>View</button>
       </Link>
     </div>
