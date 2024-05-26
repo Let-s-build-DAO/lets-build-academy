@@ -1,12 +1,12 @@
 import React from 'react';
-import AdminLayout from '../_layouts/AdminLayout';
-import ProfileCard from '../_components/cards/ProfileCard';
+import AdminLayout from '../../_layouts/AdminLayout';
+import ProfileCard from '../../_components/cards/ProfileCard';
 
 const Profile = () => {
   return (
     <AdminLayout>
-      <section className='flex mt-8'>
-        <div className='w-[70%]'>
+      <section className='lg:flex mt-8'>
+        <div className='lg:w-[70%]'>
           <h1 className='text-4xl font-bold'>Profile Details</h1>
           <div className='my-2'>
             <label className='text-sm'>First Name</label>
@@ -32,7 +32,7 @@ const Profile = () => {
             <button className='w-full bg-purple rounded-md text-sm p-3 text-white'>Save</button>
           </div>
         </div>
-        <div className='w-[30%] ml-6'>
+        <div className='lg:w-[30%] lg:ml-6'>
           <ProfileCard />
           <div className='bg-[#CECCCF] text-[#848086] flex my-3 rounded-md'>
             <p className='p-3 text-xs w-80 '>https://twitter.com/</p>

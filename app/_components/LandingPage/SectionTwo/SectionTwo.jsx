@@ -4,24 +4,24 @@ import Image from "next/image"
 
 function SectionTwo() {
   return (
-    <div className='bg-white'>
-      <div className="flex justify-evenly bg-customPurple items-center h-[130px] rounded-md  lg:mx-20 text-white text-center">
-        <div className=''>
+    <div className=''>
+      <div className="lg:flex z-10 relative justify-evenly bg-purple items-center lg:h-[130px] text-white text-center">
+        <div className='sm:p-4'>
           <p className=' font-bold'>2</p>
           <p>Years <br /> Experience</p>
         </div>
-        <div className="bg-white w-px h-20 mx-2"></div>
-        <div>
+        <div className="bg-white lg:w-px w-full h-[1px] lg:h-20 mx-2"></div>
+        <div className='sm:p-4'>
           <p className=' font-bold'>100+</p>
           <p>Students <br /> worldwide</p>
         </div>
-        <div className="bg-white w-px h-20 mx-2"></div>
-        <div>
+        <div className="bg-white lg:w-px w-full h-[1px] lg:h-20 mx-2"></div>
+        <div className='sm:p-4'>
           <p className=' font-bold'>5</p>
           <p>Sponsors</p>
         </div>
-        <div className="bg-white w-px h-20 mx-2"></div>
-        <div>
+        <div className="bg-white lg:w-px w-full h-[1px] lg:h-20 mx-2"></div>
+        <div className='sm:p-4'>
           <p className=' font-bold'>0</p>
           <p>Awards <br /> Received</p>
         </div>
@@ -31,7 +31,7 @@ function SectionTwo() {
           <Image src='/Rectangle 4.png' width={2500} height={600} />
         </div>
         <div className="lg:w-[52%] px-6 ">
-          <h1 className="font-bold my-3 text-3xl ">Why Choose <br /> Let's Build Labs</h1>
+          <h1 className="font-bold my-3 text-3xl ">Why Choose <br /> Let's Build Academy</h1>
           <div className="flex flex-wrap justify-between">
             <div className="shadow-md my-3 text-center py-8 p-3 lg:w-[49%] rounded-md">
               <h2 className="font-bold my-2">Cutting-Edge Courses</h2>

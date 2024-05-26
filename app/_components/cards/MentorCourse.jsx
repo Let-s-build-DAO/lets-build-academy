@@ -3,7 +3,7 @@ import React from 'react';
 
 const MentorCourse = () => {
   return (
-    <div className='bg-white rounded-md p-4 w-[49%] my-3'>
+    <div className='bg-white rounded-md p-4 lg:w-[49%] my-3'>
       <div className='flex justify-between'>
         <div className='flex'>
           <img className='h-4 w-4 my-auto mx-4' src="../images/icons/local_library.svg" alt="" />
@@ -18,7 +18,7 @@ const MentorCourse = () => {
         </div>
 
       </div>
-      <Link href={'/mentor/1'}>
+      <Link href={'/mentor/course/1'}>
         <button className='p-2 w-40 h-10 float-right my-auto bg-white border border-purple rounded-md text-purple text-sm px-6'>View</button>
       </Link>
     </div>

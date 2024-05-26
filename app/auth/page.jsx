@@ -10,7 +10,7 @@ const Auth = () => {
         <img className="h-screen w-full object-cover" src={"/auth-img.png"} />
         {/* <Image src={"/auth-img.png"} alt="auth-img" width={650} height={200} /> */}
       </div>
-      <div className="lg:w-1/2 p-10">
+      <div className="lg:w-1/2 lg:p-10 p-4">
         <div className="">
           <h1 className=" text-black text-3xl md:text-5xl font-bold font-['Poppins'] leading-[44px] md:leading-[64px]">
             Connect Your <br />
@@ -37,10 +37,10 @@ const Auth = () => {
             </button>
           </div>
         </div>
-        {/* <button className="bg-purple w-full my-4 p-2 rounded-md text-white flex justify-center">
+        <button className="bg-purple w-full my-4 p-2 rounded-md text-white flex justify-center">
           <img src="/images/icons/MetaMask.svg" alt="" />
           <p className="my-auto mx-3">Connect with Metamask</p>
-        </button> */}
+        </button>
       </div>
     </div>
   );
