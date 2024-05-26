@@ -33,7 +33,7 @@ const PersonalInfo = () => {
           </div> : <div className="mt-10">
             <div className="lg:flex my-6 justify-between">
               <input type="text" placeholder="First Name" className="p-3 rounded-md lg:w-[49%] w-full" />
-              <input type="text" placeholder="Last Name" className="p-3 rounded-md lg:w-[49%] w-full" />
+              <input type="text" placeholder="Last Name" className="p-3 sm:mt-6 rounded-md lg:w-[49%] w-full" />
             </div>
             <div className="my-6">
               <input type="text" placeholder="Username" className="p-3 rounded-md w-full" />
