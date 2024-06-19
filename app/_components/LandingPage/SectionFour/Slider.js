@@ -1,19 +1,19 @@
 'use client'
 
 import { Carousel } from "react-responsive-carousel";
-// import { items } from ".///items.json";
+import { items } from ".///items.json";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import './Slider.css'
 export default function ResponsiveCarousel() {
-  // const { responsive } = items;
+  const { responsive } = items;
 
-  // console.log(items)
+  console.log(items)
   return (
 
     <div style={{ backgroundColor: "#FBF7FD", paddingTop: "80px", paddingBottom: "100px" }}>
       <h1 className="font-bold text-3xl sm:text-4xl pb-12 " style={{ width: '250px', margin: '0 auto', textAlign: 'center' }}>What Our Students Say</h1>
       <div className="w-[90%] mx-auto">
-        {/* <Carousel  >
+        <Carousel  >
           {items.bootstrap.map((item) => (
             <div key={item.id} style={{ backgroundColor: "white", maxWidth: '60rem', margin: "0 auto" }}>
               <p style={{ width: '450px', margin: '0 auto', paddingTop: "3rem" }}>{item.body}</p>
@@ -23,7 +23,7 @@ export default function ResponsiveCarousel() {
               </div>
             </div>
           ))}
-        </Carousel> */}
+        </Carousel>
       </div>
     </div>
   );

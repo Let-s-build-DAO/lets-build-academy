@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import { setCookie } from 'cookies-next';
 import Link from 'next/link';
 
-const Login = () => {
+const Auth = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState("")
   const router = useRouter()
@@ -64,4 +64,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Auth;

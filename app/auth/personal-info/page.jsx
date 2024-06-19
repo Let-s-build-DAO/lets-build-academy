@@ -5,9 +5,9 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import firebase_app from "../../firebase/config";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
 import { useRouter } from 'next/navigation'
-import { deleteCookie, getCookie, setCookie } from 'cookies-next';
+import { deleteCookie, getCookie } from 'cookies-next';
 
-const PersonalInfo = () => {
+const Auth = () => {
   const router = useRouter()
   const auth = getAuth(firebase_app);
   const db = getFirestore(firebase_app);
@@ -86,4 +86,4 @@ const PersonalInfo = () => {
   );
 };
 
-export default PersonalInfo;
+export default Auth;
