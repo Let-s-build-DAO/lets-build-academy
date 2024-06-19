@@ -6,15 +6,15 @@ import firebase_app from "../../firebase/config";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { useRouter } from 'next/navigation'
 import { setCookie } from 'cookies-next';
-import Link from 'next/link';
+import Link from 'next/link'
 
-const Auth = () => {
+const auth = getAuth(firebase_app);
+const db = getFirestore(firebase_app);
+
+const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState("")
   const router = useRouter()
-  const auth = getAuth(firebase_app);
-  const db = getFirestore(firebase_app);
-
   const getIn = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
@@ -64,4 +64,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default Login;

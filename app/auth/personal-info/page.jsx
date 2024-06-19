@@ -7,10 +7,11 @@ import { getFirestore, doc, setDoc } from "firebase/firestore";
 import { useRouter } from 'next/navigation'
 import { deleteCookie, getCookie } from 'cookies-next';
 
-const Auth = () => {
+const auth = getAuth(firebase_app);
+const db = getFirestore(firebase_app);
+
+const PersonalInfo = () => {
   const router = useRouter()
-  const auth = getAuth(firebase_app);
-  const db = getFirestore(firebase_app);
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState("")
   const [username, setUsername] = useState("")
@@ -86,4 +87,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default PersonalInfo;
