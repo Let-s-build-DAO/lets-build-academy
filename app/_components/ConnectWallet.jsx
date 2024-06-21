@@ -40,7 +40,7 @@ const ConnectWallet = () => {
           </button>
 
           <div className='my-6'>
-            <p>Already have an account? <Link className='text-purple' href={'/auth'}>Login</Link></p>
+            <p>Already have an account? <Link className='text-purple' href={'/auth/login'}>Login</Link></p>
           </div>
         </div >
       </div >

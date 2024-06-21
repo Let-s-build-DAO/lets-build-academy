@@ -15,6 +15,7 @@ const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState("")
   const router = useRouter()
+  
   const getIn = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
@@ -22,8 +23,9 @@ const Login = () => {
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
           setCookie('token', user.accessToken);
+          const userRole = userDoc.data().role
           console.log("User data:", userDoc.data());
-          router.push(`/user`)
+          router.push(`/${userRole}`)
         } else {
           console.log("No such document!");
           router.push('/auth')

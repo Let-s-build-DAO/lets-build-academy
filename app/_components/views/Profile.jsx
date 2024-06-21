@@ -8,14 +8,14 @@ const Profile = () => {
       <section className='lg:flex mt-8'>
         <div className='lg:w-[70%]'>
           <h1 className='text-4xl font-bold'>Profile Details</h1>
-          <div className='my-2'>
+          {/* <div className='my-2'>
             <label className='text-sm'>First Name</label>
             <input type="text" className='p-3 my-1 bg-white w-full rounded-md' />
           </div>
           <div className='my-2'>
             <label className='text-sm'>Last Name</label>
             <input type="text" className='p-3 my-1 bg-white w-full rounded-md' />
-          </div>
+          </div> */}
           <div className='my-2'>
             <label className='text-sm'>Username</label>
             <input type="text" className='p-3 my-1 bg-white w-full rounded-md' />
