@@ -1,12 +1,8 @@
 "use client"
 
 import React, { useEffect, useState } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
-import { MdPreview, MdCatalog } from 'md-editor-rt';
+import { MdPreview } from 'md-editor-rt';
 import 'md-editor-rt/lib/preview.css';
-
-const scrollElement = document.documentElement;
 
 const SingleCourse = ({ data }) => {
   // const [text] = useState('# Hello Editor ');

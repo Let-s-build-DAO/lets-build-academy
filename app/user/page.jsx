@@ -50,7 +50,6 @@ const Dashboard = () => {
                 <th className=''>Name</th>
                 <th className='text-center'>Percentage</th>
               </tr>
-              {/* <tbody> */}
               <tr className='text-sm'>
                 <td className='py-4'>1</td>
                 <td className='font-bold text-center'>Sunday Kingsley</td>
@@ -66,7 +65,6 @@ const Dashboard = () => {
                 <td className='font-bold text-center'>Sunday Kingsley</td>
                 <td className='text-purple text-center'>95%</td>
               </tr>
-              {/* </tbody> */}
             </table>
           </div>
         </div>

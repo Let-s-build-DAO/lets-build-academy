@@ -11,7 +11,7 @@ const db = getFirestore(firebase_app);
 
 const Single = () => {
   const [data, setData] = useState()
-  const page = useSearchParams()?.get("id")
+  const page = useSearchParams().get("id")
 
   const getCourse = async () => {
     const docRef = doc(db, "courses", page);
