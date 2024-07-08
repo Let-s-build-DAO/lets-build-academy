@@ -25,7 +25,7 @@ const AdminCourse = ({ course, getData }) => {
           </div>
         </div>
         <div className='w-40'>
-          <h1 className='text-4xl font-bold'>100</h1>
+          <h1 className='text-4xl font-bold'>{course.enrolledStudents?.length}</h1>
           <p className='text-xs'>Erolled</p>
         </div>
       </div>

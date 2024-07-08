@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import { hasCookie } from 'cookies-next';
+import { deleteCookie } from 'cookies-next';
 
 const AdminSideNav = ({ setShowBar }) => {
   const pathname = usePathname()
@@ -17,6 +18,11 @@ const AdminSideNav = ({ setShowBar }) => {
       router.push('/auth')
     }
   }, [])
+
+  const logout = () => {
+    deleteCookie('token');
+    router.push('/auth/login')
+  }
 
   const userNav = [
     {
@@ -128,14 +134,14 @@ const AdminSideNav = ({ setShowBar }) => {
           <p className='ml-4'>Profile</p>
         </div>
       </Link> */}
-        <Link href={'/auth'}>
-          <div className='text-[#EB1515] p-3 flex mt-44'>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#EB1515" className="w-6 h-6">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-            </svg>
-            <p className='ml-4'>Logout</p>
-          </div>
-        </Link>
+        {/* <Link href={'/auth'}> */}
+        <div onClick={() => logout()} className='text-[#EB1515] p-3 cursor-pointer flex mt-44'>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="#EB1515" className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+          </svg>
+          <p className='ml-4'>Logout</p>
+        </div>
+        {/* </Link> */}
       </aside>
     </>
   );

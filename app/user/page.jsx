@@ -43,7 +43,7 @@ const Dashboard = () => {
             </button>
           </div>
           <div className='my-3 lg:flex justify-between'>
-            <UserCountCard text={"Total Courses"} count={"50"} />
+            {/* <UserCountCard text={"Total Courses"} count={"50"} /> */}
             <UserCountCard text={"Completed Courses"} count={"19"} />
             <UserCountCard text={"Courses in progress"} count={"22"} />
           </div>

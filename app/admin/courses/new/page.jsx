@@ -10,6 +10,7 @@ import firebase_app from "../../../firebase/config";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 const db = getFirestore(firebase_app);
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { createSlug } from '@/app/utils/createSlug';
 
 const storage = getStorage();
 
@@ -17,6 +18,7 @@ const NewCourse = () => {
   const content = useSearchParams().get('content')
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
+  const [author, setAuthor] = useState("")
   const [timeframe, setTimeframe] = useState("")
   const [skill, setSkill] = useState("")
   const [img, setImg] = useState("")
@@ -79,7 +81,10 @@ const NewCourse = () => {
             timeframe,
             skill,
             lessons,
-            imgUrl: downloadURL
+            author,
+            imgUrl: downloadURL,
+            enrolledStudents: [],
+            slug: createSlug(title)
           });
           // console.log(docRef);
           router.push('/admin/courses')
@@ -183,6 +188,10 @@ const NewCourse = () => {
             <div className='my-3'>
               <label className='test-sm' htmlFor="">Timeframe</label>
               <input onChange={e => setTimeframe(e.target.value)} value={timeframe} type="text" className='bg-white mt-2 rounded-md p-3 w-full' placeholder='E.g Two (2) Weeks' />
+            </div>
+            <div className='my-3'>
+              <label className='test-sm' htmlFor="">Author</label>
+              <input onChange={e => setAuthor(e.target.value)} value={author} type="text" className='bg-white mt-2 rounded-md p-3 w-full' placeholder='John Doe' />
             </div>
             <div className='my-3'>
               <label className='test-sm' htmlFor="">Skill Level</label>

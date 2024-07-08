@@ -9,6 +9,14 @@ import { userAtom } from '@/app/store';
 const Profile = () => {
   const [user] = useAtom(userAtom)
   const [bio, setBio] = useState(user?.info)
+  const [twitter, setTwitter] = useState(user?.socials?.twitter || '')
+  const [instagram, setInstagram] = useState(user?.socials?.instagram || "")
+  const [github, setGithub] = useState(user?.socials?.github || "")
+
+  const updateData = () => {
+
+  }
+
   return (
     <AdminLayout>
       <section className='lg:flex mt-8'>
@@ -42,15 +50,15 @@ const Profile = () => {
           <ProfileCard />
           <div className='bg-[#CECCCF] text-[#848086] flex my-3 rounded-md'>
             <p className='p-3 text-xs w-80 '>https://twitter.com/</p>
-            <input className='w-full rounded-r-md' type="text" />
+            <input value={twitter} onChange={e => setTwitter(e.target.value)} className='w-full rounded-r-md' type="text" />
           </div>
           <div className='bg-[#CECCCF] text-[#848086] flex my-3 rounded-md'>
             <p className='p-3 text-xs w-80'>https://instagram.com/</p>
-            <input className='w-full rounded-r-md' type="text" />
+            <input value={instagram} onChange={e => setInstagram(e.target.value)} className='w-full rounded-r-md' type="text" />
           </div>
           <div className='bg-[#CECCCF] text-[#848086] flex my-3 rounded-md'>
             <p className='p-3 text-xs w-80 '>https://github.com/</p>
-            <input className='w-full rounded-r-md' type="text" />
+            <input value={github} onChange={e => setGithub(e.target.value)} className='w-full rounded-r-md' type="text" />
           </div>
         </div>
       </section>
