@@ -1,11 +1,32 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AdminHeader from '../_components/AdminHeader';
 import AdminSideNav from '../_components/AdminSideNav';
+import { usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation'
+import { useAtom } from 'jotai'
+import { userAtom } from '../store';
+import { getCookie  } from 'cookies-next';
 
 const AdminLayout = ({ children, header }) => {
   const [showBar, setShowBar] = useState(true)
+  const [user] = useAtom(userAtom)
+  const pathname = usePathname()
+  const router = useRouter()
+  const token = getCookie('token')
+
+  useEffect(() => {
+    if (!token) {
+      router.push('/auth/login')
+    }
+    if (user !== undefined) {
+      if (pathname.includes(user.role)) {
+        return
+      }
+      router.push(`/${user.role}`)
+    }
+  })
   return (
     <div className='lg:flex'>
       <div className={showBar ? 'block ' : 'hidden'}>

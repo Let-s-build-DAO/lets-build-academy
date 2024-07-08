@@ -7,32 +7,48 @@ import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { useRouter } from 'next/navigation'
 import { setCookie } from 'cookies-next';
 import Link from 'next/link'
+import Spinner from '@/app/_components/Spinner';
+import { useAtom } from 'jotai'
+
+import { toast } from 'react-toastify';
+import { userAtom } from '@/app/store';
 
 const auth = getAuth(firebase_app);
 const db = getFirestore(firebase_app);
 
 const Login = () => {
+  const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState("")
   const router = useRouter()
-  
+  const [user, setUser] = useAtom(userAtom)
+
   const getIn = () => {
+    setLoading(true)
     signInWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         const user = userCredential.user;
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
           setCookie('token', user.accessToken);
+          setLoading(false)
+          toast("Logged in Successfully!")
           const userRole = userDoc.data().role
+          setUser(userDoc.data())
           console.log("User data:", userDoc.data());
           router.push(`/${userRole}`)
+
         } else {
+          setLoading(false)
+          toast.error("User does not exist.")
           console.log("No such document!");
           router.push('/auth')
         }
       })
       .catch((error) => {
+        toast.error(error.message)
         console.log(error.message)
+        setLoading(false)
       });
   }
 
@@ -58,7 +74,7 @@ const Login = () => {
             <p>Dont have an account? <Link className='text-purple' href={'/auth'}>Signup</Link></p>
           </div>
           <div className="my-6">
-            <button onClick={() => getIn()} className="bg-purple rounded-md w-full text-white p-3">Login</button>
+            <button onClick={() => getIn()} className="bg-purple rounded-md w-full text-white p-3">{loading ? <Spinner /> : 'Login'}</button>
           </div>
         </div>
       </div>
