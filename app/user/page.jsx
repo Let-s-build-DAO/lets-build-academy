@@ -28,7 +28,6 @@ const Dashboard = () => {
   const [user] = useAtom(userAtom);
 
   const fetchEnrolledCourses = async (userId) => {
-    
     const coursesRef = collection(db, "courses");
     const querySnapshot = await getDocs(coursesRef);
     const courses = [];

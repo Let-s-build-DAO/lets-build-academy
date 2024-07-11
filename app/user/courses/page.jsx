@@ -12,8 +12,6 @@ import { userAtom } from "@/app/store";
 
 const auth = getAuth(firebase_app);
 const db = getFirestore(firebase_app);
-import { useAtom } from 'jotai'
-import { userAtom } from '../../store';
 
 const Courses = () => {
   const [courses, setCourses] = useState([]);

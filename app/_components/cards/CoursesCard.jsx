@@ -16,7 +16,6 @@ const db = getFirestore(firebase_app);
 
 const CoursesCard = ({ course, userId }) => {
   const [isEnrolled, setIsEnrolled] = useState(false);
-  const mint = false;
   const twoColors = { "0%": "#40196C", "100%": "#40196C" };
 
   useEffect(() => {
@@ -88,7 +87,7 @@ const CoursesCard = ({ course, userId }) => {
             <p className="text-xs my-3">By {course.author}</p>
           </div>
         </div>
-        {mint ? (
+        {isEnrolled ? (
           <Progress
             type="circle"
             percent={90}
@@ -106,7 +105,7 @@ const CoursesCard = ({ course, userId }) => {
           </button>
         )}
       </div>
-      {mint ? (
+      {isEnrolled ? (
         <Link href={"/user/courses/1"}>
           <button className="p-2 h-10 float-right my-auto bg-white border border-purple rounded-md text-purple text-sm px-6">
             Continue
