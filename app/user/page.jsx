@@ -86,6 +86,7 @@ const Dashboard = () => {
             <p className='text-xs text-center'>Your Progress: 80%</p>
           </div> */}
         </div>
+        
       </section>
     </AdminLayout>
   );
