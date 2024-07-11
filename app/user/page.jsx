@@ -1,48 +1,121 @@
-"use client"
+"use client";
 
-import React from 'react';
-import AdminLayout from '../_layouts/AdminLayout';
-import { Progress } from 'antd';
-import UserCountCard from '../_components/cards/UserCountCard';
-import ProfileCard from '../_components/cards/ProfileCard';
-import Link from 'next/link';
-import { useAtom } from 'jotai'
-import { userAtom } from '../store';
+import { useEffect, useState } from "react";
+import AdminLayout from "../_layouts/AdminLayout";
+import { Progress } from "antd";
+import UserCountCard from "../_components/cards/UserCountCard";
+import ProfileCard from "../_components/cards/ProfileCard";
+import Link from "next/link";
+import { useAtom } from "jotai";
+import { userAtom } from "../store";
+import {
+  collection,
+  query,
+  getDocs,
+  getFirestore,
+  where,
+} from "firebase/firestore";
+import { onAuthStateChanged, getAuth } from "firebase/auth";
+import firebase_app from "../firebase/config";
+
+const auth = getAuth(firebase_app);
+const db = getFirestore(firebase_app);
 
 const Dashboard = () => {
-  const twoColors = { '0%': '#40196C', '100%': '#40196C' };
-  const [user] = useAtom(userAtom)
+  const [userId, setUserId] = useState(null);
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const twoColors = { "0%": "#40196C", "100%": "#40196C" };
+  const [user] = useAtom(userAtom);
+
+  const fetchEnrolledCourses = async (userId) => {
+    
+    const coursesRef = collection(db, "courses");
+    const querySnapshot = await getDocs(coursesRef);
+    const courses = [];
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      if (
+        data.enrolledStudents &&
+        Array.isArray(data.enrolledStudents) &&
+        data.enrolledStudents.some((student) => student.userId === userId)
+      ) {
+        courses.push({ id: doc.id, ...data });
+      }
+    });
+
+    return courses;
+  };
+
+  useEffect(() => {
+    const getEnrolledCourses = async () => {
+      try {
+        const courses = await fetchEnrolledCourses(userId);
+        setEnrolledCourses(courses);
+      } catch (error) {
+        console.error("Error fetching enrolled courses: ", error);
+      }
+    };
+
+    getEnrolledCourses();
+  }, [userId]);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(user.uid);
+      } else {
+        setUserId(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <AdminLayout>
-      <section className='my-6 lg:flex justify-between'>
+      <section className="my-6 lg:flex justify-between">
         <div>
-          <h1 className='text-4xl capitalize font-bold'>Hey {user?.username} 👋 </h1>
-          <p className='text-sm'>Let’s Learn something new today!!</p>
+          <h1 className="text-4xl capitalize font-bold">
+            Hey {user?.username} 👋{" "}
+          </h1>
+          <p className="text-sm">Let’s Learn something new today!!</p>
         </div>
-        <Link href={'/user/courses '}>
-          <button className='text-purple sm:my-3 flex my-auto'>
-            <p className='text-sm'>Courses</p>
-            <img className='h-3 w-3 my-auto ml-3' src="/images/icons/arrow.svg" alt="" />
+        <Link href={"/user/courses "}>
+          <button className="text-purple sm:my-3 flex my-auto">
+            <p className="text-sm">Courses</p>
+            <img
+              className="h-3 w-3 my-auto ml-3"
+              src="/images/icons/arrow.svg"
+              alt=""
+            />
           </button>
         </Link>
       </section>
-      <section className='lg:flex'>
-        <div className='lg:w-[75%]'>
-          <div className='p-4 lg:flex justify-between bg-white rounded-md mb-3'>
-            <div className='flex'>
-              <img className='h-4 w-4 my-auto mx-4' src="./images/icons/local_library.svg" alt="" />
-              <div className='my-auto w-44'>
-                <h4 className='font-bold my-3 text-sm'>Learn Solidity</h4>
-                <p className='text-xs my-3'>By Great Adams</p>
+      <section className="lg:flex">
+        <div className="lg:w-[75%]">
+          <div className="p-4 lg:flex justify-between bg-white rounded-md mb-3">
+            <div className="flex">
+              <img
+                className="h-4 w-4 my-auto mx-4"
+                src="./images/icons/local_library.svg"
+                alt=""
+              />
+              <div className="my-auto w-44">
+                <h4 className="font-bold my-3 text-sm">Learn Solidity</h4>
+                <p className="text-xs my-3">By Great Adams</p>
               </div>
-              <Progress type="circle" percent={90} strokeColor={twoColors} size={70} />
+              <Progress
+                type="circle"
+                percent={90}
+                strokeColor={twoColors}
+                size={70}
+              />
             </div>
-            <button className='p-3 sm:mt-4 h-12 my-auto px-6 bg-purple text-white rounded-md '>
+            <button className="p-3 sm:mt-4 h-12 my-auto px-6 bg-purple text-white rounded-md ">
               Continue
             </button>
           </div>
-          <div className='my-3 lg:flex justify-between'>
+          <div className="my-3 lg:flex justify-between">
             {/* <UserCountCard text={"Total Courses"} count={"50"} /> */}
             <UserCountCard text={"Completed Courses"} count={"19"} />
             <UserCountCard text={"Courses in progress"} count={"22"} />
@@ -73,7 +146,7 @@ const Dashboard = () => {
             </table>
           </div> */}
         </div>
-        <div className='lg:w-[25%] ml-4'>
+        <div className="lg:w-[25%] ml-4">
           <ProfileCard />
           {/* <div className='mt-4 bg-white p-4 rounded-md'>
             <h3 className='text-sm font-bold'>Performance</h3>
@@ -87,6 +160,34 @@ const Dashboard = () => {
           </div> */}
         </div>
         
+      </section>
+      <section>
+        <h2>My Enrolled Courses</h2>
+        {enrolledCourses.length === 0 ? (
+          <p>No courses enrolled yet.</p>
+        ) : (
+          <ul>
+            {enrolledCourses.map((course) => (
+                  <div key={course.id} className="bg-white rounded-md p-4 lg:w-[49%] my-3">
+                  <div className="flex justify-between">
+                    <div className="flex">
+                      <img
+                        className="h-4 w-4 my-auto mx-4"
+                        src="../images/icons/local_library.svg"
+                        alt=""
+                      />
+                      <div className="my-auto w-44">
+                        <h4 className="font-bold my-3 text-sm">{course.title}</h4>
+                        <p className="text-xs my-3">By {course.author}</p>
+                      </div>
+                    </div>
+                   
+                  </div>
+               
+                </div>
+            ))}
+          </ul>
+        )}
       </section>
     </AdminLayout>
   );
