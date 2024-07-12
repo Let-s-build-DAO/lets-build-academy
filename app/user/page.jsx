@@ -28,21 +28,32 @@ const Dashboard = () => {
   const [user] = useAtom(userAtom);
 
   const fetchEnrolledCourses = async (userId) => {
-    const coursesRef = collection(db, "courses");
-    const querySnapshot = await getDocs(coursesRef);
-    const courses = [];
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      if (
-        data.enrolledStudents &&
-        Array.isArray(data.enrolledStudents) &&
-        data.enrolledStudents.some((student) => student.userId === userId)
-      ) {
-        courses.push({ id: doc.id, ...data });
-      }
-    });
+    try {
+      const coursesQuery = query(collection(db, "courses"));
+      const coursesSnapshot = await getDocs(coursesQuery);
+      const enrolledCourses = [];
 
-    return courses;
+      for (const courseDoc of coursesSnapshot.docs) {
+        const enrollmentsRef = collection(
+          db,
+          `courses/${courseDoc.id}/enrolledStudents`
+        );
+        const enrollmentQuery = query(
+          enrollmentsRef,
+          where("userId", "==", userId)
+        );
+        const enrollmentSnapshot = await getDocs(enrollmentQuery);
+
+        if (!enrollmentSnapshot.empty) {
+          enrolledCourses.push({ id: courseDoc.id, ...courseDoc.data() });
+        }
+      }
+
+      return enrolledCourses;
+    } catch (error) {
+      console.error("Error fetching enrolled courses: ", error);
+      return [];
+    }
   };
 
   useEffect(() => {
@@ -51,7 +62,7 @@ const Dashboard = () => {
         const courses = await fetchEnrolledCourses(userId);
         setEnrolledCourses(courses);
       } catch (error) {
-        console.error("Error fetching enrolled courses: ", error);
+        toast.error("Error fetching enrolled courses: ", error);
       }
     };
 
@@ -75,7 +86,7 @@ const Dashboard = () => {
       <section className="my-6 lg:flex justify-between">
         <div>
           <h1 className="text-4xl capitalize font-bold">
-            Hey {user?.username} 👋{" "}
+            Hey {user?.username} 👋
           </h1>
           <p className="text-sm">Let’s Learn something new today!!</p>
         </div>
@@ -158,32 +169,32 @@ const Dashboard = () => {
             <p className='text-xs text-center'>Your Progress: 80%</p>
           </div> */}
         </div>
-        
       </section>
       <section>
-        <h2>My Enrolled Courses</h2>
         {enrolledCourses.length === 0 ? (
-          <p>No courses enrolled yet.</p>
+          <p></p>
         ) : (
           <ul>
+            <h2>My Enrolled Courses</h2>
             {enrolledCourses.map((course) => (
-                  <div key={course.id} className="bg-white rounded-md p-4 lg:w-[49%] my-3">
-                  <div className="flex justify-between">
-                    <div className="flex">
-                      <img
-                        className="h-4 w-4 my-auto mx-4"
-                        src="../images/icons/local_library.svg"
-                        alt=""
-                      />
-                      <div className="my-auto w-44">
-                        <h4 className="font-bold my-3 text-sm">{course.title}</h4>
-                        <p className="text-xs my-3">By {course.author}</p>
-                      </div>
+              <div
+                key={course.id}
+                className="bg-white rounded-md p-4 lg:w-[49%] my-3"
+              >
+                <div className="flex justify-between">
+                  <div className="flex">
+                    <img
+                      className="h-4 w-4 my-auto mx-4"
+                      src="../images/icons/local_library.svg"
+                      alt=""
+                    />
+                    <div className="my-auto w-44">
+                      <h4 className="font-bold my-3 text-sm">{course.title}</h4>
+                      <p className="text-xs my-3">By {course.author}</p>
                     </div>
-                   
                   </div>
-               
                 </div>
+              </div>
             ))}
           </ul>
         )}

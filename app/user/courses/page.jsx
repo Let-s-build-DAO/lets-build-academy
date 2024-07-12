@@ -18,6 +18,18 @@ const Courses = () => {
   const [userId, setUserId] = useState(null);
   const [user] = useAtom(userAtom)
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(user.uid);
+      } else {
+        setUserId(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   const getData = async () => {
     const all = [];
     const data = await getDocs(collection(db, "courses"));
@@ -36,7 +48,7 @@ const Courses = () => {
     <AdminLayout >
       <section className='my-6 lg:flex justify-between'>
         <div className='lg:w-96'>
-          <h1 className='text-4xl font-bold'>Hey Alabo 👋 </h1>
+          <h1 className='text-4xl font-bold'>Hey  {user?.username} 👋 </h1>
           <p className='text-sm'>To gain access to all courses purchase our NFT’s and enjoy premium learning experience</p>
         </div>
         {/* <button className='bg-purple p-3 sm:mt-4 rounded-md text-white flex my-auto'>
