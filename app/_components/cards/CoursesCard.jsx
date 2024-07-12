@@ -4,10 +4,8 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import {
   doc,
-  updateDoc,
   getFirestore,
-  arrayUnion,
-  getDoc,
+  getDoc, getDocs, collection, serverTimestamp, setDoc, where, query
 } from "firebase/firestore";
 import firebase_app from "../../firebase/config";
 import { toast } from 'react-toastify';
@@ -19,57 +17,44 @@ const CoursesCard = ({ course, userId }) => {
   const twoColors = { "0%": "#40196C", "100%": "#40196C" };
 
   useEffect(() => {
-    const checkEnrollment = async () => {
+    const checkEnrollment = async () => {   
       try {
-        const courseRef = doc(db, "courses", course.id);
-        const courseDoc = await getDoc(courseRef);
+        const enrollmentRef = collection(db, `courses/${course.id}/enrolledStudents`);
+        const q = query(enrollmentRef, where("userId", "==", userId));
+        const querySnapshot = await getDocs(q);
 
-        if (courseDoc.exists) {
-          const courseData = courseDoc.data();
-          const enrolledStudents = courseData.enrolledStudents || [];
-          const isUserEnrolled = enrolledStudents.some(
-            (student) => student.userId === userId
-          );
-
-          if (isUserEnrolled) {
+        if (!querySnapshot.empty) {
+          setIsEnrolled(true);
+          localStorage.setItem(`enrolled_${course.id}`, "true");
+        } else {
+          const enrolledStatus = localStorage.getItem(`enrolled_${course.id}`);
+          if (enrolledStatus === "true") {
             setIsEnrolled(true);
-            localStorage.setItem(`enrolled_${course.id}`, "true");
-          } else {
-            const enrolledStatus = localStorage.getItem(
-              `enrolled_${course.id}`
-            );
-            if (enrolledStatus === "true") {
-              setIsEnrolled(true);
-            }
           }
         }
       } catch (error) {
-        console.error("Error checking enrollment status: ", error);
+        toast.error("Error checking enrollment status: ", error);
       }
-    };
 
+    };    
     checkEnrollment();
   }, [course.id, userId]);
 
-  const enrollUser = async (req, res) => {
-    try {
-      const courseRef = doc(db, "courses", course.id);
-
-      const timestamp = new Date();
-
-      await updateDoc(courseRef, {
-        enrolledStudents: arrayUnion({
-          userId: userId,
-          progress: 10,
-          enrolledAt: timestamp,
-        }),
-      });
+  const enrollUser = async () => {
+    try { 
+         
+      const courseRef = doc(db,`courses/${course.id}/enrolledStudents`, userId);;
+      await setDoc(courseRef, { 
+        userId: userId,
+        progress: 10,
+        enrolledAt: serverTimestamp(),
+      }, {merge: true});
 
       setIsEnrolled(true);
       localStorage.setItem(`enrolled_${course.id}`, "true");
-      toast("Enrolled Successfully!")
+      toast.success("Enrolled Successfully!")
     } catch (error) {
-      toast("Error enrolling");
+      toast.error("Error enrolling");
     }
   };
 
