@@ -13,10 +13,11 @@ import {
   query,
   getDocs,
   getFirestore,
-  where,
+  where, orderBy, limit
 } from "firebase/firestore";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
 import firebase_app from "../firebase/config";
+import CoursesCard from "../_components/cards/CoursesCard";
 
 const auth = getAuth(firebase_app);
 const db = getFirestore(firebase_app);
@@ -24,6 +25,8 @@ const db = getFirestore(firebase_app);
 const Dashboard = () => {
   const [userId, setUserId] = useState(null);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const [recentCourse, setRecentCourse] = useState(null);
+
   const twoColors = { "0%": "#40196C", "100%": "#40196C" };
   const [user] = useAtom(userAtom);
 
@@ -56,6 +59,38 @@ const Dashboard = () => {
     }
   };
 
+  const fetchMostRecentEnrolledCourse = async (userId) => {
+    try {
+      const coursesQuery = query(collection(db, "courses"));
+      const coursesSnapshot = await getDocs(coursesQuery);
+      let recentCourse = null;
+
+      for (const courseDoc of coursesSnapshot.docs) {
+        const enrollmentsRef = collection(
+          db,
+          `courses/${courseDoc.id}/enrolledStudents`
+        );
+        const enrollmentQuery = query(
+          enrollmentsRef,
+          where("userId", "==", userId),
+          orderBy("enrolledAt", "desc"),
+          limit(1)
+        );
+        const enrollmentSnapshot = await getDocs(enrollmentQuery);
+
+        if (!enrollmentSnapshot.empty) {
+          recentCourse = { id: courseDoc.id, ...courseDoc.data() };
+          break;
+        }
+      }
+
+      return recentCourse;
+    } catch (error) {
+      toast.error("Error fetching most recent enrolled course: ", error);
+      return null;
+    }
+  };
+
   useEffect(() => {
     const getEnrolledCourses = async () => {
       try {
@@ -66,7 +101,17 @@ const Dashboard = () => {
       }
     };
 
+    const getRecentEnrolledCourse = async () => {
+      try {
+        const courses = await fetchMostRecentEnrolledCourse(userId);
+        setRecentCourse(courses);
+      } catch (error) {
+        toast.error("Error fetching Most recent enrolled courses: ", error);
+      }
+    };
+
     getEnrolledCourses();
+    getRecentEnrolledCourse();
   }, [userId]);
 
   useEffect(() => {
@@ -103,7 +148,9 @@ const Dashboard = () => {
       </section>
       <section className="lg:flex">
         <div className="lg:w-[75%]">
-          <div className="p-4 lg:flex justify-between bg-white rounded-md mb-3">
+          {
+            recentCourse && (
+              <div className="p-4 lg:flex justify-between bg-white rounded-md mb-3">
             <div className="flex">
               <img
                 className="h-4 w-4 my-auto mx-4"
@@ -111,8 +158,8 @@ const Dashboard = () => {
                 alt=""
               />
               <div className="my-auto w-44">
-                <h4 className="font-bold my-3 text-sm">Learn Solidity</h4>
-                <p className="text-xs my-3">By Great Adams</p>
+                <h4 className="font-bold my-3 text-sm">{recentCourse.title}</h4>
+                <p className="text-xs my-3">{recentCourse.author}</p>
               </div>
               <Progress
                 type="circle"
@@ -125,6 +172,8 @@ const Dashboard = () => {
               Continue
             </button>
           </div>
+            )
+          }
           <div className="my-3 lg:flex justify-between">
             {/* <UserCountCard text={"Total Courses"} count={"50"} /> */}
             <UserCountCard text={"Completed Courses"} count={"19"} />
@@ -171,32 +220,15 @@ const Dashboard = () => {
         </div>
       </section>
       <section>
-        {enrolledCourses.length === 0 ? (
-          <p></p>
-        ) : (
-          <ul>
+        {enrolledCourses.length > 0 && (
+          <div>
             <h2>My Enrolled Courses</h2>
-            {enrolledCourses.map((course) => (
-              <div
-                key={course.id}
-                className="bg-white rounded-md p-4 lg:w-[49%] my-3"
-              >
-                <div className="flex justify-between">
-                  <div className="flex">
-                    <img
-                      className="h-4 w-4 my-auto mx-4"
-                      src="../images/icons/local_library.svg"
-                      alt=""
-                    />
-                    <div className="my-auto w-44">
-                      <h4 className="font-bold my-3 text-sm">{course.title}</h4>
-                      <p className="text-xs my-3">By {course.author}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </ul>
+            <div className="flex flex-wrap justify-between">
+              {enrolledCourses.map((course) => (
+                <CoursesCard key={course.id} course={course} userId={userId} />
+              ))}
+            </div>
+          </div>
         )}
       </section>
     </AdminLayout>

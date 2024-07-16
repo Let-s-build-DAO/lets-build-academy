@@ -91,7 +91,7 @@ const CoursesCard = ({ course, userId }) => {
         )}
       </div>
       {isEnrolled ? (
-        <Link href={"/user/courses/1"}>
+        <Link href={`/user/courses/${course.id}`}>
           <button className="p-2 h-10 float-right my-auto bg-white border border-purple rounded-md text-purple text-sm px-6">
             Continue
           </button>

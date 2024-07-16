@@ -11,6 +11,8 @@ import { getFirestore, collection, addDoc } from "firebase/firestore";
 const db = getFirestore(firebase_app);
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { createSlug } from '@/app/utils/createSlug';
+import Spinner from '@/app/_components/Spinner';
+import { toast } from 'react-toastify';
 
 const storage = getStorage();
 
@@ -23,6 +25,7 @@ const NewCourse = () => {
   const [skill, setSkill] = useState("")
   const [img, setImg] = useState("")
   const [file, setFile] = useState(null)
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
   const uploadRef = useRef(null)
 
@@ -60,7 +63,7 @@ const NewCourse = () => {
 
   const createCourse = async () => {
     if (!file) return;
-
+    setLoading(true)
     const storageRef = ref(storage, `images/${file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -87,6 +90,8 @@ const NewCourse = () => {
             slug: createSlug(title)
           });
           // console.log(docRef);
+          toast("Course CreatedSuccessfully!")
+          setLoading(false)
           router.push('/admin/courses')
           console.log('File available at', downloadURL);
         });
@@ -158,7 +163,7 @@ const NewCourse = () => {
           </div>)}
         </div>
         <div className='mt-6'>
-          <button onClick={() => createCourse()} className='p-3 w-full text-white bg-purple rounded-md '>Save</button>
+          <button onClick={() => createCourse()} className='p-3 w-full text-white bg-purple rounded-md '>{loading ? <Spinner /> : 'Save'}</button>
         </div>
       </div> : <div>
         <h1 className='text-4xl font-bold'>Course Upload</h1>
