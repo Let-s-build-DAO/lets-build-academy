@@ -5,6 +5,12 @@ import ProfileCard from '../../_components/cards/ProfileCard';
 import { useAtom } from 'jotai'
 import { toast } from 'react-toastify';
 import { userAtom } from '@/app/store';
+import firebase_app from '@/app/firebase/config';
+import { getFirestore, doc, updateDoc } from "firebase/firestore";
+import Spinner from "@/app/_components/Spinner";
+
+
+const db = getFirestore(firebase_app);
 
 const Profile = () => {
   const [user] = useAtom(userAtom)
@@ -12,9 +18,32 @@ const Profile = () => {
   const [twitter, setTwitter] = useState(user?.socials?.twitter || '')
   const [instagram, setInstagram] = useState(user?.socials?.instagram || "")
   const [github, setGithub] = useState(user?.socials?.github || "")
+  const [loading, setLoading] = useState(false);
 
-  const updateData = () => {
 
+
+
+
+
+  const updateData = async () => {
+    setLoading(true)
+    try {
+      const userDoc = doc(db, "users", user.id); 
+      await updateDoc(userDoc, {
+        info: bio,
+        socials: {
+          twitter: twitter,
+          instagram: instagram,
+          github: github
+        }
+      });
+      toast.success("Profile updated successfully!");
+      setLoading(false)
+    } catch (error) {
+      console.error("Error updating profile: ", error);
+      toast.error("Failed to update profile.");
+      setLoading(false)
+    }
   }
 
   return (
@@ -40,10 +69,10 @@ const Profile = () => {
           </div>
           <div className='my-2'>
             <label className='text-sm'>Bio</label>
-            <textarea value={bio} onChange={e => setBio(e.target.value)} className='p-3 my-1 bg-white w-full rounded-md'></textarea>
+            <textarea value={bio} onChange={e => setBio(e.target.value)} className='h-36 p-3 my-1 bg-white w-full rounded-md'></textarea>
           </div>
           <div className='my-2'>
-            <button className='w-full bg-purple rounded-md text-sm p-3 text-white'>Save</button>
+            <button onClick={updateData} className='w-20 bg-purple rounded-md text-sm p-3 text-white'>{loading? <Spinner />: "Save"}</button>
           </div>
         </div>
         <div className='lg:w-[30%] lg:ml-6'>

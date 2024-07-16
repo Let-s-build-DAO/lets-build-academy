@@ -34,7 +34,7 @@ const Login = () => {
           setLoading(false)
           toast("Logged in Successfully!")
           const userRole = userDoc.data().role
-          setUser(userDoc.data())
+        setUser({...userDoc.data(), id:user.uid})
           console.log("User data:", userDoc.data());
           router.push(`/${userRole}`)
 
