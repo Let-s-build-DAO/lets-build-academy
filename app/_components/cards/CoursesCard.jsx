@@ -4,8 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import {
   doc,
-  getFirestore,
-  getDoc, getDocs, collection, serverTimestamp, setDoc, where, query
+  getFirestore, getDocs, collection, serverTimestamp, setDoc, where, query
 } from "firebase/firestore";
 import firebase_app from "../../firebase/config";
 import { toast } from 'react-toastify';
@@ -14,6 +13,8 @@ const db = getFirestore(firebase_app);
 
 const CoursesCard = ({ course, userId }) => {
   const [isEnrolled, setIsEnrolled] = useState(false);
+  const [progress, setProgress] = useState(0);
+
   const twoColors = { "0%": "#40196C", "100%": "#40196C" };
 
   useEffect(() => {
@@ -26,6 +27,8 @@ const CoursesCard = ({ course, userId }) => {
         if (!querySnapshot.empty) {
           setIsEnrolled(true);
           localStorage.setItem(`enrolled_${course.id}`, "true");
+          const enrollmentDoc = querySnapshot.docs[0];
+          setProgress(enrollmentDoc.data().progress); 
         } else {
           const enrolledStatus = localStorage.getItem(`enrolled_${course.id}`);
           if (enrolledStatus === "true") {
@@ -46,9 +49,9 @@ const CoursesCard = ({ course, userId }) => {
       const courseRef = doc(db,`courses/${course.id}/enrolledStudents`, userId);;
       await setDoc(courseRef, { 
         userId: userId,
-        progress: 10,
+        progress: 0,
         enrolledAt: serverTimestamp(),
-      }, {merge: true});
+      });
 
       setIsEnrolled(true);
       localStorage.setItem(`enrolled_${course.id}`, "true");
@@ -75,7 +78,7 @@ const CoursesCard = ({ course, userId }) => {
         {isEnrolled ? (
           <Progress
             type="circle"
-            percent={90}
+            percent={progress}
             strokeColor={twoColors}
             size={60}
           />

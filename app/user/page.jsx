@@ -13,11 +13,14 @@ import {
   query,
   getDocs,
   getFirestore,
-  where, orderBy, limit
+  where,
+  orderBy,
+  limit,
 } from "firebase/firestore";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
 import firebase_app from "../firebase/config";
 import CoursesCard from "../_components/cards/CoursesCard";
+import { toast } from "react-toastify";
 
 const auth = getAuth(firebase_app);
 const db = getFirestore(firebase_app);
@@ -26,6 +29,10 @@ const Dashboard = () => {
   const [userId, setUserId] = useState(null);
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [recentCourse, setRecentCourse] = useState(null);
+  const [totalEnrolledCourses, setTotalEnrolledCourses] = useState(0);
+  const [completedCourses, setCompletedCourses] = useState(0);
+  const [coursesInProgress, setCoursesInProgress] = useState(0);
+  const [progress, setProgress] = useState(0);
 
   const twoColors = { "0%": "#40196C", "100%": "#40196C" };
   const [user] = useAtom(userAtom);
@@ -64,6 +71,8 @@ const Dashboard = () => {
       const coursesQuery = query(collection(db, "courses"));
       const coursesSnapshot = await getDocs(coursesQuery);
       let recentCourse = null;
+      let recentTimestamp = null;
+      let recentProgress = 0; 
 
       for (const courseDoc of coursesSnapshot.docs) {
         const enrollmentsRef = collection(
@@ -73,21 +82,128 @@ const Dashboard = () => {
         const enrollmentQuery = query(
           enrollmentsRef,
           where("userId", "==", userId),
-          orderBy("enrolledAt", "desc"),
-          limit(1)
+          orderBy("enrolledAt", "desc")
         );
         const enrollmentSnapshot = await getDocs(enrollmentQuery);
 
         if (!enrollmentSnapshot.empty) {
-          recentCourse = { id: courseDoc.id, ...courseDoc.data() };
-          break;
+          const enrollmentDoc = enrollmentSnapshot.docs[0];
+         
+          
+
+          const enrolledAt = enrollmentDoc.data().enrolledAt.toDate();
+          const lastUpdated = enrollmentDoc.data().lastUpdate ?  enrollmentDoc.data().lastUpdated.toDate() : enrolledAt;
+
+          const latestTimestamp = lastUpdated > enrolledAt ? lastUpdated : enrolledAt;
+          // if (!recentTimestamp || enrolledAt > recentTimestamp) {
+          //   recentCourse = { id: courseDoc.id, ...courseDoc.data() };
+        
+          //   recentTimestamp = enrolledAt;
+          // }
+          if (!recentTimestamp || latestTimestamp > recentTimestamp) {
+            recentCourse = { id: courseDoc.id, ...courseDoc.data() };
+            recentTimestamp = latestTimestamp;
+            recentProgress = enrollmentDoc.data().progress;  
+          }
         }
       }
 
+      if (recentCourse) {
+        setProgress(recentProgress);
+      }
       return recentCourse;
     } catch (error) {
       toast.error("Error fetching most recent enrolled course: ", error);
       return null;
+    }
+  };
+
+  const fetchTotalEnrolledCourses = async (userId) => {
+    try {
+      const coursesQuery = query(collection(db, "courses"));
+      const coursesSnapshot = await getDocs(coursesQuery);
+      let totalEnrolledCourses = 0;
+
+      for (const courseDoc of coursesSnapshot.docs) {
+        const enrollmentsRef = collection(
+          db,
+          `courses/${courseDoc.id}/enrolledStudents`
+        );
+        const enrollmentQuery = query(
+          enrollmentsRef,
+          where("userId", "==", userId)
+        );
+        const enrollmentSnapshot = await getDocs(enrollmentQuery);
+
+        if (!enrollmentSnapshot.empty) {
+          totalEnrolledCourses++;
+        }
+      }
+
+      return totalEnrolledCourses;
+    } catch (error) {
+      toast.error("Error fetching total enrolled courses: ", error);
+      return 0;
+    }
+  };
+
+  const fetchTotalCompletedCourses = async (userId) => {
+    try {
+      const coursesQuery = query(collection(db, "courses"));
+      const coursesSnapshot = await getDocs(coursesQuery);
+      let completedCourses = 0;
+
+      for (const courseDoc of coursesSnapshot.docs) {
+        const enrollmentsRef = collection(
+          db,
+          `courses/${courseDoc.id}/enrolledStudents`
+        );
+        const enrollmentQuery = query(
+          enrollmentsRef,
+          where("userId", "==", userId),
+          where("progress", "==", 100)
+        );
+        const enrollmentSnapshot = await getDocs(enrollmentQuery);
+
+        if (!enrollmentSnapshot.empty) {
+          completedCourses++;
+        }
+      }
+
+      return completedCourses;
+    } catch (error) {
+      toast.error("Error fetching total enrolled courses: ", error);
+      return 0;
+    }
+  };
+
+  const fetchCoursesInProgress = async (userId) => {
+    try {
+      const coursesQuery = query(collection(db, "courses"));
+      const coursesSnapshot = await getDocs(coursesQuery);
+      let coursesInProgress = 0;
+
+      for (const courseDoc of coursesSnapshot.docs) {
+        const enrollmentsRef = collection(
+          db,
+          `courses/${courseDoc.id}/enrolledStudents`
+        );
+        const enrollmentQuery = query(
+          enrollmentsRef,
+          where("userId", "==", userId),
+          where("progress", ">", 0)
+        );
+        const enrollmentSnapshot = await getDocs(enrollmentQuery);
+
+        if (!enrollmentSnapshot.empty) {
+          coursesInProgress++;
+        }
+      }
+
+      return coursesInProgress;
+    } catch (error) {
+      toast.error("Error fetching total enrolled courses: ", error);
+      return 0;
     }
   };
 
@@ -101,17 +217,55 @@ const Dashboard = () => {
       }
     };
 
+    getEnrolledCourses();
+  }, [userId]);
+
+  useEffect(() => {
     const getRecentEnrolledCourse = async () => {
       try {
-        const courses = await fetchMostRecentEnrolledCourse(userId);
-        setRecentCourse(courses);
+        const course = await fetchMostRecentEnrolledCourse(userId);
+        // console.log(course);
+        setRecentCourse(course);
+      } catch (error) {
+        toast.error("Error fetching Most recent enrolled courses: ", error);
+      }
+    };
+    getRecentEnrolledCourse();
+  }, [userId]);
+
+  useEffect(() => {
+    const getTotalEnrolledCourse = async () => {
+      try {
+        const total = await fetchTotalEnrolledCourses(userId);
+
+        setTotalEnrolledCourses(total);
       } catch (error) {
         toast.error("Error fetching Most recent enrolled courses: ", error);
       }
     };
 
-    getEnrolledCourses();
-    getRecentEnrolledCourse();
+    const getTotalCompletedCourse = async () => {
+      try {
+        const total = await fetchTotalCompletedCourses(userId);
+
+        setCompletedCourses(total);
+      } catch (error) {
+        toast.error("Error fetching total courses: ", error);
+      }
+    };
+
+    const getCoursesInProgress = async () => {
+      try {
+        const total = await fetchCoursesInProgress(userId);
+        setCoursesInProgress(total);
+      } catch (error) {
+        toast.error("Error fetching total courses: ", error);
+      }
+    };
+
+    getTotalEnrolledCourse();
+    getTotalCompletedCourse();
+    getCoursesInProgress();
   }, [userId]);
 
   useEffect(() => {
@@ -148,36 +302,45 @@ const Dashboard = () => {
       </section>
       <section className="lg:flex">
         <div className="lg:w-[75%]">
-          {
-            recentCourse && (
-              <div className="p-4 lg:flex justify-between bg-white rounded-md mb-3">
-            <div className="flex">
-              <img
-                className="h-4 w-4 my-auto mx-4"
-                src="./images/icons/local_library.svg"
-                alt=""
-              />
-              <div className="my-auto w-44">
-                <h4 className="font-bold my-3 text-sm">{recentCourse.title}</h4>
-                <p className="text-xs my-3">{recentCourse.author}</p>
+          {recentCourse && (
+            <div className="p-4 lg:flex justify-between bg-white rounded-md mb-3">
+              <div className="flex">
+                <img
+                  className="h-4 w-4 my-auto mx-4"
+                  src="./images/icons/local_library.svg"
+                  alt=""
+                />
+                <div className="my-auto w-44">
+                  <h4 className="font-bold my-3 text-sm">
+                    {recentCourse.title}
+                  </h4>
+                  <p className="text-xs my-3">{recentCourse.author}</p>
+                </div>
+                <Progress
+                  type="circle"
+                  percent={progress}
+                  strokeColor={twoColors}
+                  size={70}
+                />
               </div>
-              <Progress
-                type="circle"
-                percent={90}
-                strokeColor={twoColors}
-                size={70}
-              />
+              <button className="p-3 sm:mt-4 h-12 my-auto px-6 bg-purple text-white rounded-md ">
+                Continue
+              </button>
             </div>
-            <button className="p-3 sm:mt-4 h-12 my-auto px-6 bg-purple text-white rounded-md ">
-              Continue
-            </button>
-          </div>
-            )
-          }
-          <div className="my-3 lg:flex justify-between">
-            {/* <UserCountCard text={"Total Courses"} count={"50"} /> */}
-            <UserCountCard text={"Completed Courses"} count={"19"} />
-            <UserCountCard text={"Courses in progress"} count={"22"} />
+          )}
+          <div className="my-3 lg:flex justify-between gap-2">
+            <UserCountCard
+              text={"Total Enrolled Courses"}
+              count={totalEnrolledCourses}
+            />
+            <UserCountCard
+              text={"Completed Courses"}
+              count={completedCourses}
+            />
+            <UserCountCard
+              text={"Courses in progress"}
+              count={coursesInProgress}
+            />
           </div>
           {/* <div className='my-3 bg-white p-4 rounded-md'>
             <h3 className='text-sm mb-4 font-bold'>Leaderboard</h3>

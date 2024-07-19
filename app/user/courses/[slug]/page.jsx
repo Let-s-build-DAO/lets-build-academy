@@ -7,12 +7,28 @@ import { useParams } from 'next/navigation';
 import { doc, getDoc } from "firebase/firestore";
 import firebase_app from "../../../firebase/config";
 import { getFirestore } from "firebase/firestore";
+import { onAuthStateChanged, getAuth } from "firebase/auth";
+
+const auth = getAuth(firebase_app);
 const db = getFirestore(firebase_app);
 
 const CoursesPage = () => {
   const [data, setData] = useState()
   const params = useParams();
+  const [userId, setUserId] = useState(null);
   const { slug } = params;
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(user.uid);
+      } else {
+        setUserId(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const getCourse = async () => {
     const docRef = doc(db, "courses", slug);
@@ -31,7 +47,7 @@ const CoursesPage = () => {
   }, [])
   return (
     <AdminLayout header={false}>
-      <SingleCourse data={data} />
+      <SingleCourse data={data} userId={userId} courseId={slug} />
     </AdminLayout>
   );
 };
