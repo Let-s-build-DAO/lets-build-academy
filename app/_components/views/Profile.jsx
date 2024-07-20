@@ -21,10 +21,6 @@ const Profile = () => {
   const [loading, setLoading] = useState(false);
 
 
-
-
-
-
   const updateData = async () => {
     setLoading(true)
     try {
