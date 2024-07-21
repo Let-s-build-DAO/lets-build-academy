@@ -86,7 +86,6 @@ const NewCourse = () => {
             lessons,
             author,
             imgUrl: downloadURL,
-            enrolledStudents: [],
             slug: createSlug(title)
           });
           // console.log(docRef);
