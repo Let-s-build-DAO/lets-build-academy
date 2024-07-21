@@ -1,4 +1,5 @@
 "use client"
+
 import React,{ useState, useEffect }  from 'react';
 import AdminLayout from '../_layouts/AdminLayout';
 import MentorStatCard from '../_components/cards/MentorStatCard';
@@ -7,7 +8,7 @@ import { getFirestore, collection, getDocs } from "firebase/firestore";
 
 const db = getFirestore(firebase_app);
 
-const mentor = () => {
+const Mentor = () => {
   const [stats, setStats] = useState({
     totalStudents: 0,
     graduated: 0,
@@ -60,4 +61,4 @@ const mentor = () => {
   );
 };
 
-export default mentor;
+export default Mentor;
