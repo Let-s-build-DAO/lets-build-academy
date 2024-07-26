@@ -34,7 +34,7 @@ const MainHeader = () => {
           </ul>
         </nav>
         <Link className='sm:hidden' href={'/auth'}>
-          <button className='bg-purple flex text-white font-medium p-3 px-8 rounded-full ml-5'>Start Learning                         <img className='ml-3' src="/east.png" alt="" />
+          <button className='bg-purple flex text-white font-medium p-3 px-8 rounded-md ml-5'>Start Learning<img className='ml-3' src="/east.png" alt="" />
           </button>
         </Link>
         <button onClick={() => setOpen(!open)} className='lg:hidden block bg-primary h-10 w-10 my-auto'>

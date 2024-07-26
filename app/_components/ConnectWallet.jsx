@@ -1,20 +1,25 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useWeb3Modal } from '@web3modal/wagmi/react'
 import { useAccount } from 'wagmi'
 import { setCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation'
 import Link from 'next/link';
+import Modal from './Modal';
 
 const ConnectWallet = () => {
   const { open, close } = useWeb3Modal()
+  const [modal, setModal] = useState(false)
   const account = useAccount()
   const router = useRouter()
+  const hasNFT = false
 
   useEffect(() => {
-    if (account.isConnected) {
+    if (account.isConnected && hasNFT) {
       setCookie('address', account.address)
       router.push('/auth/personal-info')
       console.log(account.address)
+    } else {
+      setModal(true)
     }
   }, [account])
   return (
@@ -42,8 +47,21 @@ const ConnectWallet = () => {
           <div className='my-6'>
             <p>Already have an account? <Link className='text-purple' href={'/auth/login'}>Login</Link></p>
           </div>
-        </div >
-      </div >
+        </div>
+      </div>
+      <Modal isOpen={modal} onClose={() => setModal(false)}>
+        <h2 className="text-2xl font-semibold mb-4"></h2>
+        <p className="mb-4 text-xl text-center">You dont have our NFT, to claim our NFT click the button below.</p>
+        <div className="flex justify-center">
+          <a
+            href="https://lazy-nft.vercel.app/claim"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <button className='bg-purple p-3 rounded-md text-white px-6'>Claim our Free NFT</button>
+          </a>
+        </div>
+      </Modal>
     </>
   );
 };
