@@ -18,7 +18,6 @@ const ConnectWallet = () => {
   const [modal, setModal] = useState(false)
   const account = useAccount()
   const router = useRouter()
-  const hasNFT = false
     const provider = new ethers.providers.JsonRpcProvider('https://rpc.sepolia-api.lisk.com')
     const nftAddress = '0xF8324D5172Bb7558d4B4495e8a02B1281C43579D'
     const getBalance =  () => {
@@ -30,6 +29,8 @@ const ConnectWallet = () => {
         console.log(account.address)
         if (res < 1) {
           setModal(true)
+        }else {
+          router.push('/auth/personal-info')
         }
       })
       .catch((error) => {
@@ -40,12 +41,7 @@ const ConnectWallet = () => {
   }
 
   useEffect(() => {
-    if (account.isConnected) {
-      setCookie('address', account.address)
-      router.push('/auth/personal-info')
-      console.log(account.address)
-    }
-    // getBalance()
+    getBalance()
   }, [account])
   return (
     <>
