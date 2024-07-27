@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useWeb3Modal } from '@web3modal/wagmi/react'
-import { useReadContract } from "thirdweb/react";
-import { useAccount } from 'wagmi'
+import { ethers } from 'ethers'
+import { useWeb3Modal, } from '@web3modal/wagmi/react'
+import { useAccount, useReadContract } from 'wagmi'
 import { setCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation'
 import { getContract } from "thirdweb";
@@ -9,27 +9,43 @@ import { liskSepolia } from "thirdweb/chains";
 import Link from 'next/link';
 import Modal from './Modal';
 import LazyABI from "../utils/ABI.js"
-import { client } from '../auth/page';
+import { config } from "../config/index"
 
 
 
 const ConnectWallet = () => {
-  const contract = getContract({
-    client,
-    address: "0xF8324D5172Bb7558d4B4495e8a02B1281C43579D",
-    chain: liskSepolia,
-  });
   const { open, close } = useWeb3Modal()
   const [modal, setModal] = useState(false)
   const account = useAccount()
   const router = useRouter()
   const hasNFT = false
 
-  const { data, isLoading } = useReadContract({
-    contract,
-    method: "function tokenURI(uint256 tokenId) returns (string)",
-    params: [1n], // type safe params
-  });
+  const { data: balance } = useReadContract({
+    // ...config,
+    abi: LazyABI,
+    functionName: 'balanceOf',
+    args: ['0x4d074b7a9b16417764D4Bc31FC3914dC53101b66'],
+  })
+    const provider = new ethers.providers.JsonRpcProvider('https://rpc.sepolia-api.lisk.com')
+  const nftAddress = '0xF8324D5172Bb7558d4B4495e8a02B1281C43579D'
+  const getBalance =  () => {
+    console.log('Provider:', provider)
+    const nftContract = new ethers.Contract(nftAddress, LazyABI, provider)
+
+    const bal = nftContract.balanceOf(account.address, 1).then((bal) => {
+      console.log(ethers.utils.formatUnits(bal, 18));
+      const res = ethers.utils.formatUnits(bal, 18)
+      console.log(account.address)
+      if (res < 1) {
+        setModal(true)
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+
+
+  }
 
   useEffect(() => {
     if (account.isConnected && hasNFT) {
@@ -39,10 +55,10 @@ const ConnectWallet = () => {
     } else {
       setModal(true)
     }
+    getBalance()
   }, [account])
   return (
     <>
-    {/* {`test`} {balance?.toString()} */}
       <div className="w-full bg-gray-200 justify-start items-center flex">
         <div className="w-1/2 md:flex justify-between items-center gap-4 inline-flex hidden">
           <img className="h-screen w-full object-cover" src={"/auth-img.png"} />
@@ -68,7 +84,7 @@ const ConnectWallet = () => {
           </div>
         </div>
       </div>
-      <Modal isOpen={false} onClose={() => setModal(false)}>
+      <Modal isOpen={modal} onClose={() => setModal(false)}>
         <h2 className="text-2xl font-semibold mb-4"></h2>
         <p className="mb-4 text-xl text-center">You dont have our NFT, to claim our NFT click the button below.</p>
         <div className="flex justify-center">

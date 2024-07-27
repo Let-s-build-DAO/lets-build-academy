@@ -19,7 +19,7 @@ export const config = createConfig({
   chains,
   projectId,
   metadata,
-  ssr: true,
+  ssr: false,
   storage: createStorage({
     storage: cookieStorage
   }),

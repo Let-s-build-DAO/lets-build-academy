@@ -31,14 +31,12 @@ const Auth = () => {
   const initialState = cookieToInitialState(config)
 
   return (
-    <ThirdwebProvider>
 
       <WagmiProvider config={config} initialState={initialState}>
         <QueryClientProvider client={queryClient}>
           <ConnectWallet />
         </QueryClientProvider>
       </WagmiProvider>
-    </ThirdwebProvider>
   )
 };
 
