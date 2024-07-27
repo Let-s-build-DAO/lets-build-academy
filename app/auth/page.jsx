@@ -1,5 +1,7 @@
 'use client'
 
+import { ThirdwebProvider } from "thirdweb/react";
+import { createThirdwebClient } from "thirdweb";
 import { cookieToInitialState } from 'wagmi'
 import { config, projectId } from '../config'
 import { createWeb3Modal } from '@web3modal/wagmi/react'
@@ -11,6 +13,10 @@ import ConnectWallet from '../_components/ConnectWallet'
 const queryClient = new QueryClient()
 
 if (!projectId) throw new Error('Project ID is not defined')
+
+export const client = createThirdwebClient({
+  clientId: 'bf9ec2d4d4216967eba4dd10a894f744',
+});
 
 // Create modal
 createWeb3Modal({
@@ -25,11 +31,14 @@ const Auth = () => {
   const initialState = cookieToInitialState(config)
 
   return (
-    <WagmiProvider config={config} initialState={initialState}>
-      <QueryClientProvider client={queryClient}>
-        <ConnectWallet />
-      </QueryClientProvider>
-    </WagmiProvider>
+    <ThirdwebProvider>
+
+      <WagmiProvider config={config} initialState={initialState}>
+        <QueryClientProvider client={queryClient}>
+          <ConnectWallet />
+        </QueryClientProvider>
+      </WagmiProvider>
+    </ThirdwebProvider>
   )
 };
 
