@@ -24,8 +24,9 @@ const ConnectWallet = () => {
     const nftContract = new ethers.Contract(nftAddress, LazyABI, provider)
 
       const bal = nftContract.balanceOf(account.address, 1).then((bal) => {
-        console.log(ethers.utils.formatUnits(bal, 18));
-        const res = ethers.utils.formatUnits(bal, 18)
+        console.log(ethers.utils.formatUnits(bal, 0));
+        const res = ethers.utils.formatUnits(bal, 0)
+        console.log(Math.round(res))
         console.log(account.address)
         if (res < 1) {
           setModal(true)
