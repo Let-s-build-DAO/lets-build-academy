@@ -18,27 +18,25 @@ const ConnectWallet = () => {
   const [modal, setModal] = useState(false)
   const account = useAccount()
   const router = useRouter()
-    const provider = new ethers.providers.JsonRpcProvider('https://rpc.sepolia-api.lisk.com')
-    const nftAddress = '0xF8324D5172Bb7558d4B4495e8a02B1281C43579D'
-    const getBalance =  () => {
+  const provider = new ethers.providers.JsonRpcProvider('https://rpc.sepolia-api.lisk.com')
+  const nftAddress = '0xF8324D5172Bb7558d4B4495e8a02B1281C43579D'
+  const getBalance = () => {
     const nftContract = new ethers.Contract(nftAddress, LazyABI, provider)
-
-      const bal = nftContract.balanceOf(account.address, 1).then((bal) => {
-        console.log(ethers.utils.formatUnits(bal, 0));
-        const res = ethers.utils.formatUnits(bal, 0)
-        console.log(Math.round(res))
-        console.log(account.address)
-        if (res < 1) {
-          setModal(true)
-        }else {
-          router.push('/auth/personal-info')
-        }
-      })
+    setCookie('address', account.address)
+    const bal = nftContract.balanceOf(account.address, 1).then((bal) => {
+      console.log(ethers.utils.formatUnits(bal, 0));
+      const res = ethers.utils.formatUnits(bal, 0)
+      console.log(Math.round(res))
+      console.log(account.address)
+      if (res < 1) {
+        setModal(true)
+      } else {
+        router.push('/auth/personal-info')
+      }
+    })
       .catch((error) => {
         console.error(error);
       });
-
-
   }
 
   useEffect(() => {
