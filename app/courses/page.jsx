@@ -8,16 +8,16 @@ const courses = () => {
   return (
     <MainLayout>
       <section>
-        <Hero text="Contact Us" />
+        <Hero text="Our Premium Courses" />
         <section className='bg-purple lg:p-16 sm:py-16 p-4 content'>
           <div className='flex mb-8 justify-end'>
             <input type="text" placeholder='Search' className='bg-purple p-2 lg:w-[30%] w-full text-white border border-white rounded-md' />
           </div>
           <div className="lg:flex justify-between text-white px-4 ">
-            <h1 className="font-bold text-2xl lg:w-52 lg:text-3xl">EXPLORE OUR COURSES</h1>
+            <h1 className="font-bold text-2xl lg:w-52 lg:text-3xl">Explore Our Courses</h1>
             <Link href={"/courses"}>
               <div className='flex'>
-                <p className="text-xs sm:text-lg">EXPLORE ALL COURSES </p>
+                <p className="text-xs sm:text-lg">Explore All Courses </p>
                 <img className='ml-3 w-4' src="/east.png" alt="" />
               </div>
             </Link>
@@ -32,7 +32,7 @@ const courses = () => {
                   </div>
                   <div className="ml-4">
                     <h1 className='font-medium'>Web 3 Development</h1>
-                    <p className='text-sm'>Lets Build Labs</p>
+                    <p className='text-sm'>Lets Build Academy</p>
                   </div>
                 </div>
               </div>

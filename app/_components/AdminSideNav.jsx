@@ -21,6 +21,7 @@ const AdminSideNav = ({ setShowBar }) => {
 
   const logout = () => {
     deleteCookie('token');
+    localStorage.removeItem('null');
     router.push('/auth/login')
   }
 
