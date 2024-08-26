@@ -13,11 +13,9 @@ function SectionOne() {
             <p className='my-5 text-lg'>Empower yourself with knowledge of <br />
               Decentralized Web and Blockchain
             </p>
-            <Link href={'/auth'}>
-              <button className="bg-purple flex justify-evenly text-white font-medium rounded-md px-4 lg:py-5 py-3 w-52">
-                Get Started
-                <img src="/east.png" alt="" />
-              </button>
+            <Link href={'/auth'} className='flex'>
+            <button className='bg-purple w-36 rounded-full flex text-white justify-center font-medium p-3 px-4 ml-5'>Get Started</button>
+            <button className=' w-36 border rounded-full flex text-purple justify-center font-medium p-3 px-4 ml-5'>Get Started</button>
             </Link>
           </div>
           <div className='lg:w-1/2 z-0 absolute sm:hidden right-0 top-32 bottom-0'>

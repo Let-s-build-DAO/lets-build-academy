@@ -33,9 +33,9 @@ const MainHeader = () => {
             <li><Link href={'/contact'}>Contact Us</Link></li>
           </ul>
         </nav>
-        <Link className='sm:hidden' href={'/auth'}>
-          <button className='bg-purple flex text-white font-medium p-3 px-8 rounded-md ml-5'>Start Learning<img className='ml-3' src="/east.png" alt="" />
-          </button>
+        <Link className='sm:hidden flex' href={'/auth'} >
+          <button className=' w-36 border rounded-full flex text-purple justify-center font-medium p-3 px-4 ml-5'>Sign up</button>
+          <button className='bg-purple w-36 rounded-full flex text-white justify-center font-medium p-3 px-4 ml-5'>Log in</button>
         </Link>
         <button onClick={() => setOpen(!open)} className='lg:hidden block bg-primary h-10 w-10 my-auto'>
           <img src="/images/icons/menu.png" className='w-8 h-8 mx-auto' alt="" />
