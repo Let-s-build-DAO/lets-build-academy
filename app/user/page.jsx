@@ -369,7 +369,7 @@ const Dashboard = () => {
           </div> */}
         </div>
         <div className="lg:w-[25%] ml-4">
-          <ProfileCard />
+          <ProfileCard  user={user}/>
           {/* <div className='mt-4 bg-white p-4 rounded-md'>
             <h3 className='text-sm font-bold'>Performance</h3>
 

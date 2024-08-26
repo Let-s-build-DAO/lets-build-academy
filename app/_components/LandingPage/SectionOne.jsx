@@ -14,7 +14,7 @@ function SectionOne() {
               Decentralized Web and Blockchain
             </p>
             <Link href={'/auth'}>
-              <button className="bg-purple flex justify-evenly text-white font-medium rounded-md px-4 lg:py-5 py-3 w-52">
+              <button className="bg-purple flex justify-evenly text-white font-medium rounded-3xl px-4 lg:py-5 py-3 w-52">
                 Get Started
                 <img src="/east.png" alt="" />
               </button>
