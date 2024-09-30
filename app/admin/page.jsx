@@ -20,7 +20,7 @@ const Mentor = () => {
   });
 
   async function getData() {
-    const  usercol= collection(db, 'users');
+    const  usercol= collection(db, 'usersProd');
     const citySnapshot = await getDocs(usercol);
     const userList = citySnapshot.docs.map(doc => doc.data());
 
