@@ -26,7 +26,7 @@ const about = () => {
           </div>
           <div className="lg:flex lg:ml-20 lg:py-[100px]">
             <div className="lg:w-[50%] my-auto px-6 ">
-              <h1 className="font-bold my-3 text-3xl ">Our Vision</h1>
+              <h1 className="font-bold my-3 text-3xl text- ">Our Vision</h1>
               <div className="flex flex-wrap justify-between">
                 <div className="shadow-md my-3 py-8 p-4 rounded-md">
                   <p className="text-lg">At Let’s Build Labs, our vision is to be a global leader in shaping the future of tech education. We envision a world where individuals from all walks of life have equal access to transformative learning experiences in web3 technologies, blockchain, and decentralized applications. Through innovation, collaboration, and a commitment to excellence, we aim to empower our students not only with technical skills but also with a mindset of creativity, adaptability, and ethical responsibility. We see a future where our graduates drive innovation, solve complex problems, and lead the way in building a more inclusive, decentralized, and technologically advanced society.</p>

@@ -68,6 +68,8 @@ const SingleCourse = ({ data, userId, courseId }) => {
     if (lesson < data?.lessons.length) {
       setLesson(lesson + 1);
       await updateCourseProgress(courseId, lesson + 1);
+    }else{
+      toast.success("Congratulations! You have completed the course.");
     }
   };
 
@@ -93,7 +95,7 @@ const SingleCourse = ({ data, userId, courseId }) => {
             </div>
             <button
               onClick={handleNextLesson}
-              disabled={lesson === data?.lessons.length}
+              // disabled={lesson === data?.lessons.length}
             >
               <img src="/arrow_circle_right.png" alt="Next Lesson" />
             </button>
