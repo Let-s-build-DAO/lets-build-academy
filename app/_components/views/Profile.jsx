@@ -22,7 +22,7 @@ const Profile = () => {
   const updateData = async () => {
     setLoading(true);
     try {
-      const userDoc = doc(db, "users", user.id);
+      const userDoc = doc(db, "usersProd", user.id); 
       await updateDoc(userDoc, {
         info: bio,
         socials: {

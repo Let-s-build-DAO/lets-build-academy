@@ -71,10 +71,10 @@ const ConnectWallet = () => {
       </div>
       <Modal isOpen={modal} onClose={() => setModal(false)}>
         <h2 className="text-2xl font-semibold mb-4"></h2>
-        <p className="mb-4 text-xl text-center">You dont have our NFT, to claim our NFT click the button below.</p>
+        <p className="mb-4 text-xl text-center">You don&apos;t have our NFT, to claim our NFT click the button below.</p>
         <div className="flex justify-center">
           <a
-            href="https://lazy-nft.vercel.app/claim"
+            href="https://lazy.letsbuilddao.org/"
             target="_blank"
             rel="noopener noreferrer"
           >
