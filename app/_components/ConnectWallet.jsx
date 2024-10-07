@@ -19,6 +19,7 @@ const ConnectWallet = () => {
   const account = useAccount()
   const router = useRouter()
   const provider = new ethers.providers.JsonRpcProvider('https://rpc.sepolia-api.lisk.com')
+  
   const nftAddress = '0xF8324D5172Bb7558d4B4495e8a02B1281C43579D'
   const getBalance = () => {
     const nftContract = new ethers.Contract(nftAddress, LazyABI, provider)
@@ -71,10 +72,10 @@ const ConnectWallet = () => {
       </div>
       <Modal isOpen={modal} onClose={() => setModal(false)}>
         <h2 className="text-2xl font-semibold mb-4"></h2>
-        <p className="mb-4 text-xl text-center">You dont have our NFT, to claim our NFT click the button below.</p>
+        <p className="mb-4 text-xl text-center">You don&apos;t have our NFT, to claim our NFT click the button below.</p>
         <div className="flex justify-center">
           <a
-            href="https://lazy-nft.vercel.app/claim"
+            href="https://lazy.letsbuilddao.org/"
             target="_blank"
             rel="noopener noreferrer"
           >
