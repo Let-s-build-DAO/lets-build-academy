@@ -18,9 +18,8 @@ const ConnectWallet = () => {
   const [modal, setModal] = useState(false)
   const account = useAccount()
   const router = useRouter()
-  const provider = new ethers.providers.JsonRpcProvider('https://rpc.sepolia-api.lisk.com')
-  
-  const nftAddress = '0xF8324D5172Bb7558d4B4495e8a02B1281C43579D'
+  const provider = new ethers.providers.JsonRpcProvider('https://rpc.api.lisk.com')
+  const nftAddress = '0x78f7a4DCeEb5d0D440fC7e320f608eE735488572'
   const getBalance = () => {
     const nftContract = new ethers.Contract(nftAddress, LazyABI, provider)
     setCookie('address', account.address)
