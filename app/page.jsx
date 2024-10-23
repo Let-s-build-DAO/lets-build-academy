@@ -11,7 +11,7 @@ export default function Home() {
       <MainLayout style={{ backgroundColor: "#F3F3F3" }}>
         <SectionOne />
         <SectionThree />
-        <Slider />
+        {/* <Slider /> */}
         {/* <SectionFive /> */}
       </MainLayout>
       {/* <MentorPage /> */}

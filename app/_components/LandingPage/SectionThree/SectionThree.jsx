@@ -14,7 +14,7 @@ function SectionThree() {
                     </div>
                 </Link>
             </div>
-            <main className="flex sm:flex-col items-center justify-evenly sm:p-4 mt-12 gap-6">
+            {/* <main className="flex sm:flex-col items-center justify-evenly sm:p-4 mt-12 gap-6">
                 {[1, 2, 3].map((item) => (
                     <article key={item} className="first-div text-white mb-8 sm:mb-4">
                         <Image src='/Rectangle 5.png' alt='Course Image' width={380} height={179} />
@@ -29,7 +29,7 @@ function SectionThree() {
                         </div>
                     </article>
                 ))}
-            </main>
+            </main> */}
         </section>
     )
 }

@@ -6,7 +6,7 @@ function SectionTwo() {
   return (
     <div className=''>
       <div className="lg:flex z-10 relative justify-evenly bg-purple items-center lg:h-[130px] text-white text-center">
-        <div className='sm:p-4'>
+        {/* <div className='sm:p-4'>
           <p className=' font-bold'>2</p>
           <p>Years <br /> Experience</p>
         </div>
@@ -24,7 +24,7 @@ function SectionTwo() {
         <div className='sm:p-4'>
           <p className=' font-bold'>0</p>
           <p>Awards <br /> Received</p>
-        </div>
+        </div> */}
       </div>
       <div className="lg:flex lg:mr-20 py-[100px] bg-white ">
         <div className="lg:w-[48%]">
