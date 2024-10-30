@@ -28,7 +28,7 @@ const Login = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         const user = userCredential.user;
-        const userDoc = await getDoc(doc(db, "users", user.uid));
+        const userDoc = await getDoc(doc(db, "usersProd", user.uid));
         if (userDoc.exists()) {
           setCookie('token', user.accessToken);
           setLoading(false)
