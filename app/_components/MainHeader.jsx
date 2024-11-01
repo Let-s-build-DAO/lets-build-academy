@@ -22,7 +22,7 @@ const MainHeader = () => {
   return (
     <>
       <header className={`flex z-50 fixed justify-between top-0 w-full items-center lg:px-16 px-4 py-4 ${isScrolled ? 'bg-white' : 'bg-transparent'}`}>
-        <img src="/logo.png" className='w-40' alt="" />
+        <img src="/academylogo.png" className='w-40' alt="" />
         <nav className='lg:flex hidden justify-between'>
           <ul className="flex my-auto">
             <li className="mr-6 text-black"> <Link href={'/'}>Home</Link> </li>

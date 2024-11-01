@@ -26,6 +26,8 @@ const NewCourse = () => {
   const [img, setImg] = useState("")
   const [file, setFile] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [videoFile, setVideoFile] = useState(null);
+  // const [video, setVideo] = useState("")
   const router = useRouter()
   const uploadRef = useRef(null)
 
@@ -45,12 +47,64 @@ const NewCourse = () => {
     }
   }
 
+  const handleVideoChange = (e, index) => {
+    const file = e.target.files[0];
+    console.log(file);
+    if (file && file.type.startsWith("video/")) {
+      setLessons((prevLessons) =>
+        prevLessons.map((lesson, i) =>
+          i === index ? { ...lesson, videoFile: file } : lesson
+        )
+      );
+      console.log(lessons)
+      toast.success("Video file selected.");
+    } else {
+      toast.error("Please select a valid video file.");
+    }
+  };
+  
+
+  const handleVideoUpload = async (index) => {
+    const currentLesson = lessons[index];
+    if (!currentLesson.videoFile) {
+      toast.error("Please select a video file before uploading.");
+      return;
+    }
+  
+    const storageRef = ref(storage, `videos/${currentLesson.videoFile.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, currentLesson.videoFile);
+  
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+      },
+      (error) => {
+        console.error("Upload failed", error);
+        toast.error("Failed to upload video.");
+      },
+      async () => {
+        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+        setLessons((prevLessons) => {
+          const updatedLessons = [...prevLessons];
+          updatedLessons[index].videoUrl = downloadURL;
+          updatedLessons[index].videoFile = null;  // Clear file after upload
+          return updatedLessons;
+        });
+        toast.success("Video uploaded successfully!");
+      }
+    );
+  };
+
   const lesson = {
     title: "",
     subtitle: "",
     body: "",
     description: "",
     category: "",
+    videoFile: null,
+    videoUrl: "",
     handsOn: false
   }
   const [lessons, setLessons] = useState([lesson])
@@ -89,7 +143,7 @@ const NewCourse = () => {
             slug: createSlug(title)
           });
           // console.log(docRef);
-          toast("Course CreatedSuccessfully!")
+          toast("Course Created Successfully!")
           setLoading(false)
           router.push('/admin/courses')
           console.log('File available at', downloadURL);
@@ -147,8 +201,25 @@ const NewCourse = () => {
               <div className='my-3'>
                 <div className='flex'>
                   <img className='w-8' src="/file_upload.png" alt="" />
-                  <p className='my-auto ml-3'>CLick to upload video</p>
+                  <input
+              type="file"
+              onChange={(e) => handleVideoChange(e, index)}
+              className="my-2 w-[100%] hidden max-w-[400px] lg:w-[100rem]"
+              ref={uploadRef}
+            />
+                 <p className='my-auto ml-3' onClick={() => uploadRef.current.click()} >CLick to upload video</p>
                 </div>
+                {single.videoFile && (
+            <button
+              onClick={() => handleVideoUpload(index)}
+              className='p-2 mt-2 bg-purple text-white rounded-md'
+            >
+              Upload Video
+            </button>
+          )}
+          {single.videoUrl && (
+            <p className="text-green-500 mt-2">Video uploaded successfully!</p>
+          )}
               </div>
               <div className='my-3'>
                 <label htmlFor="">Description</label>

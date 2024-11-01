@@ -323,9 +323,12 @@ const Dashboard = () => {
                   size={70}
                 />
               </div>
+              <Link href={`/user/courses/${recentCourse.id}`}>
               <button className="p-3 sm:mt-4 h-12 my-auto px-6 bg-purple text-white rounded-md ">
                 Continue
               </button>
+              </Link>
+           
             </div>
           )}
           <div className="my-3 lg:flex justify-between gap-2">

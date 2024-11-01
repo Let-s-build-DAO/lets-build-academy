@@ -12,7 +12,8 @@ import {
   serverTimestamp,
   setDoc,
   where,
-  query, updateDoc
+  query,
+  updateDoc,
 } from "firebase/firestore";
 
 import firebase_app from "../../firebase/config";
@@ -40,7 +41,6 @@ const SingleCourse = ({ data, userId, courseId }) => {
 
       const progress = Math.round((completedLessons / totalLessons) * 100);
 
-      
       const enrollmentRef = doc(
         db,
         `courses/${courseId}/enrolledStudents`,
@@ -68,7 +68,7 @@ const SingleCourse = ({ data, userId, courseId }) => {
     if (lesson < data?.lessons.length) {
       setLesson(lesson + 1);
       await updateCourseProgress(courseId, lesson + 1);
-    }else{
+    } else {
       toast.success("Congratulations! You have completed the course.");
     }
   };
@@ -100,6 +100,15 @@ const SingleCourse = ({ data, userId, courseId }) => {
               <img src="/arrow_circle_right.png" alt="Next Lesson" />
             </button>
           </div>
+          {active?.videoUrl && (
+            <video
+              className="custom-video"
+              src={active.videoUrl}
+              controls
+              width={300}
+              height={300}
+            ></video>
+          )}
           <MdPreview editorId={id} modelValue={active?.body} />
         </div>
         {active?.handsOn ? <div className="w-1/2"></div> : null}
