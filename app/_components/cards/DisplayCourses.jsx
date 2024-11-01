@@ -20,6 +20,7 @@ const DisplayCourses = () => {
           id: doc.id,
           ...doc.data(),
         }));
+        console.log(coursesData)
         setCourses(coursesData);
       } catch (error) {
         console.error("Error fetching courses:", error);
@@ -29,23 +30,23 @@ const DisplayCourses = () => {
     fetchCourses();
   }, []);
   return (
-    <main className="flex sm:flex-col flex-wrap items-center justify-evenly sm:p-4 mt-12 ">
+    <main className="grid lg:grid-cols-3 grid-cols-1 sm:p-4 mt-12 ">
       {courses.map(course => (
         <div key={course.id} className="first-div text-white mb-8 sm:mb-5">
           {/* <Image src={course.imgUrl} alt="Course Image" width={380} height={350} /> */}
-          <Link href={"/user/courses"}>
+          {/* <Link href={"/user/courses"}> */}
           <img src={course.imgUrl} alt="Course Image" className="w-[350px] h-[200px]" />
-          <div className="flex mt-4 justify-center">
+          <div className="mt-4 justify-center">
             {/* <div className="my-auto">
               <Image src="/Ellipse 1.png" alt="Instructor Image" width={40} height={50} />
             </div> */}
-            <div className="text-center">
+            <div className="">
               <h1 className="font-medium text-lg">{course.title}</h1>
-              <p className="text-sm ">Let's Build Academy</p>
+              <p className="text-sm ">{course.author}</p>
             </div>
           </div>
-          </Link>
-     
+          {/* </Link> */}
+
         </div>
       ))}
     </main>
