@@ -9,7 +9,7 @@ const MainFooter = () => {
       <CommunitySection />
       <footer className='lg:m-20 m-4 lg:flex justify-between'>
         <div className='sm:my-4'>
-          <img className='w-32' src="/logo.png" alt="" />
+          <img className='w-32' src="/academylogo.png" alt="" />
         </div>
         <div className='sm:my-4'>
           <h1 className='font-bold text-xl mb-3'>Quick Links</h1>
@@ -43,7 +43,7 @@ const MainFooter = () => {
           <button className='p-2 sm:w-full bg-purple text-white lg:ml-2 sm:mt-2 rounded-md'>Send</button>
         </div>
       </footer>
-      <div className='p-3 text-sm border-t border-[#B3B3B4] text-center'>Copyright © 2023 Lets build Labs. All rights reserved.</div>
+      <div className='p-3 text-sm border-t border-[#B3B3B4] text-center'>Copyright © 2024 Lets build Labs. All rights reserved.</div>
     </div>
   );
 };

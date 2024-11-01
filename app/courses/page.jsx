@@ -3,6 +3,8 @@ import MainLayout from '../_layouts/MainLayout';
 import Hero from '../_components/Hero';
 import Link from 'next/link';
 import Image from 'next/image'
+import DisplayCourses from '../_components/cards/DisplayCourses';
+
 
 const courses = () => {
   return (
@@ -22,7 +24,8 @@ const courses = () => {
               </div>
             </Link>
           </div>
-          <main className="flex sm:flex-col flex-wrap items-center justify-evenly sm:p-4 mt-12">
+          <DisplayCourses />
+          {/* <main className="flex sm:flex-col flex-wrap items-center justify-evenly sm:p-4 mt-12">
             {[1, 2, 3, 4, 5, 6].map((item) => (
               <div key={item} className="first-div text-white mb-8 sm:mb-5">
                 <Image src='/Rectangle 5.png' alt='Course Image' width={380} height={179} />
@@ -37,7 +40,7 @@ const courses = () => {
                 </div>
               </div>
             ))}
-          </main>
+          </main> */}
         </section>
       </section>
     </MainLayout>
