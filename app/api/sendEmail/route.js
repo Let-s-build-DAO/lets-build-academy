@@ -17,8 +17,8 @@ export const POST = async (req) => {
       port: 465, // Use port 465 for secure SMTP
       secure: true,
       auth: {
-        user: 'letsbuilddao@gmail.com',
-        pass: 'nuci xapl daao oibl',
+        user: '',
+        pass: '',
       },
     });
 
