@@ -1,13 +1,14 @@
 "use client"
 
 import AdminLayout from '@/app/_layouts/AdminLayout';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { MdEditor } from 'md-editor-rt';
 import 'md-editor-rt/lib/style.css';
 import firebase_app from "../../../firebase/config";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 const db = getFirestore(firebase_app);
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { createSlug } from '@/app/utils/createSlug';
@@ -27,76 +28,11 @@ const NewCourse = () => {
   const [file, setFile] = useState(null)
   const [loading, setLoading] = useState(false)
   const [videoFile, setVideoFile] = useState(null);
+  const [courseId, setCourseId] = useState("")
   // const [video, setVideo] = useState("")
   const router = useRouter()
   const uploadRef = useRef(null)
-
-  const handleFileChange = (
-    e,
-  ) => {
-    const file = e.target.files?.[0] // Add null check for e.target.files
-    setFile(file)
-    const reader = new FileReader()
-
-    reader.onloadend = () => {
-      setImg(reader.result?.toString() || '')
-    }
-
-    if (file) {
-      reader.readAsDataURL(file)
-    }
-  }
-
-  const handleVideoChange = (e, index) => {
-    const file = e.target.files[0];
-    console.log(file);
-    if (file && file.type.startsWith("video/")) {
-      setLessons((prevLessons) =>
-        prevLessons.map((lesson, i) =>
-          i === index ? { ...lesson, videoFile: file } : lesson
-        )
-      );
-      console.log(lessons)
-      toast.success("Video file selected.");
-    } else {
-      toast.error("Please select a valid video file.");
-    }
-  };
-  
-
-  const handleVideoUpload = async (index) => {
-    const currentLesson = lessons[index];
-    if (!currentLesson.videoFile) {
-      toast.error("Please select a video file before uploading.");
-      return;
-    }
-  
-    const storageRef = ref(storage, `videos/${currentLesson.videoFile.name}`);
-    const uploadTask = uploadBytesResumable(storageRef, currentLesson.videoFile);
-  
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
-      },
-      (error) => {
-        console.error("Upload failed", error);
-        toast.error("Failed to upload video.");
-      },
-      async () => {
-        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-        setLessons((prevLessons) => {
-          const updatedLessons = [...prevLessons];
-          updatedLessons[index].videoUrl = downloadURL;
-          updatedLessons[index].videoFile = null;  // Clear file after upload
-          return updatedLessons;
-        });
-        toast.success("Video uploaded successfully!");
-      }
-    );
-  };
-
+  const page = useSearchParams().get("id")
   const lesson = {
     title: "",
     subtitle: "",
@@ -109,56 +45,118 @@ const NewCourse = () => {
   }
   const [lessons, setLessons] = useState([lesson])
 
+  useEffect(() => {
+    if (page) {
+      setCourseId(page)
+      fetchCourseData(page);
+    }
+  }, [page]);
+
+  const fetchCourseData = async (id) => {
+    const courseRef = doc(db, "courses", id);
+    const docSnap = await getDoc(courseRef);
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      console.log(data)
+      setTitle(data.title);
+      setDescription(data.description);
+      setAuthor(data.author);
+      setTimeframe(data.timeframe);
+      setSkill(data.skill);
+      setLessons(data.lessons);
+      setImg(data.imgUrl);
+    } else {
+      toast.error("Course not found!");
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    setFile(file);
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      setImg(reader.result?.toString() || '');
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleLessonInputChange = (index, field, value) => {
     const updatedObjects = [...lessons];
     updatedObjects[index] = { ...updatedObjects[index], [field]: value };
     setLessons(updatedObjects);
   };
 
-  const createCourse = async () => {
-    if (!file) return;
-    setLoading(true)
-    const storageRef = ref(storage, `images/${file.name}`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
+  const handleValidation = () => {
+    if (!title || !description || !timeframe || !author || !skill || !img) {
+      toast.error("Please fill in all fields.");
+      return false;
+    }
+    return true;
+  };
 
-    uploadTask.on(
-      'state_changed',
-      (snapshot) => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log(progress)
-      },
-      (error) => {
-        console.error('Upload failed', error);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-          const docRef = await addDoc(collection(db, "courses"), {
-            title,
-            description,
-            timeframe,
-            skill,
-            lessons,
-            author,
-            imgUrl: downloadURL,
-            slug: createSlug(title)
-          });
-          // console.log(docRef);
-          toast("Course Created Successfully!")
-          setLoading(false)
-          router.push('/admin/courses')
-          console.log('File available at', downloadURL);
-        });
-      }
-    );
+  const createOrUpdateCourse = async () => {
+    if (!handleValidation()) return;
+    setLoading(true);
+    let imgUrl = img;
+    if (file) {
+      const storageRef = ref(storage, `images/${file.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
 
-  }
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log(progress);
+        },
+        (error) => {
+          console.error('Upload failed', error);
+        },
+        async () => {
+          imgUrl = await getDownloadURL(uploadTask.snapshot.ref());
+        }
+      );
+    }
+
+    const courseData = {
+      title,
+      description,
+      timeframe,
+      skill,
+      lessons,
+      author,
+      imgUrl,
+      slug: createSlug(title),
+    };
+
+    if (courseId) {
+      // Update existing course
+      const courseRef = doc(db, "courses", courseId);
+      await updateDoc(courseRef, courseData);
+      toast("Course updated successfully!");
+    } else {
+      // Create new course
+      await addDoc(collection(db, "courses"), courseData);
+      toast("Course created successfully!");
+    }
+
+    setLoading(false);
+    router.push('/admin/courses');
+  };
 
   return (
     <AdminLayout header={false}>
       {content ? <div>
         <div className='lg:flex justify-between'>
           <h1 className='text-4xl font-bold'>Course Content</h1>
-          <button onClick={() => setLessons([...lessons, lesson])} className='border sm:mt-4 rounded-md border-purple text-purple p-3'>Add Lesson <span className='font-medium ml-3'>+</span></button>
+
+          <div className='flex justify-between w-[30%]'>
+            <button onClick={() => router.back()} className='border sm:mt-4 rounded-md border-purple text-purple p-3'>Go Back</button>
+            <button onClick={() => setLessons([...lessons, lesson])} className='border sm:mt-4 rounded-md border-purple text-purple p-3'>Add Lesson <span className='font-medium ml-3'>+</span></button>
+          </div>
         </div>
         <div>
           {lessons.map((single, index) => <div key={index}>
@@ -202,24 +200,24 @@ const NewCourse = () => {
                 <div className='flex'>
                   <img className='w-8' src="/file_upload.png" alt="" />
                   <input
-              type="file"
-              onChange={(e) => handleVideoChange(e, index)}
-              className="my-2 w-[100%] hidden max-w-[400px] lg:w-[100rem]"
-              ref={uploadRef}
-            />
-                 <p className='my-auto ml-3' onClick={() => uploadRef.current.click()} >CLick to upload video</p>
+                    type="file"
+                    onChange={(e) => handleVideoChange(e, index)}
+                    className="my-2 w-[100%] hidden max-w-[400px] lg:w-[100rem]"
+                    ref={uploadRef}
+                  />
+                  <p className='my-auto ml-3' onClick={() => uploadRef.current.click()} >CLick to upload video</p>
                 </div>
                 {single.videoFile && (
-            <button
-              onClick={() => handleVideoUpload(index)}
-              className='p-2 mt-2 bg-purple text-white rounded-md'
-            >
-              Upload Video
-            </button>
-          )}
-          {single.videoUrl && (
-            <p className="text-green-500 mt-2">Video uploaded successfully!</p>
-          )}
+                  <button
+                    onClick={() => handleVideoUpload(index)}
+                    className='p-2 mt-2 bg-purple text-white rounded-md'
+                  >
+                    Upload Video
+                  </button>
+                )}
+                {single.videoUrl && (
+                  <p className="text-green-500 mt-2">Video uploaded successfully!</p>
+                )}
               </div>
               <div className='my-3'>
                 <label htmlFor="">Description</label>
@@ -233,15 +231,17 @@ const NewCourse = () => {
           </div>)}
         </div>
         <div className='mt-6'>
-          <button onClick={() => createCourse()} className='p-3 w-full text-white bg-purple rounded-md '>{loading ? <Spinner /> : 'Save'}</button>
+          <button onClick={() => createOrUpdateCourse()} className='p-3 w-full text-white bg-purple rounded-md '>{loading ? <Spinner /> : 'Save'}</button>
         </div>
       </div> : <div>
-        <h1 className='text-4xl font-bold'>Course Upload</h1>
+        <h1 className='text-4xl font-bold'>{page ? 'Edit Course' : 'Course Upload'}</h1>
         <div className='lg:flex mt-5 justify-between'>
           <div className='lg:w-[27%] lg:order-1 mt-11'>
-            {img ? <img className='mx-auto' src={img} alt="" /> : <div className='bg-white p-6 rounded-md w-full'>
-              <img className='mx-auto' src="/file_upload.png" alt="" />
-            </div>}
+            {img ?
+              <img className='mx-auto' src={img} alt="" /> :
+              <div className='bg-white p-6 rounded-md w-full'>
+                <img className='mx-auto' src="/file_upload.png" alt="" />
+              </div>}
             <input
               id={`img`}
               type="file"
