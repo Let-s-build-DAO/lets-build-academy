@@ -116,7 +116,7 @@ const AdminSideNav = ({ setShowBar }) => {
     <>
       <div onClick={() => setShowBar()} className='bg-[#000] lg:hidden opacity-20 w-full h-screen sm:fixed top-0 right-0 left-0'></div>
       <aside className='p-6 bg-white h-screen fixed lg:w-[20%] z-10 w-[70%]'>
-        <img src="/academylogo.png" className='mb-10' alt="" />
+        <img src="/academylogo.png" className='mb-10 w-40' alt="" />
         {
           nav?.map((item, idx) => (
             <Link href={item.href} key={idx}>
