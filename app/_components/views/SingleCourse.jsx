@@ -15,6 +15,7 @@ import {
   query,
   updateDoc,
 } from "firebase/firestore";
+import CodeEditor from '../CodeEditor'
 
 import firebase_app from "../../firebase/config";
 import { toast } from "react-toastify";
@@ -81,37 +82,38 @@ const SingleCourse = ({ data, userId, courseId }) => {
   };
 
   return data && lesson ? (
-    <section className="">
+    <section className="mt-4">
       <div className="flex justify-between">
         <div className={active?.handsOn ? "w-1/2" : "w-full"}>
           <div className="flex my-3 justify-between">
             <button onClick={handlePreviousLesson} disabled={lesson === 1}>
               <img src="/arrow_circle_left.png" alt="Previous Lesson" />
             </button>
-            <div className="text-center lg:w-1/2 w-[70%]">
+            <div className="text-center lg:w-[60%] w-[70%]">
               <p className="font-bold">Lesson {lesson}</p>
-              <h1 className="font-bold lg:text-3xl">{active?.title}</h1>
+              <h1 className="font-bold lg:text-xl">{active?.title}</h1>
               <p>{active?.subtitle}</p>
             </div>
             <button
               onClick={handleNextLesson}
-              // disabled={lesson === data?.lessons.length}
+            // disabled={lesson === data?.lessons.length}
             >
               <img src="/arrow_circle_right.png" alt="Next Lesson" />
             </button>
           </div>
           {active?.videoUrl && (
             <video
-              className="custom-video"
+              className="custom-video w-full"
               src={active.videoUrl}
               controls
-              width={300}
               height={300}
             ></video>
           )}
           <MdPreview editorId={id} modelValue={active?.body} />
         </div>
-        {active?.handsOn ? <div className="w-1/2"></div> : null}
+        {active?.handsOn ? <div className="w-[48%]">
+          <CodeEditor courseName={data?.title} />
+        </div> : null}
       </div>
       {/* <MdCatalog editorId={id} scrollElement={scrollElement} /> */}
     </section>
