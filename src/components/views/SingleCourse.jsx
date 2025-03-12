@@ -15,7 +15,7 @@ import {
   query,
   updateDoc,
 } from "firebase/firestore";
-import CodeEditor from '../CodeEditor'
+import CodeEditor from "../CodeEditor";
 
 import firebase_app from "../../firebase/config";
 import { toast } from "react-toastify";
@@ -28,8 +28,18 @@ const SingleCourse = ({ data, userId, courseId }) => {
   const [active, setActive] = useState(data?.lessons[0]);
   const [lesson, setLesson] = useState(0);
 
+  // useEffect(() => {
+  //   updateCourseProgress();
+  // });
+
   const updateCourseProgress = async (courseId, completedLessons) => {
     try {
+      if (!courseId) {
+        throw new Error("courseId is undefined");
+      }
+      if (!userId) {
+        throw new Error("userId is undefined");
+      }
       const courseRef = doc(db, "courses", courseId);
       const courseSnapshot = await getDoc(courseRef);
 
@@ -48,12 +58,24 @@ const SingleCourse = ({ data, userId, courseId }) => {
         userId
       );
 
-      await updateDoc(enrollmentRef, {
-        progress: progress,
-        lastUpdated: serverTimestamp(),
-      });
+      // await updateDoc(enrollmentRef, {
+      //   progress: progress,
+      //   lastUpdated: serverTimestamp(),
+      // });
+
+      await setDoc(
+        enrollmentRef,
+        {
+          progress: progress,
+          lastLesson: completedLessons,
+          lastUpdated: serverTimestamp(),
+        },
+        { merge: true }
+      );
 
       console.log("Progress updated successfully:", progress);
+      console.log(progress);
+      console.log(courseSnapshot);
       return progress;
     } catch (error) {
       console.error("Error updating course progress:", error);
@@ -67,8 +89,10 @@ const SingleCourse = ({ data, userId, courseId }) => {
 
   const handleNextLesson = async () => {
     if (lesson < data?.lessons.length) {
-      setLesson(lesson + 1);
-      await updateCourseProgress(courseId, lesson + 1);
+      const nextLesson = lesson + 1;
+      setLesson(nextLesson);
+      setActive(data?.lessons[nextLesson - 1]);
+      await updateCourseProgress(courseId, nextLesson);
     } else {
       toast.success("Congratulations! You have completed the course.");
     }
@@ -76,10 +100,16 @@ const SingleCourse = ({ data, userId, courseId }) => {
 
   const handlePreviousLesson = async () => {
     if (lesson > 1) {
-      setLesson(lesson - 1);
-      await updateCourseProgress(courseId, lesson + 1);
+      const prevLesson = lesson - 1;
+      setLesson(prevLesson);
+      setActive(data?.lessons[prevLesson - 1]);
+      await updateCourseProgress(courseId, prevLesson);
     }
   };
+
+  useEffect(() => {
+    console.log(lesson);
+  }, [lesson]);
 
   return data && lesson ? (
     <section className="mt-4">
@@ -96,7 +126,7 @@ const SingleCourse = ({ data, userId, courseId }) => {
             </div>
             <button
               onClick={handleNextLesson}
-            // disabled={lesson === data?.lessons.length}
+              // disabled={lesson === data?.lessons.length}
             >
               <img src="/arrow_circle_right.png" alt="Next Lesson" />
             </button>
@@ -111,9 +141,11 @@ const SingleCourse = ({ data, userId, courseId }) => {
           )}
           <MdPreview editorId={id} modelValue={active?.body} />
         </div>
-        {active?.handsOn ? <div className="w-[48%]">
-          <CodeEditor courseName={data?.title} />
-        </div> : null}
+        {active?.handsOn ? (
+          <div className="w-[48%]">
+            <CodeEditor courseName={data?.lessons[lesson - 1]?.title} />
+          </div>
+        ) : null}
       </div>
       {/* <MdCatalog editorId={id} scrollElement={scrollElement} /> */}
     </section>
