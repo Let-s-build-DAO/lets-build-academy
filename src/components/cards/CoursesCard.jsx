@@ -4,10 +4,16 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import {
   doc,
-  getFirestore, getDocs, collection, serverTimestamp, setDoc, where, query
+  getFirestore,
+  getDocs,
+  collection,
+  serverTimestamp,
+  setDoc,
+  where,
+  query,
 } from "firebase/firestore";
 import firebase_app from "../../firebase/config";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 const db = getFirestore(firebase_app);
 
@@ -18,9 +24,12 @@ const CoursesCard = ({ course, userId }) => {
   const twoColors = { "0%": "#40196C", "100%": "#40196C" };
 
   useEffect(() => {
-    const checkEnrollment = async () => {   
+    const checkEnrollment = async () => {
       try {
-        const enrollmentRef = collection(db, `courses/${course.id}/enrolledStudents`);
+        const enrollmentRef = collection(
+          db,
+          `courses/${course.id}/enrolledStudents`
+        );
         const q = query(enrollmentRef, where("userId", "==", userId));
         const querySnapshot = await getDocs(q);
 
@@ -28,7 +37,7 @@ const CoursesCard = ({ course, userId }) => {
           setIsEnrolled(true);
           localStorage.setItem(`enrolled_${course.id}`, "true");
           const enrollmentDoc = querySnapshot.docs[0];
-          setProgress(enrollmentDoc.data().progress); 
+          setProgress(enrollmentDoc.data().progress);
         } else {
           const enrolledStatus = localStorage.getItem(`enrolled_${course.id}`);
           if (enrolledStatus === "true") {
@@ -38,16 +47,18 @@ const CoursesCard = ({ course, userId }) => {
       } catch (error) {
         toast.error("Error checking enrollment status: ", error);
       }
-
-    };    
+    };
     checkEnrollment();
   }, [course.id, userId]);
 
   const enrollUser = async () => {
-    try { 
-         
-      const courseRef = doc(db,`courses/${course.id}/enrolledStudents`, userId);;
-      await setDoc(courseRef, { 
+    try {
+      const courseRef = doc(
+        db,
+        `courses/${course.id}/enrolledStudents`,
+        userId
+      );
+      await setDoc(courseRef, {
         userId: userId,
         progress: 0,
         enrolledAt: serverTimestamp(),
@@ -55,7 +66,7 @@ const CoursesCard = ({ course, userId }) => {
 
       setIsEnrolled(true);
       localStorage.setItem(`enrolled_${course.id}`, "true");
-      toast.success("Enrolled Successfully!")
+      toast.success("Enrolled Successfully!");
     } catch (error) {
       toast.error("Error enrolling");
     }
