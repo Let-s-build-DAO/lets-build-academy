@@ -6,7 +6,6 @@ import { collection, getDocs, getFirestore } from "firebase/firestore";
 import firebase_app from "../../firebase/config";
 import Link from "next/link";
 
-
 const db = getFirestore(firebase_app);
 
 const DisplayCourses = () => {
@@ -20,7 +19,7 @@ const DisplayCourses = () => {
           id: doc.id,
           ...doc.data(),
         }));
-        console.log(coursesData)
+        console.log(coursesData);
         setCourses(coursesData);
       } catch (error) {
         console.error("Error fetching courses:", error);
@@ -31,11 +30,19 @@ const DisplayCourses = () => {
   }, []);
   return (
     <main className="grid lg:grid-cols-3 grid-cols-1 sm:p-4 mt-12 ">
-      {courses.map(course => (
-        <div key={course.id} className="first-div text-white mb-8 sm:mb-5">
+      {courses.map((course) => (
+        <Link
+          href={`/courses/${course.id}`}
+          key={course.id}
+          className="first-div text-white mb-8 sm:mb-5"
+        >
           {/* <Image src={course.imgUrl} alt="Course Image" width={380} height={350} /> */}
           {/* <Link href={"/user/courses"}> */}
-          <img src={course.imgUrl} alt="Course Image" className="w-[350px] h-[200px]" />
+          <img
+            src={course.imgUrl}
+            alt="Course Image"
+            className="w-[350px] h-[200px]"
+          />
           <div className="mt-4 justify-center">
             {/* <div className="my-auto">
               <Image src="/Ellipse 1.png" alt="Instructor Image" width={40} height={50} />
@@ -46,8 +53,7 @@ const DisplayCourses = () => {
             </div>
           </div>
           {/* </Link> */}
-
-        </div>
+        </Link>
       ))}
     </main>
   );

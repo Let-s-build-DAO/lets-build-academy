@@ -21,6 +21,7 @@ import { onAuthStateChanged, getAuth } from "firebase/auth";
 import firebase_app from "../../firebase/config";
 import CoursesCard from "../../components/cards/CoursesCard";
 import { toast } from "react-toastify";
+import UserLeaderboard from "@/src/components/UserLeaderboard";
 
 const auth = getAuth(firebase_app);
 const db = getFirestore(firebase_app);
@@ -72,7 +73,7 @@ const Dashboard = () => {
       const coursesSnapshot = await getDocs(coursesQuery);
       let recentCourse = null;
       let recentTimestamp = null;
-      let recentProgress = 0; 
+      let recentProgress = 0;
 
       for (const courseDoc of coursesSnapshot.docs) {
         const enrollmentsRef = collection(
@@ -88,22 +89,23 @@ const Dashboard = () => {
 
         if (!enrollmentSnapshot.empty) {
           const enrollmentDoc = enrollmentSnapshot.docs[0];
-         
-          
 
           const enrolledAt = enrollmentDoc.data().enrolledAt.toDate();
-          const lastUpdated = enrollmentDoc.data().lastUpdate ?  enrollmentDoc.data().lastUpdated.toDate() : enrolledAt;
+          const lastUpdated = enrollmentDoc.data().lastUpdate
+            ? enrollmentDoc.data().lastUpdated.toDate()
+            : enrolledAt;
 
-          const latestTimestamp = lastUpdated > enrolledAt ? lastUpdated : enrolledAt;
+          const latestTimestamp =
+            lastUpdated > enrolledAt ? lastUpdated : enrolledAt;
           // if (!recentTimestamp || enrolledAt > recentTimestamp) {
           //   recentCourse = { id: courseDoc.id, ...courseDoc.data() };
-        
+
           //   recentTimestamp = enrolledAt;
           // }
           if (!recentTimestamp || latestTimestamp > recentTimestamp) {
             recentCourse = { id: courseDoc.id, ...courseDoc.data() };
             recentTimestamp = latestTimestamp;
-            recentProgress = enrollmentDoc.data().progress;  
+            recentProgress = enrollmentDoc.data().progress;
           }
         }
       }
@@ -283,11 +285,11 @@ const Dashboard = () => {
   return (
     <AdminLayout>
       <section className="my-6 lg:flex justify-between">
-        <div>
+        <div className="mt-10 lg:mt-0">
           <h1 className="text-4xl capitalize font-bold">
             Hey {user?.username} 👋
           </h1>
-          <p className="text-sm">Let’s Learn something new today!!</p>
+          <p className="text-sm mt-5">Let’s Learn something new today!!</p>
         </div>
         <Link href={"/user/courses "}>
           <button className="text-purple sm:my-3 flex my-auto">
@@ -301,37 +303,35 @@ const Dashboard = () => {
         </Link>
       </section>
       <section className="lg:flex">
-        <div className="lg:w-[75%]">
+        <div className="lg:w-[65%]">
           {recentCourse && (
-            <div className="p-4 lg:flex justify-between bg-white rounded-md mb-3">
-              <div className="flex">
+            <div className="p-4 lg:flex justify-between items-center bg-white rounded-lg mb-3">
+              <div className="flex gap-3 items-center">
                 <img
-                  className="h-4 w-4 my-auto mx-4"
+                  className="h-8 w-8 my-auto mx-4"
                   src="./images/icons/local_library.svg"
                   alt=""
                 />
                 <div className="my-auto w-44">
-                  <h4 className="font-bold my-3 text-sm">
-                    {recentCourse.title}
-                  </h4>
-                  <p className="text-xs my-3">{recentCourse.author}</p>
+                  <h4 className="font-bold my-3 text-lg">Learn Solidity</h4>
+                  <p className="text-xs my-3">Great Adams</p>
                 </div>
                 <Progress
                   type="circle"
-                  percent={progress}
+                  percent={75}
                   strokeColor={twoColors}
-                  size={70}
+                  size={60}
                 />
               </div>
-              <Link href={`/user/courses/${recentCourse.id}`}>
-              <button className="p-3 sm:mt-4 h-12 my-auto px-6 bg-purple text-white rounded-md ">
-                Continue
-              </button>
+              <Link href="/">
+                <button className="py-3 sm:mt-4 my-auto px-7 bg-purple text-white rounded-full ">
+                  Continue
+                </button>
               </Link>
-           
             </div>
           )}
-          <div className="my-3 lg:flex justify-between gap-2">
+
+          <div className="my-3 mt-5 lg:flex justify-between gap-2">
             <UserCountCard
               text={"Total Enrolled Courses"}
               count={totalEnrolledCourses}
@@ -345,44 +345,43 @@ const Dashboard = () => {
               count={coursesInProgress}
             />
           </div>
-          {/* <div className='my-3 bg-white p-4 rounded-md'>
-            <h3 className='text-sm mb-4 font-bold'>Leaderboard</h3>
-            <table className='w-full'>
-              <tr className='text-sm text-[#5C555E]'>
-                <th className='lg:w-40 w-10'>Rank</th>
-                <th className=''>Name</th>
-                <th className='text-center'>Percentage</th>
-              </tr>
-              <tr className='text-sm'>
-                <td className='py-4'>1</td>
-                <td className='font-bold text-center'>Sunday Kingsley</td>
-                <td className='text-purple text-center'>95%</td>
-              </tr>
-              <tr className='text-sm'>
-                <td className='py-2'>1</td>
-                <td className='font-bold text-center'>Sunday Kingsley</td>
-                <td className='text-purple text-center'>95%</td>
-              </tr>
-              <tr className='text-sm'>
-                <td className='py-2'>1</td>
-                <td className='font-bold text-center'>Sunday Kingsley</td>
-                <td className='text-purple text-center'>95%</td>
-              </tr>
-            </table>
-          </div> */}
+          <UserLeaderboard />
         </div>
-        <div className="lg:w-[25%] ml-4">
-          <ProfileCard  user={user}/>
-          {/* <div className='mt-4 bg-white p-4 rounded-md'>
-            <h3 className='text-sm font-bold'>Performance</h3>
-
-            <div className='flex my-4 justify-between'>
-              <img className='w-6 h-6 my-auto' src="/images/disappointed-face.png" alt="" />
-              <Progress type="dashboard" percent={75} strokeColor={twoColors} />
-              <img className='w-6 h-6 my-auto' src="/images/savouring-food.png" alt="" />
+        <div className="lg:w-[35%] mt-10 lg:mt-0 lg:ml-4">
+          <ProfileCard user={user} />
+          <div className="mt-4 bg-white p-4 rounded-md">
+            <div className="flex justify-between">
+              <h3 className="text-sm font-bold">Performance</h3>
+              <select
+                // value={selectedOption}
+                // onChange={(e) => setSelectedOption(e.target.value)}
+                className="text-sm py-2 px-4 rounded-mg"
+              >
+                <option value="monthly">Monthly</option>
+                <option value="daily">Daily</option>
+                <option value="yearly">Yearly</option>
+              </select>
             </div>
-            <p className='text-xs text-center'>Your Progress: 80%</p>
-          </div> */}
+
+            <div className="flex my-4 justify-between">
+              <img
+                className="w-6 h-6 my-auto"
+                src="/images/disappointed-face.png"
+                alt=""
+              />
+              <Progress
+                type="dashboard"
+                percent={progress}
+                strokeColor={twoColors}
+              />
+              <img
+                className="w-6 h-6 my-auto"
+                src="/images/savouring-food.png"
+                alt=""
+              />
+            </div>
+            <p className="text-xs text-center">Your Progress: {progress}%</p>
+          </div>
         </div>
       </section>
       <section>
