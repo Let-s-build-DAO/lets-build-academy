@@ -38,7 +38,7 @@ const CoursePage = () => {
 
   return (
     <MainLayout>
-      <div style={{ backgroundImage: `url("/BackgroundImage.jpg")` }}>
+      <div>
         <div className="p-6 max-w-5xl mx-auto py-32">
           {loading ? (
             <p className="text-center">Loading...</p>
