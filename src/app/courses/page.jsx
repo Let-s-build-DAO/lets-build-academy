@@ -1,26 +1,31 @@
-import React from 'react';
-import MainLayout from '../../layouts/MainLayout';
-import Hero from '../../components/Hero';
-import Link from 'next/link';
-import Image from 'next/image'
-import DisplayCourses from '../../components/cards/DisplayCourses';
-
+import React from "react";
+import MainLayout from "../../layouts/MainLayout";
+import Hero from "../../components/Hero";
+import Link from "next/link";
+import Image from "next/image";
+import DisplayCourses from "../../components/cards/DisplayCourses";
 
 const courses = () => {
   return (
     <MainLayout>
       <section>
         <Hero text="Our Premium Courses" />
-        <section className='bg-purple lg:p-16 sm:py-16 p-4 content'>
-          <div className='flex mb-8 justify-end'>
-            <input type="text" placeholder='Search' className='bg-purple p-2 lg:w-[30%] w-full text-white border border-white rounded-md' />
+        <section className="bg-purple lg:p-16 sm:py-16 p-4 content">
+          <div className="flex mb-8 justify-end">
+            <input
+              type="text"
+              placeholder="Search"
+              className="bg-purple p-2 lg:w-[30%] w-full text-white border border-white rounded-md"
+            />
           </div>
           <div className="lg:flex justify-between text-white px-4 ">
-            <h1 className="font-bold text-2xl lg:w-52 lg:text-3xl">Explore Our Courses</h1>
+            <h1 className="font-bold text-2xl lg:w-52 lg:text-3xl">
+              Explore Our Courses
+            </h1>
             <Link href={"/courses"}>
-              <div className='flex'>
+              <div className="flex">
                 <p className="text-xs sm:text-lg">Explore All Courses </p>
-                <img className='ml-3 w-4' src="/east.png" alt="" />
+                <img className="ml-3 w-4" src="/east.png" alt="" />
               </div>
             </Link>
           </div>

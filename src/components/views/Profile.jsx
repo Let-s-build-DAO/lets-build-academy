@@ -22,7 +22,7 @@ const Profile = () => {
   const updateData = async () => {
     setLoading(true);
     try {
-      const userDoc = doc(db, "usersProd", user.id); 
+      const userDoc = doc(db, "usersProd", user.id);
       await updateDoc(userDoc, {
         info: bio,
         socials: {
@@ -53,16 +53,27 @@ const Profile = () => {
   return (
     <AdminLayout>
       <section className="lg:flex mt-8">
-        <div className="lg:w-[70%]">
+        <div className="lg:w-[60%]">
           <h1 className="text-4xl font-bold">Profile Details</h1>
-          {/* <div className='my-2'>
-            <label className='text-sm'>First Name</label>
-            <input type="text" className='p-3 my-1 bg-white w-full rounded-md' />
+          <div></div>
+          <div className="my-2 mt-10">
+            <label className="text-sm">First Name</label>
+            <input
+              disabled
+              value={user?.firstname}
+              type="text"
+              className="p-3 my-1 bg-white w-full rounded-md"
+            />
           </div>
-          <div className='my-2'>
-            <label className='text-sm'>Last Name</label>
-            <input type="text" className='p-3 my-1 bg-white w-full rounded-md' />
-          </div> */}
+          <div className="my-2">
+            <label className="text-sm">Last Name</label>
+            <input
+              disabled
+              value={user?.lastname}
+              type="text"
+              className="p-3 my-1 bg-white w-full rounded-md"
+            />
+          </div>
           <div className="my-2">
             <label className="text-sm">Username</label>
             <input
@@ -86,19 +97,19 @@ const Profile = () => {
             <textarea
               value={bio}
               onChange={(e) => setBio(e.target.value)}
-              className="h-36 p-3 my-1 bg-white w-full rounded-md"
+              className="resize-none h-40 p-3 my-1 bg-white w-full rounded-md"
             ></textarea>
           </div>
           <div className="my-2">
             <button
               onClick={updateData}
-              className="w-20 bg-purple rounded-md text-sm p-3 text-white"
+              className="w-full bg-purple rounded-md text-sm p-3 text-white"
             >
               {loading ? <Spinner /> : "Save"}
             </button>
           </div>
         </div>
-        <div className="lg:w-[30%] lg:ml-6">
+        <div className="lg:w-[40%] lg:ml-6">
           <ProfileCard />
           <div className="bg-[#CECCCF] text-[#848086] flex my-3 rounded-md">
             <p className="p-3 text-xs w-80 ">https://twitter.com/</p>
