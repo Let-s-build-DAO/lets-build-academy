@@ -41,7 +41,8 @@ const NewCourse = () => {
     category: "",
     videoFile: null,
     videoUrl: "",
-    handsOn: false
+    handsOn: false, 
+    editor: []
   }
   const [lessons, setLessons] = useState([lesson])
 
@@ -180,6 +181,31 @@ const NewCourse = () => {
                   <option value="article">Article</option>
                 </select>
               </div>
+              <div className='lg:w-[49%] sm:my-3'>
+                <label htmlFor="">Lesson Code Editor</label>
+                <div className="flex flex-col mt-2">
+                  {["html", "css", "js", "solidity"].map((option) => (
+                    <label key={option} className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        value={option}
+                        checked={single.editor.includes(option)}
+                        onChange={(e) => {
+                          const selectedEditors = single.editor.includes(option)
+                            ? single.editor.filter((lang) => lang !== option)
+                            : [...single.editor, option]; 
+                          handleLessonInputChange(index, "editor", selectedEditors);
+                        }}
+                        className="mr-2"
+                      />
+                      <span className="capitalize">{option}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className='lg:flex justify-between lg:my-3'>
+             
               <div className='lg:w-[49%] sm:my-3'>
                 <label htmlFor="">Hands On</label>
                 <div className='mt-3'>
