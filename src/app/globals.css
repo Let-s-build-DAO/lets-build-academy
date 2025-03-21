@@ -1,14 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
 body {
-  background-color: #F3F3F3 !important;
+  background-color: #f3f3f3 !important;
   overflow-x: hidden;
-  font-family: 'Poppins' !important;
+  font-family: "Poppins" !important;
 }
 
 .content {
@@ -24,8 +23,7 @@ button:focus {
   outline: none;
 }
 
-
-.switch input { 
+.switch input {
   opacity: 0;
   width: 0;
   height: 0;
@@ -38,7 +36,7 @@ button:focus {
   height: 24px;
 }
 
-.switch input { 
+.switch input {
   opacity: 0;
   width: 0;
   height: 0;
@@ -53,8 +51,8 @@ button:focus {
   right: 0;
   bottom: 0;
   background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 .slider:before {
@@ -66,16 +64,16 @@ button:focus {
   left: 3px;
   bottom: 4px;
   background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 input:checked + .slider {
-  background-color: #8F0FBA;
+  background-color: #8f0fba;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #8F0FBA;
+  box-shadow: 0 0 1px #8f0fba;
 }
 
 input:checked + .slider:before {
