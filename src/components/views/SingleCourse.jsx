@@ -19,6 +19,7 @@ import CodeEditor from "../CodeEditor";
 
 import firebase_app from "../../firebase/config";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 const db = getFirestore(firebase_app);
 
@@ -27,59 +28,59 @@ const SingleCourse = ({ data, userId, courseId }) => {
   const [id] = useState("preview-only");
   const [active, setActive] = useState(data?.lessons[0]);
   const [lesson, setLesson] = useState(0);
+  const router = useRouter;
 
   // useEffect(() => {
   //   updateCourseProgress();
   // });
 
+  useEffect(() => {
+    const fetchProgress = async () => {
+      try {
+        const enrollmentRef = doc(
+          db,
+          `courses/${courseId}/enrolledStudents`,
+          userId
+        );
+        const enrollmentSnapshot = await getDoc(enrollmentRef);
+
+        if (enrollmentSnapshot.exists()) {
+          const enrollmentData = enrollmentSnapshot.data();
+          const lastLesson = enrollmentData.lastLesson || 1;
+          setLesson(lastLesson);
+          setActive(data?.lessons[lastLesson - 1]);
+        } else {
+          setLesson(1);
+          setActive(data?.lessons[0]);
+        }
+      } catch (error) {
+        console.error("Error fetching progress:", error);
+        setLesson(1);
+        setActive(data?.lessons[0]);
+      }
+    };
+
+    fetchProgress();
+  }, [courseId, userId, data?.lessons]);
+
   const updateCourseProgress = async (courseId, completedLessons) => {
     try {
-      if (!courseId) {
-        throw new Error("courseId is undefined");
-      }
-      if (!userId) {
-        throw new Error("userId is undefined");
-      }
-      const courseRef = doc(db, "courses", courseId);
-      const courseSnapshot = await getDoc(courseRef);
-
-      if (!courseSnapshot.exists()) {
-        throw new Error("Course not found");
-      }
-
-      const courseData = courseSnapshot.data();
-      const totalLessons = courseData.lessons.length;
-
-      const progress = Math.round((completedLessons / totalLessons) * 100);
+      if (!courseId || !userId) throw new Error("Missing courseId or userId");
 
       const enrollmentRef = doc(
         db,
         `courses/${courseId}/enrolledStudents`,
         userId
       );
+      const courseProgress = {
+        progress: Math.round((completedLessons / data.lessons.length) * 100),
+        lastLesson: completedLessons,
+        lastUpdated: serverTimestamp(),
+      };
 
-      // await updateDoc(enrollmentRef, {
-      //   progress: progress,
-      //   lastUpdated: serverTimestamp(),
-      // });
-
-      await setDoc(
-        enrollmentRef,
-        {
-          progress: progress,
-          lastLesson: completedLessons,
-          lastUpdated: serverTimestamp(),
-        },
-        { merge: true }
-      );
-
-      console.log("Progress updated successfully:", progress);
-      console.log(progress);
-      console.log(courseSnapshot);
-      return progress;
+      await setDoc(enrollmentRef, courseProgress, { merge: true });
     } catch (error) {
       console.error("Error updating course progress:", error);
-      throw error;
     }
   };
 
@@ -95,6 +96,7 @@ const SingleCourse = ({ data, userId, courseId }) => {
       await updateCourseProgress(courseId, nextLesson);
     } else {
       toast.success("Congratulations! You have completed the course.");
+      router.push("/user/courses");
     }
   };
 
@@ -113,8 +115,8 @@ const SingleCourse = ({ data, userId, courseId }) => {
 
   return data && lesson ? (
     <section className="mt-4">
-      <div className="flex justify-between">
-        <div className={active?.handsOn ? "w-1/2" : "w-full"}>
+      <div className="flex justify-between relative">
+        <div className={`${active?.handsOn ? "w-1/2" : "w-full"}`}>
           <div className="flex my-3 justify-between">
             <button onClick={handlePreviousLesson} disabled={lesson === 1}>
               <img src="/arrow_circle_left.png" alt="Previous Lesson" />
@@ -142,7 +144,7 @@ const SingleCourse = ({ data, userId, courseId }) => {
           <MdPreview editorId={id} modelValue={active?.body} />
         </div>
         {active?.handsOn ? (
-          <div className="w-[48%]">
+          <div className="w-[38%] fixed right-5 top-10">
             <CodeEditor editors={data?.lessons[lesson - 1]?.editor || []} />
           </div>
         ) : null}
@@ -175,7 +177,7 @@ const SingleCourse = ({ data, userId, courseId }) => {
             </div>
             {/* <Link href={'&lesson=0'}> */}
             <button
-              onClick={() => setLesson(1)}
+              onClick={() => setLesson(lesson || 1)}
               className="p-3 rounded-md bg-purple text-white px-10"
             >
               Start
