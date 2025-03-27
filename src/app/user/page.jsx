@@ -330,6 +330,21 @@ const Dashboard = () => {
               </Link>
             </div>
           )}
+          <section>
+            {enrolledCourses.length > 0 && (
+              <div className="mt-7">
+                <div className="flex flex-wrap justify-between">
+                  {enrolledCourses.map((course) => (
+                    <CoursesCard
+                      key={course.id}
+                      course={course}
+                      userId={userId}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+          </section>
 
           <div className="my-3 mt-5 lg:flex justify-between gap-2">
             <UserCountCard
@@ -345,7 +360,7 @@ const Dashboard = () => {
               count={coursesInProgress}
             />
           </div>
-          <UserLeaderboard />
+          {/* <UserLeaderboard /> */}
         </div>
         <div className="lg:w-[35%] mt-10 lg:mt-0 lg:ml-4">
           <ProfileCard user={user} />
@@ -383,18 +398,6 @@ const Dashboard = () => {
             <p className="text-xs text-center">Your Progress: {progress}%</p>
           </div>
         </div>
-      </section>
-      <section>
-        {enrolledCourses.length > 0 && (
-          <div>
-            <h2>My Enrolled Courses</h2>
-            <div className="flex flex-wrap justify-between">
-              {enrolledCourses.map((course) => (
-                <CoursesCard key={course.id} course={course} userId={userId} />
-              ))}
-            </div>
-          </div>
-        )}
       </section>
     </AdminLayout>
   );

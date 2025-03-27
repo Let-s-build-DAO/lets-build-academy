@@ -26,7 +26,7 @@ const AdminLayout = ({ children, header }) => {
     //   }
     //   router.push(`/${user.role}`)
     // }
-  });
+  }, []);
   return (
     <div className="lg:flex">
       <div className={showBar ? "block " : "hidden"}>
