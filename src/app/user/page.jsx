@@ -56,7 +56,13 @@ const Dashboard = () => {
         const enrollmentSnapshot = await getDocs(enrollmentQuery);
 
         if (!enrollmentSnapshot.empty) {
-          enrolledCourses.push({ id: courseDoc.id, ...courseDoc.data() });
+          const enrollmentDoc = enrollmentSnapshot.docs[0];
+          const progress = enrollmentDoc.data().progress;
+          enrolledCourses.push({
+            id: courseDoc.id,
+            ...courseDoc.data(),
+            progress,
+          });
         }
       }
 
@@ -214,6 +220,7 @@ const Dashboard = () => {
       try {
         const courses = await fetchEnrolledCourses(userId);
         setEnrolledCourses(courses);
+        console.log(enrolledCourses);
       } catch (error) {
         toast.error("Error fetching enrolled courses: ", error);
       }
@@ -304,44 +311,50 @@ const Dashboard = () => {
       </section>
       <section className="lg:flex">
         <div className="lg:w-[65%]">
-          {recentCourse && (
-            <div className="p-4 lg:flex justify-between items-center bg-white rounded-lg mb-3">
-              <div className="flex gap-3 items-center">
-                <img
-                  className="h-8 w-8 my-auto mx-4"
-                  src="./images/icons/local_library.svg"
-                  alt=""
-                />
-                <div className="my-auto w-44">
-                  <h4 className="font-bold my-3 text-lg">Learn Solidity</h4>
-                  <p className="text-xs my-3">Great Adams</p>
-                </div>
-                <Progress
-                  type="circle"
-                  percent={75}
-                  strokeColor={twoColors}
-                  size={60}
-                />
-              </div>
-              <Link href="/">
-                <button className="py-3 sm:mt-4 my-auto px-7 bg-purple text-white rounded-full ">
-                  Continue
-                </button>
-              </Link>
-            </div>
-          )}
           <section>
             {enrolledCourses.length > 0 && (
-              <div className="mt-7">
-                <div className="flex flex-wrap justify-between">
-                  {enrolledCourses.map((course) => (
-                    <CoursesCard
-                      key={course.id}
-                      course={course}
-                      userId={userId}
+              <div>
+                <div className="p-4 lg:flex justify-between items-center bg-white rounded-lg mb-3">
+                  <div className="flex gap-3 items-center">
+                    <img
+                      className="h-8 w-8 my-auto mx-4"
+                      src="./images/icons/local_library.svg"
+                      alt=""
                     />
-                  ))}
+                    <div className="my-auto w-44">
+                      <h4 className="font-bold my-3 text-lg">
+                        {enrolledCourses[0].title}
+                      </h4>
+                      <p className="text-xs my-3">
+                        {enrolledCourses[0].author}
+                      </p>
+                    </div>
+                    <Progress
+                      type="circle"
+                      percent={enrolledCourses[0].progress}
+                      strokeColor={twoColors}
+                      size={60}
+                    />
+                  </div>
+                  <Link href={`/user/courses/${enrolledCourses[0].id}`}>
+                    <button className="py-3 sm:mt-4 my-auto px-7 bg-purple text-white rounded-full">
+                      Continue
+                    </button>
+                  </Link>
                 </div>
+                {enrolledCourses.length > 1 && (
+                  <div className="mt-7">
+                    <div className="flex flex-wrap justify-between">
+                      {enrolledCourses.slice(1).map((course) => (
+                        <CoursesCard
+                          key={course.id}
+                          course={course}
+                          userId={userId}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </section>
