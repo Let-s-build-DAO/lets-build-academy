@@ -155,8 +155,8 @@ const NewCourse = () => {
           <h1 className='text-4xl font-bold'>Course Content</h1>
 
           <div className='flex justify-between w-[30%]'>
-            <button onClick={() => router.back()} className='border sm:mt-4 rounded-md border-purple text-purple p-3'>Go Back</button>
-            <button onClick={() => setLessons([...lessons, lesson])} className='border sm:mt-4 rounded-md border-purple text-purple p-3'>Add Lesson <span className='font-medium ml-3'>+</span></button>
+            <button onClick={() => router.back()} className='border sm:mt-4 rounded-full border-purple text-purple p-3'>Go Back</button>
+            <button onClick={() => setLessons([...lessons, lesson])} className='border sm:mt-4 rounded-full border-purple text-purple p-3'>Add Lesson <span className='font-medium ml-3'>+</span></button>
           </div>
         </div>
         <div>
@@ -236,7 +236,7 @@ const NewCourse = () => {
                 {single.videoFile && (
                   <button
                     onClick={() => handleVideoUpload(index)}
-                    className='p-2 mt-2 bg-purple text-white rounded-md'
+                    className='p-2 mt-2 bg-purple text-white rounded-full'
                   >
                     Upload Video
                   </button>
@@ -257,7 +257,7 @@ const NewCourse = () => {
           </div>)}
         </div>
         <div className='mt-6'>
-          <button onClick={() => createOrUpdateCourse()} className='p-3 w-full text-white bg-purple rounded-md '>{loading ? <Spinner /> : 'Save'}</button>
+          <button onClick={() => createOrUpdateCourse()} className='p-3 w-full text-white bg-purple rounded-full '>{loading ? <Spinner /> : 'Save'}</button>
         </div>
       </div> : <div>
         <h1 className='text-4xl font-bold'>{page ? 'Edit Course' : 'Course Upload'}</h1>
@@ -275,7 +275,7 @@ const NewCourse = () => {
               ref={uploadRef}
               className="my-2 w-[100%] hidden max-w-[400px] lg:w-[100rem]"
             />
-            <button onClick={() => uploadRef.current.click()} className='border rounded-md border-purple p-3 w-full bg-white text-purple mt-4'>Browse file</button>
+            <button onClick={() => uploadRef.current.click()} className='border rounded-full border-purple p-3 w-full bg-white text-purple mt-4'>Browse file</button>
           </div>
           <div className='lg:w-[70%] lg:order-0'>
             <div className='my-3'>
@@ -305,7 +305,7 @@ const NewCourse = () => {
             </div>
             <div className='my-3'>
               <Link href={'?content=true'}>
-                <button className='bg-purple w-full p-3 rounded-md text-white'>Next</button>
+                <button className='bg-purple w-full p-3 rounded-full text-white'>Next</button>
               </Link>
             </div>
           </div>

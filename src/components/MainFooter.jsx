@@ -40,7 +40,7 @@ const MainFooter = () => {
         <div className='sm:my-4'>
           <h1 className='font-bold mb-3 text-xl'>Subscribe to our Newsletter</h1>
           <input type="text" className='border sm:w-full p-2 rounded-md border-[#B3B3B4] text-sm' placeholder='Enter Email address' />
-          <button className='p-2 sm:w-full bg-purple text-white lg:ml-2 sm:mt-2 rounded-md'>Send</button>
+          <button className='p-2 sm:w-full bg-purple text-white lg:ml-2 sm:mt-2 rounded-full'>Send</button>
         </div>
       </footer>
       <div className='p-3 text-sm border-t border-[#B3B3B4] text-center'>Copyright © 2024 Lets build Labs. All rights reserved.</div>

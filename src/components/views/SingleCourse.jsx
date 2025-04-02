@@ -178,7 +178,7 @@ const SingleCourse = ({ data, userId, courseId }) => {
             {/* <Link href={'&lesson=0'}> */}
             <button
               onClick={() => setLesson(lesson || 1)}
-              className="p-3 rounded-md bg-purple text-white px-10"
+              className="p-3 rounded-full bg-purple text-white px-10"
             >
               Start
             </button>

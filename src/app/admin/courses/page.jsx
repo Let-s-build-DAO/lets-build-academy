@@ -34,7 +34,7 @@ const Courses = () => {
           <h1 className='text-4xl font-bold'>Courses</h1>
           <div>
             <Link href={'/admin/courses/new'}>
-              <button className='bg-purple p-3 rounded-md px-6 text-white'>Add New</button>
+              <button className='bg-purple p-3 rounded-full px-6 text-white'>Add New</button>
             </Link>
           </div>
         </div>

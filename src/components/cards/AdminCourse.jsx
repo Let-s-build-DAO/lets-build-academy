@@ -38,18 +38,18 @@ const AdminCourse = ({ course, getData }) => {
       </div>
       <div className="flex mt-4 justify-between">
         <Link href={`/admin/courses/single?id=${course.id}`}>
-          <button className="p-2 w-32 h-10 float-right my-auto bg-white border border-purple rounded-md text-purple text-sm px-6">
+          <button className="p-2 w-32 h-10 float-right my-auto bg-white border border-purple rounded-full text-purple text-sm px-6">
             View
           </button>
         </Link>
         <Link href={`/admin/courses/new?id=${course.id}`}>
-          <button className="p-2 w-32 h-10 float-right my-auto bg-white border border-purple rounded-md text-purple text-sm px-6">
+          <button className="p-2 w-32 h-10 float-right my-auto bg-white border border-purple rounded-full text-purple text-sm px-6">
             Edit
           </button>
         </Link>
         <button
           onClick={() => deleteCourse()}
-          className="p-2 w-32 h-10 float-right my-auto bg-white border border-[#FF0000] rounded-md text-[#FF0000] text-sm px-6"
+          className="p-2 w-32 h-10 float-right my-auto bg-white border border-[#FF0000] rounded-full text-[#FF0000] text-sm px-6"
         >
           Delete
         </button>

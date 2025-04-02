@@ -59,7 +59,7 @@ const ConnectWallet = () => {
             </p>
           </div>
 
-          <button onClick={() => open()} className="bg-purple w-full my-4 p-2 rounded-md text-white flex justify-center">
+          <button onClick={() => open()} className="bg-purple w-full my-4 p-2 rounded-full text-white flex justify-center">
             <img src="/images/icons/MetaMask.svg" alt="" />
             <p className="my-auto mx-3">Connect with Metamask</p>
           </button>
@@ -78,7 +78,7 @@ const ConnectWallet = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <button className='bg-purple p-3 rounded-md text-white px-6'>Claim our NFT</button>
+            <button className='bg-purple p-3 rounded-full text-white px-6'>Claim our NFT</button>
           </a>
         </div>
       </Modal>

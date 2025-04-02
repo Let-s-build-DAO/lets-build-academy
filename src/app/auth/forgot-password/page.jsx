@@ -51,7 +51,7 @@ const ForgotPassword = () => {
       <div className="my-6">
         <button
           onClick={handlePasswordReset}
-          className="bg-purple rounded-md w-full text-white p-3"
+          className="bg-purple rounded-full w-full text-white p-3"
           disabled={loading}
         >
           {loading ? <Spinner /> : 'Reset Password'}

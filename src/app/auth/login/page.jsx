@@ -132,7 +132,7 @@ const Login = () => {
           <div className="my-6">
             <button
               onClick={() => getIn()}
-              className="bg-purple rounded-md w-full text-white p-3"
+              className="bg-purple rounded-full w-full text-white p-3"
             >
               {loading ? <Spinner /> : "Login"}
             </button>

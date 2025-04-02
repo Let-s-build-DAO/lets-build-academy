@@ -56,7 +56,7 @@ const Profile = () => {
         <div className="lg:w-[60%]">
           <h1 className="text-4xl font-bold">Profile Details</h1>
           <div></div>
-          <div className="my-2 mt-10">
+          {/* <div className="my-2 mt-10">
             <label className="text-sm">First Name</label>
             <input
               disabled
@@ -73,7 +73,7 @@ const Profile = () => {
               type="text"
               className="p-3 my-1 bg-white w-full rounded-md"
             />
-          </div>
+          </div> */}
           <div className="my-2">
             <label className="text-sm">Username</label>
             <input
@@ -103,7 +103,7 @@ const Profile = () => {
           <div className="my-2">
             <button
               onClick={updateData}
-              className="w-full bg-purple rounded-md text-sm p-3 text-white"
+              className="w-full bg-purple rounded-full text-sm p-3 text-white"
             >
               {loading ? <Spinner /> : "Save"}
             </button>
