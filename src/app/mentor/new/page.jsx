@@ -31,7 +31,7 @@ const NewCourse = () => {
       {content ? <div>
         <div className='lg:flex justify-between'>
           <h1 className='text-4xl font-bold'>Course Content</h1>
-          <button onClick={() => setLessons([...lessons, lesson])} className='border sm:mt-4 rounded-md border-purple text-purple p-3'>Add Lesson <span className='font-medium ml-3'>+</span></button>
+          <button onClick={() => setLessons([...lessons, lesson])} className='border sm:mt-4 rounded-full border-purple text-purple p-3'>Add Lesson <span className='font-medium ml-3'>+</span></button>
         </div>
         <div>
           {lessons.map((single, index) => <div key={index}>
@@ -81,7 +81,7 @@ const NewCourse = () => {
           </div>)}
         </div>
         <div className='mt-6'>
-          <button className='p-3 w-full text-white bg-purple rounded-md '>Save</button>
+          <button className='p-3 w-full text-white bg-purple rounded-full '>Save</button>
         </div>
       </div> : <div>
         <h1 className='text-4xl font-bold'>Course Upload</h1>
@@ -90,7 +90,7 @@ const NewCourse = () => {
             <div className='bg-white p-6 rounded-md w-full'>
               <img className='mx-auto' src="/file_upload.png" alt="" />
             </div>
-            <button className='border rounded-md border-purple p-3 w-full bg-white text-purple mt-4'>Browse file</button>
+            <button className='border rounded-full border-purple p-3 w-full bg-white text-purple mt-4'>Browse file</button>
           </div>
           <div className='lg:w-[70%] lg:order-0'>
             <div className='my-3'>
@@ -115,7 +115,7 @@ const NewCourse = () => {
             </div>
             <div className='my-3'>
               <Link href={'/mentor/new?content=true'}>
-                <button className='bg-purple w-full p-3 rounded-md text-white'>Next</button>
+                <button className='bg-purple w-full p-3 rounded-full text-white'>Next</button>
               </Link>
             </div>
           </div>

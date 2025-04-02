@@ -73,7 +73,7 @@ const PersonalInfo = () => {
             <textarea onChange={e => setInfo(e.target.value)} value={info} className="p-3 w-full h-32 rounded-md" placeholder="Tell us about yourself"></textarea>
           </div>
           <div className="my-6">
-            <button onClick={() => signUp()} className="bg-purple rounded-md w-full text-white p-3">{loading ? <Spinner /> : 'Sign Up'}</button>
+            <button onClick={() => signUp()} className="bg-purple rounded-full w-full text-white p-3">{loading ? <Spinner /> : 'Sign Up'}</button>
           </div>
         </div>
 

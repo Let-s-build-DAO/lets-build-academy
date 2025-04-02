@@ -24,7 +24,7 @@ const Auth = () => {
 
         </div>
         <div className="mt-10">
-          <Link href={'/user'}><input type="button" value={"Verify"} className="p-3 text-white rounded-md bg-purple w-full" /></Link>
+          <Link href={'/user'}><input type="button" value={"Verify"} className="p-3 text-white rounded-full bg-purple w-full" /></Link>
         </div>
       </div>
     </div>

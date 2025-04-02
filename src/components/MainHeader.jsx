@@ -46,7 +46,7 @@ const MainHeader = () => {
             </ul>
           </nav>
           <Link className="sm:hidden" href={"/auth"}>
-            <button className="bg-purple flex text-white font-medium p-3 px-8 rounded-3xl ml-5">
+            <button className="bg-purple flex text-white font-medium p-3 px-8 rounded-full ml-5">
               Start Learning
               <img className="ml-3" src="/east.png" alt="" />
             </button>
@@ -83,7 +83,7 @@ const MainHeader = () => {
           <p className="my-4 font-bold">
             <Link href={"/contact"}>Contact</Link>
           </p>
-          <button className="bg-white text-purple font-medium p-2 px-8 rounded-md w-full">
+          <button className="bg-white text-purple font-medium p-2 px-8 rounded-full w-full">
             Start Learning
           </button>
         </div>

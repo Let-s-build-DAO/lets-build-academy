@@ -13,7 +13,7 @@ const Mentor = () => {
           <p className='text-sm'>Keep track of your courses!!!</p>
         </div>
         <Link href={'/mentor/new'}>
-          <button className='bg-purple p-3 px-6 sm:mt-4 rounded-md text-white flex my-auto'>
+          <button className='bg-purple p-3 px-6 sm:mt-4 rounded-full text-white flex my-auto'>
             <p className='text-sm'>Add Course</p>
             <img className='h-3 w-3 my-auto ml-3' src="/images/icons/arrow-white.svg" alt="" />
           </button>

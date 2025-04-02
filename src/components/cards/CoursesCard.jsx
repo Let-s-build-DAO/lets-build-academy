@@ -95,7 +95,7 @@ const CoursesCard = ({ course, userId }) => {
           />
         ) : (
           <button
-            className="p-2 h-10 my-auto bg-white border border-purple rounded-md text-purple text-sm px-6"
+            className="p-2 h-10 my-auto bg-white border border-purple rounded-full text-purple text-sm px-6"
             onClick={enrollUser}
             disabled={isEnrolled}
           >
@@ -106,7 +106,7 @@ const CoursesCard = ({ course, userId }) => {
       </div>
       {isEnrolled ? (
         <Link href={`/user/courses/${course.id}`}>
-          <button className="p-2 h-10 float-right my-auto bg-white border border-purple rounded-md text-purple text-sm px-6">
+          <button className="p-2 h-10 float-right my-auto bg-white border border-purple rounded-full text-purple text-sm px-6">
             Continue
           </button>
         </Link>

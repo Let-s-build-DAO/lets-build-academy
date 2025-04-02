@@ -56,7 +56,13 @@ const Dashboard = () => {
         const enrollmentSnapshot = await getDocs(enrollmentQuery);
 
         if (!enrollmentSnapshot.empty) {
-          enrolledCourses.push({ id: courseDoc.id, ...courseDoc.data() });
+          const enrollmentDoc = enrollmentSnapshot.docs[0];
+          const progress = enrollmentDoc.data().progress;
+          enrolledCourses.push({
+            id: courseDoc.id,
+            ...courseDoc.data(),
+            progress,
+          });
         }
       }
 
@@ -214,6 +220,7 @@ const Dashboard = () => {
       try {
         const courses = await fetchEnrolledCourses(userId);
         setEnrolledCourses(courses);
+        console.log(enrolledCourses);
       } catch (error) {
         toast.error("Error fetching enrolled courses: ", error);
       }
@@ -302,95 +309,109 @@ const Dashboard = () => {
           </button>
         </Link>
       </section>
-      <section className="lg:flex">
-        <div className="lg:w-[65%]">
-          {recentCourse && (
-            <div className="p-4 lg:flex justify-between items-center bg-white rounded-lg mb-3">
-              <div className="flex gap-3 items-center">
+      <section>
+        <div className="lg:flex">
+          <div className="lg:w-[65%]">
+            <section>
+              {enrolledCourses.length > 0 && (
+                <div>
+                  <div className="p-6 lg:flex justify-between items-center bg-white rounded-lg mb-3">
+                    <div className="flex gap-3 items-center">
+                      <img
+                        className="h-8 w-8 my-auto mx-4"
+                        src="./images/icons/local_library.svg"
+                        alt=""
+                      />
+                      <div className="my-auto w-44">
+                        <h4 className="font-bold my-3 text-lg">
+                          {enrolledCourses[0].title}
+                        </h4>
+                        <p className="text-xs my-3">
+                          {enrolledCourses[0].author}
+                        </p>
+                      </div>
+                      <Progress
+                        type="circle"
+                        percent={enrolledCourses[0].progress}
+                        strokeColor={twoColors}
+                        size={60}
+                      />
+                    </div>
+                    <Link href={`/user/courses/${enrolledCourses[0].id}`}>
+                      <button className="py-3 sm:mt-4 my-auto px-7 bg-purple text-white rounded-full">
+                        Continue
+                      </button>
+                    </Link>
+                  </div>
+
+                </div>
+              )}
+            </section>
+
+            <div className="my-3 mt-5 grid grid-cols-2 gap-4">
+              <UserCountCard
+                text={"Total Enrolled Courses"}
+                count={totalEnrolledCourses}
+              />
+              <UserCountCard
+                text={"Completed Courses"}
+                count={completedCourses}
+              />
+              <UserCountCard
+                text={"Courses in progress"}
+                count={coursesInProgress}
+              />
+            </div>
+            {/* <UserLeaderboard /> */}
+          </div>
+          <div className="lg:w-[35%] mt-10 lg:mt-0 lg:ml-4">
+            <ProfileCard user={user} />
+            <div className="mt-4 bg-white p-4 rounded-md">
+              <div className="flex justify-between">
+                <h3 className="text-sm font-bold">Performance</h3>
+                {/* <select
+                  // value={selectedOption}
+                  // onChange={(e) => setSelectedOption(e.target.value)}
+                  className="text-sm py-2 px-4 rounded-mg"
+                >
+                  <option value="monthly">Monthly</option>
+                  <option value="daily">Daily</option>
+                  <option value="yearly">Yearly</option>
+                </select> */}
+              </div>
+
+              <div className="flex my-4 justify-between">
                 <img
-                  className="h-8 w-8 my-auto mx-4"
-                  src="./images/icons/local_library.svg"
+                  className="w-6 h-6 my-auto"
+                  src="/images/disappointed-face.png"
                   alt=""
                 />
-                <div className="my-auto w-44">
-                  <h4 className="font-bold my-3 text-lg">Learn Solidity</h4>
-                  <p className="text-xs my-3">Great Adams</p>
-                </div>
                 <Progress
-                  type="circle"
-                  percent={75}
+                  type="dashboard"
+                  percent={progress}
                   strokeColor={twoColors}
-                  size={60}
+                />
+                <img
+                  className="w-6 h-6 my-auto"
+                  src="/images/savouring-food.png"
+                  alt=""
                 />
               </div>
-              <Link href="/">
-                <button className="py-3 sm:mt-4 my-auto px-7 bg-purple text-white rounded-full ">
-                  Continue
-                </button>
-              </Link>
+              <p className="text-xs text-center">Your Progress: {progress}%</p>
             </div>
-          )}
-
-          <div className="my-3 mt-5 lg:flex justify-between gap-2">
-            <UserCountCard
-              text={"Total Enrolled Courses"}
-              count={totalEnrolledCourses}
-            />
-            <UserCountCard
-              text={"Completed Courses"}
-              count={completedCourses}
-            />
-            <UserCountCard
-              text={"Courses in progress"}
-              count={coursesInProgress}
-            />
-          </div>
-          <UserLeaderboard />
-        </div>
-        <div className="lg:w-[35%] mt-10 lg:mt-0 lg:ml-4">
-          <ProfileCard user={user} />
-          <div className="mt-4 bg-white p-4 rounded-md">
-            <div className="flex justify-between">
-              <h3 className="text-sm font-bold">Performance</h3>
-              <select
-                // value={selectedOption}
-                // onChange={(e) => setSelectedOption(e.target.value)}
-                className="text-sm py-2 px-4 rounded-mg"
-              >
-                <option value="monthly">Monthly</option>
-                <option value="daily">Daily</option>
-                <option value="yearly">Yearly</option>
-              </select>
-            </div>
-
-            <div className="flex my-4 justify-between">
-              <img
-                className="w-6 h-6 my-auto"
-                src="/images/disappointed-face.png"
-                alt=""
-              />
-              <Progress
-                type="dashboard"
-                percent={progress}
-                strokeColor={twoColors}
-              />
-              <img
-                className="w-6 h-6 my-auto"
-                src="/images/savouring-food.png"
-                alt=""
-              />
-            </div>
-            <p className="text-xs text-center">Your Progress: {progress}%</p>
           </div>
         </div>
-      </section>
-      <section>
-        {enrolledCourses.length > 0 && (
-          <div>
-            <h2>My Enrolled Courses</h2>
+
+        {enrolledCourses.length > 1 && (
+          <div className="mt-2">
+            <p className="font-bold">Enrolled Courses</p>
             <div className="flex flex-wrap justify-between">
-              {enrolledCourses.map((course) => (
-                <CoursesCard key={course.id} course={course} userId={userId} />
+              {enrolledCourses.slice(1).map((course) => (
+                <CoursesCard
+                  key={course.id}
+                  course={course}
+                  userId={userId}
+                />
               ))}
             </div>
           </div>
