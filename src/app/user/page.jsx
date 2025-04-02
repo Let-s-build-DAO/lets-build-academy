@@ -380,7 +380,7 @@ const Dashboard = () => {
           <div className="mt-4 bg-white p-4 rounded-md">
             <div className="flex justify-between">
               <h3 className="text-sm font-bold">Performance</h3>
-              <select
+              {/* <select
                 // value={selectedOption}
                 // onChange={(e) => setSelectedOption(e.target.value)}
                 className="text-sm py-2 px-4 rounded-mg"
@@ -388,7 +388,7 @@ const Dashboard = () => {
                 <option value="monthly">Monthly</option>
                 <option value="daily">Daily</option>
                 <option value="yearly">Yearly</option>
-              </select>
+              </select> */}
             </div>
 
             <div className="flex my-4 justify-between">
