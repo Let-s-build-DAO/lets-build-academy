@@ -19,13 +19,17 @@ const MainFooter = () => {
           <p className='text-sm my-2'>
             <Link href={'/about'}>About Us</Link>
           </p>
-          <p className='text-sm my-2'>Courses</p>
+          <p className='text-sm my-2'>
+            <Link href={'/courses'}>Courses</Link>
+          </p>
 
           <p className='text-sm my-2'><Link href={'/contact'}>Contact Us</Link></p>
-          <p className='text-sm my-2'>Community</p>
-          <p className='text-sm my-2'>FAQs</p>
+          <p className='text-sm my-2'>
+            <Link href={'https://discord.com/invite/M9jx85nJkN'}>Community</Link>
+          </p>
+          {/* <p className='text-sm my-2'>FAQs</p>
           <p className='text-sm my-2'>Privacy Policy</p>
-          <p className='text-sm my-2'>Terms of Service</p>
+          <p className='text-sm my-2'>Terms of Service</p> */}
 
         </div>
         <div className='sm:my-4'>
@@ -33,7 +37,9 @@ const MainFooter = () => {
           <div className='sm:w-1/2 flex justify-between'>
             <img className='w-7 h-7' src="/images/icons/facebook-square.png" alt="" />
             <img className='w-7 h-7' src="/images/icons/instagram.png" alt="" />
-            <img className='w-7 h-7' src="/images/icons/twitter-square.png" alt="" />
+            <a href="https://x.com/letsbuild_dao">
+              <img className='w-7 h-7' src="/images/icons/twitter-square.png" alt="" />
+            </a>
             <img className='w-7 h-7' src="/images/icons/youtube-square.png" alt="" />
           </div>
         </div>
