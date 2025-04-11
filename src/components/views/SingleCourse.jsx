@@ -145,7 +145,18 @@ const SingleCourse = ({ data, userId, courseId }) => {
         </div>
         {active?.handsOn ? (
           <div className="w-[38%] fixed right-5 top-10">
-            <CodeEditor editors={data?.lessons[lesson - 1]?.editor || []} />
+            {Object.entries(data?.lessons[lesson - 1]?.task || {}).map(
+              ([lang, details]) => (
+                <div key={lang} className="task-container">
+                  <h2>Task for {lang.toUpperCase()}</h2>
+                  <p>
+                    <strong>Description:</strong> {details.description}
+                  </p>
+                </div>
+              )
+            )}
+
+            <CodeEditor editors={data?.lessons[lesson - 1]?.editor || []} task={data?.lessons[lesson - 1]?.task} />
           </div>
         ) : null}
       </div>

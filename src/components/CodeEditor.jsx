@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 
-const CodeEditor = ({ editors }) => {
-  const [codeStates, setCodeStates] = useState({
-    html: "<!DOCTYPE html>\n<html>\n<body>\n<h1>Hello, World!</h1>\n</body>\n</html>",
-    css: "body { font-family: Arial, sans-serif; }",
-    js: 'console.log("Hello from JavaScript!");',
-    solidity: `
+const CodeEditor = ({ editors, task }) => {
+  const initialCodeStates = {
+    html: task?.html?.boilerplate || "<!DOCTYPE html>\n<html>\n<body>\n<h1>Hello, World!</h1>\n</body>\n</html>",
+    css: task?.css?.boilerplate || "body { font-family: Arial, sans-serif; }",
+    js: task?.js?.boilerplate || 'console.log("Hello from JavaScript!");',
+    solidity: task?.solidity?.boilerplate || `
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -14,12 +14,12 @@ contract HelloWorld {
     string public greet = "Hello, Solidity!";
 }
 `,
-  });
+  };
 
+  const [codeStates, setCodeStates] = useState(initialCodeStates);
   const [output, setOutput] = useState("");
 
   useEffect(() => {
-    
     if (editors.includes("html") || editors.includes("css") || editors.includes("js")) {
       const htmlContent = `
         <!DOCTYPE html>

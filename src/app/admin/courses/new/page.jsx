@@ -69,7 +69,6 @@ const NewCourse = () => {
     const docSnap = await getDoc(courseRef);
     if (docSnap.exists()) {
       const data = docSnap.data();
-      console.log(data);
       setTitle(data.title);
       setDescription(data.description);
       setAuthor(data.author);
@@ -96,11 +95,44 @@ const NewCourse = () => {
     }
   };
 
+  // const handleLessonInputChange = (index, field, value) => {
+  //   const updatedObjects = [...lessons];
+  //   updatedObjects[index] = { ...updatedObjects[index], [field]: value };
+  //   setLessons(updatedObjects);
+  // };
   const handleLessonInputChange = (index, field, value) => {
-    const updatedObjects = [...lessons];
-    updatedObjects[index] = { ...updatedObjects[index], [field]: value };
-    setLessons(updatedObjects);
+    setLessons((prevLessons) => {
+      const updatedLessons = [...prevLessons];
+  
+      // If the field is `task`, we need to merge objects
+      if (field === "task") {
+        updatedLessons[index] = {
+          ...updatedLessons[index],
+          [field]: {
+            ...(prevLessons[index]?.[field] || {}), // Keep previous object data
+            ...value, // Merge new value
+          },
+        };
+      }
+      // If the field is `editor`, it must be an array (for checkboxes)
+      else if (field === "editor") {
+        updatedLessons[index] = {
+          ...updatedLessons[index],
+          [field]: Array.isArray(value) ? value : [], // Ensure it's an array
+        };
+      }
+      // For everything else (title, category, description), just assign directly
+      else {  
+        updatedLessons[index] = {
+          ...updatedLessons[index],
+          [field]: value,
+        };
+      }
+  
+      return updatedLessons;
+    });
   };
+  
 
   const handleValidation = () => {
     if (!title || !description || !timeframe || !author || !skill || !img) {
@@ -297,13 +329,13 @@ const NewCourse = () => {
                   <div>
                     <div className="lg:flex justify-between lg:my-3">
                       <div className="lg:w-[49%] my-3">
-                        <label htmlFor="">Task Description</label>
+                        <label htmlFor="">{lang} Task Description</label>
                         <textarea
                           onChange={(e) => {
                             handleLessonInputChange(index, "task", {
                               ...single.task,
                               [lang]: {
-                                ...single.task[lang],
+                                ...((single.task ?? {})[lang] || {}),
                                 description: e.target.value,
                               },
                             });
@@ -315,13 +347,13 @@ const NewCourse = () => {
                         ></textarea>
                       </div>
                       <div className=" lg:w-[49%] my-3">
-                        <label htmlFor="">Boilerplate Code</label>
+                        <label htmlFor="">{lang} Boilerplate Code</label>
                         <textarea
                           onChange={(e) => {
                             handleLessonInputChange(index, "task", {
                               ...single.task,
                               [lang]: {
-                                ...single.task[lang],
+                                ...((single.task ?? {})[lang] || {}),
                                 boilerplate: e.target.value,
                               },
                             });
@@ -335,27 +367,146 @@ const NewCourse = () => {
                     </div>
                     <div className="lg:flex justify-between lg:my-3">
                       <div className="lg:w-[49%] my-3">
-                        <label htmlFor="">Task Solution</label>
+                        <label htmlFor="">{lang} Task Solution</label>
                         <textarea
-                             onChange={(e) => {
-                              handleLessonInputChange(index, "task", {
-                                ...single.task,
-                                [lang]: {
-                                  ...single.task[lang],
-                                  solution: e.target.value,
-                                },
-                              });
-                            }}
-                            value={single.task?.[lang]?.solution || ""}
+                          onChange={(e) => {
+                            handleLessonInputChange(index, "task", {
+                              ...single.task,
+                              [lang]: {
+                                ...((single.task ?? {})[lang] || {}),
+                                solution: e.target.value,
+                              },
+                            });
+                          }}
+                          value={single.task?.[lang]?.solution || ""}
                           name=""
                           id=""
                           className="w-full mt-2 p-3 rounded-md h-20"
                         ></textarea>
                       </div>
+
+                      {(lang === "html" || lang === "css") && (
+                        <div className="lg:w-[49%] my-3">
+                          <label htmlFor="">{lang} Expected Output</label>
+
+                          <textarea
+                            name=""
+                            id=""
+                            className="w-full mt-2 p-3 rounded-md h-20"
+                            value={single.task?.[lang]?.expectedOutput || ""}
+                            onChange={(e) => {
+                              handleLessonInputChange(index, "task", {
+                                ...single.task,
+                                [lang]: {
+                                  ...single.task[lang],
+                                  expectedOutput: e.target.value,
+                                },
+                              });
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="lg:flex justify-between lg:my-3">
+                      {(lang === "js" || lang === "solidity") && (
+                        <div className="lg:w-[49%] my-3">
+                          <h4>{lang} Test Cases</h4>
+
+                          {/* Ensure testCases exists */}
+                          {(single.task?.[lang]?.testCases || []).map(
+                            (test, i) => (
+                              <div key={i} className="test-case">
+                                <input
+                                  type="text"
+                                  placeholder="Input (comma-separated)"
+                                  className="bg-white mt-2 rounded-md p-3 w-full mb-3"
+                                  value={test.input?.join(", ") || ""}
+                                  onChange={(e) => {
+                                    const newTestCases = [
+                                      ...(single.task[lang]?.testCases || []),
+                                    ];
+                                    newTestCases[i] = {
+                                      ...newTestCases[i],
+                                      input: e.target.value
+                                        .split(",")
+                                        .map((x) => x.trim()),
+                                    };
+                                    handleLessonInputChange(index, "task", {
+                                      ...single.task,
+                                      [lang]: {
+                                        ...single.task[lang],
+                                        testCases: newTestCases,
+                                      },
+                                    });
+                                  }}
+                                />
+                                <input
+                                  type="text"
+                                  className="bg-white mt-2 rounded-md p-3 w-full mb-3"
+                                  placeholder="Expected Output"
+                                  value={test.expectedOutput || ""}
+                                  onChange={(e) => {
+                                    const newTestCases = [
+                                      ...(single.task[lang]?.testCases || []),
+                                    ];
+                                    newTestCases[i] = {
+                                      ...newTestCases[i],
+                                      expectedOutput: e.target.value,
+                                    };
+                                    handleLessonInputChange(index, "task", {
+                                      ...single.task,
+                                      [lang]: {
+                                        ...single.task[lang],
+                                        testCases: newTestCases,
+                                      },
+                                    });
+                                  }}
+                                />
+                                <button className="p-3 w-[1/3] text-white bg-purple rounded-md mb-5"
+                                  onClick={() => {
+                                    const newTestCases = (
+                                      single.task[lang]?.testCases || []
+                                    ).filter((_, idx) => idx !== i);
+                                    handleLessonInputChange(index, "task", {
+                                      ...single.task,
+                                      [lang]: {
+                                        ...single.task[lang],
+                                        testCases: newTestCases,
+                                      },
+                                    });
+                                  }}
+                                >
+                                  Remove
+                                </button>
+                              </div>
+                            )
+                          )}
+
+                          {/* Add Test Case Button */}
+                          <button className="p-3 w-[1/3] text-white bg-purple rounded-md "
+                            onClick={() => {
+                              const newTestCases = [
+                                ...(single.task?.[lang]?.testCases || []),
+                                { input: [], expectedOutput: "" },
+                              ];
+                              handleLessonInputChange(index, "task", {
+                                ...single.task,
+                                [lang]: {
+                                  ...(single.task?.[lang] || {}),
+                                  testCases: newTestCases,
+                                },
+                              });
+                            }}
+                          >
+                            Add Test Case
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
-                ;
+
                 {single.category === "video" && (
                   <div>
                     <div className="my-3">
