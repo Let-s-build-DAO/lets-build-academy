@@ -57,13 +57,24 @@ const Dashboard = () => {
 
         if (!enrollmentSnapshot.empty) {
           const enrollmentDoc = enrollmentSnapshot.docs[0];
-          const progress = enrollmentDoc.data().progress;
+          const progress = enrollmentDoc.data().progress || 0;
           enrolledCourses.push({
             id: courseDoc.id,
             ...courseDoc.data(),
             progress,
           });
         }
+      }
+
+      if (enrolledCourses.length > 0) {
+        const total = enrolledCourses.reduce(
+          (sum, course) => sum + course.progress,
+          0
+        );
+        const average = Math.round(total / enrolledCourses.length);
+        setProgress(average); 
+      } else {
+        setProgress(0); 
       }
 
       return enrolledCourses;
@@ -116,9 +127,9 @@ const Dashboard = () => {
         }
       }
 
-      if (recentCourse) {
-        setProgress(recentProgress);
-      }
+      // if (recentCourse) {
+      //   setProgress(recentProgress);
+      // }
       return recentCourse;
     } catch (error) {
       toast.error("Error fetching most recent enrolled course: ", error);
@@ -310,9 +321,10 @@ const Dashboard = () => {
         </Link>
       </section>
       <section>
-        <div className="lg:flex">
+        <div className="lg:flex mt-10">
           <div className="lg:w-[65%]">
             <section>
+              <h3 className="font-semibold mb-3">Most Recent Course</h3>
               {enrolledCourses.length > 0 && (
                 <div>
                   <div className="p-6 lg:flex justify-between items-center bg-white rounded-lg mb-3">
@@ -343,7 +355,6 @@ const Dashboard = () => {
                       </button>
                     </Link>
                   </div>
-
                 </div>
               )}
             </section>
@@ -404,14 +415,10 @@ const Dashboard = () => {
 
         {enrolledCourses.length > 1 && (
           <div className="mt-2">
-            <p className="font-bold">Enrolled Courses</p>
+            <p className="font-semibold">Enrolled Courses</p>
             <div className="flex flex-wrap justify-between">
               {enrolledCourses.slice(1).map((course) => (
-                <CoursesCard
-                  key={course.id}
-                  course={course}
-                  userId={userId}
-                />
+                <CoursesCard key={course.id} course={course} userId={userId} />
               ))}
             </div>
           </div>
