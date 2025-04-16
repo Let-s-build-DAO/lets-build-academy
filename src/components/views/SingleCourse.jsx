@@ -16,7 +16,6 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import CodeEditor from "../CodeEditor";
-
 import firebase_app from "../../firebase/config";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
@@ -24,15 +23,11 @@ import { useRouter } from "next/router";
 const db = getFirestore(firebase_app);
 
 const SingleCourse = ({ data, userId, courseId }) => {
-  // const [text] = useState('# Hello Editor ');
   const [id] = useState("preview-only");
   const [active, setActive] = useState(data?.lessons[0]);
   const [lesson, setLesson] = useState(0);
+  const [hasProgress, setHasProgress] = useState(false);
   const router = useRouter;
-
-  // useEffect(() => {
-  //   updateCourseProgress();
-  // });
 
   useEffect(() => {
     const fetchProgress = async () => {
@@ -46,17 +41,25 @@ const SingleCourse = ({ data, userId, courseId }) => {
 
         if (enrollmentSnapshot.exists()) {
           const enrollmentData = enrollmentSnapshot.data();
-          const lastLesson = enrollmentData.lastLesson || 1;
-          setLesson(lastLesson);
-          setActive(data?.lessons[lastLesson - 1]);
+          const progress = enrollmentData.progress || 0;
+          const lastLesson = enrollmentData.lastLesson || 0;
+          
+          setHasProgress(progress > 0);
+          
+          if (progress > 0) {
+            setLesson(lastLesson);
+            setActive(data?.lessons[lastLesson - 1]);
+          } else {
+            setLesson(0); 
+          }
         } else {
-          setLesson(1);
-          setActive(data?.lessons[0]);
+          setHasProgress(false);
+          setLesson(0); 
         }
       } catch (error) {
         console.error("Error fetching progress:", error);
-        setLesson(1);
-        setActive(data?.lessons[0]);
+        setHasProgress(false);
+        setLesson(0); 
       }
     };
 
@@ -79,14 +82,17 @@ const SingleCourse = ({ data, userId, courseId }) => {
       };
 
       await setDoc(enrollmentRef, courseProgress, { merge: true });
+      setHasProgress(true);
     } catch (error) {
       console.error("Error updating course progress:", error);
     }
   };
 
-  useEffect(() => {
-    setActive(data?.lessons[parseInt(lesson) - 1]);
-  }, [lesson]);
+  const handleStartCourse = () => {
+    setLesson(1);
+    setActive(data?.lessons[0]);
+    updateCourseProgress(courseId, 1); 
+  };
 
   const handleNextLesson = async () => {
     if (lesson < data?.lessons.length) {
@@ -109,50 +115,44 @@ const SingleCourse = ({ data, userId, courseId }) => {
     }
   };
 
-  useEffect(() => {
-    console.log(lesson);
-  }, [lesson]);
-
-  return data && lesson ? (
-    <section className="mt-4">
-      <div className="flex justify-between relative">
-        <div className={`${active?.handsOn ? "w-1/2" : "w-full"}`}>
-          <div className="flex my-3 justify-between">
-            <button onClick={handlePreviousLesson} disabled={lesson === 1}>
-              <img src="/arrow_circle_left.png" alt="Previous Lesson" />
-            </button>
-            <div className="text-center lg:w-[60%] w-[70%]">
-              <p className="font-bold">Lesson {lesson}</p>
-              <h1 className="font-bold lg:text-xl">{active?.title}</h1>
-              <p>{active?.subtitle}</p>
+  return data ? (
+    <>
+      {hasProgress && lesson > 0 ? (
+        <section className="mt-4">
+          <div className="flex justify-between relative">
+            <div className={`${active?.handsOn ? "w-1/2" : "w-full"}`}>
+              <div className="flex my-3 justify-between">
+                <button onClick={handlePreviousLesson} disabled={lesson === 1}>
+                  <img src="/arrow_circle_left.png" alt="Previous Lesson" />
+                </button>
+                <div className="text-center lg:w-[60%] w-[70%]">
+                  <p className="font-bold">Lesson {lesson}</p>
+                  <h1 className="font-bold lg:text-xl">{active?.title}</h1>
+                  <p>{active?.subtitle}</p>
+                </div>
+                <button onClick={handleNextLesson}>
+                  <img src="/arrow_circle_right.png" alt="Next Lesson" />
+                </button>
+              </div>
+              {active?.videoUrl && (
+                <video
+                  className="custom-video w-full"
+                  src={active.videoUrl}
+                  controls
+                  height={300}
+                ></video>
+              )}
+              <MdPreview editorId={id} modelValue={active?.body} />
             </div>
-            <button
-              onClick={handleNextLesson}
-              // disabled={lesson === data?.lessons.length}
-            >
-              <img src="/arrow_circle_right.png" alt="Next Lesson" />
-            </button>
+            {active?.handsOn ? (
+              <div className="w-[38%] fixed right-5 top-10">
+                <CodeEditor editors={data?.lessons[lesson - 1]?.editor || []} />
+              </div>
+            ) : null}
           </div>
-          {active?.videoUrl && (
-            <video
-              className="custom-video w-full"
-              src={active.videoUrl}
-              controls
-              height={300}
-            ></video>
-          )}
-          <MdPreview editorId={id} modelValue={active?.body} />
-        </div>
-        {active?.handsOn ? (
-          <div className="w-[38%] fixed right-5 top-10">
-            <CodeEditor editors={data?.lessons[lesson - 1]?.editor || []} />
-          </div>
-        ) : null}
-      </div>
-      {/* <MdCatalog editorId={id} scrollElement={scrollElement} /> */}
-    </section>
-  ) : (
-    <section>
+        </section>
+      ) : (
+        <section>
       <div className="lg:flex justify-between">
         <div className="lg:w-[48%]">
           <h1 className="text-4xl font-bold">{data?.title}</h1>
@@ -176,12 +176,18 @@ const SingleCourse = ({ data, userId, courseId }) => {
               <h3 className="font-bold text-sm"> {data?.skill}</h3>
             </div>
             {/* <Link href={'&lesson=0'}> */}
-            <button
+            {/* <button
               onClick={() => setLesson(lesson || 1)}
               className="p-3 rounded-full bg-purple text-white px-10"
             >
               Start
-            </button>
+                  </button> */}
+                  <button
+                  onClick={handleStartCourse}
+                  className="p-3 rounded-full bg-purple text-white px-10"
+                >
+                  Start Course
+                </button>
             {/* </Link> */}
           </div>
         </div>
@@ -216,7 +222,9 @@ const SingleCourse = ({ data, userId, courseId }) => {
         </div>
       </div>
     </section>
-  );
+      )}
+    </>
+  ) : null;
 };
 
 export default SingleCourse;
