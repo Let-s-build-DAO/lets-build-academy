@@ -324,7 +324,7 @@ const Dashboard = () => {
         <div className="lg:flex mt-10">
           <div className="lg:w-[65%]">
             <section>
-              <h3 className="font-semibold mb-3">Most Recent Course</h3>
+              {/* <h3 className="font-semibold mb-3">Most Recent Course</h3> */}
               {enrolledCourses.length > 0 && (
                 <div>
                   <div className="p-6 lg:flex justify-between items-center bg-white rounded-lg mb-3">
@@ -359,7 +359,7 @@ const Dashboard = () => {
               )}
             </section>
 
-            <div className="my-3 mt-5 grid grid-cols-2 gap-4">
+            <div className="my-3 mt-5 grid lg:grid-cols-2 gap-4">
               <UserCountCard
                 text={"Total Enrolled Courses"}
                 count={totalEnrolledCourses}
@@ -414,7 +414,7 @@ const Dashboard = () => {
         </div>
 
         {enrolledCourses.length > 1 && (
-          <div className="mt-2">
+          <div className="lg:mt-2 mt-6">
             <p className="font-semibold">Enrolled Courses</p>
             <div className="flex flex-wrap justify-between">
               {enrolledCourses.slice(1).map((course) => (

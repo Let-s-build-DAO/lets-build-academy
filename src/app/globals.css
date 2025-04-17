@@ -68,15 +68,15 @@ button:focus {
   transition: 0.4s;
 }
 
-input:checked + .slider {
+input:checked+.slider {
   background-color: #8f0fba;
 }
 
-input:focus + .slider {
+input:focus+.slider {
   box-shadow: 0 0 1px #8f0fba;
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
@@ -85,4 +85,8 @@ input:checked + .slider:before {
 .custom-video {
   width: 300px;
   height: 300px;
+}
+
+.anticon-check {
+  color: #5C555E !important;
 }

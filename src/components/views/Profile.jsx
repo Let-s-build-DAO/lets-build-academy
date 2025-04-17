@@ -109,7 +109,7 @@ const Profile = () => {
             </button>
           </div>
         </div>
-        <div className="lg:w-[40%] lg:ml-6">
+        <div className="lg:w-[40%] lg:ml-6 lg:pt-[75px]">
           <ProfileCard />
           <div className="bg-[#CECCCF] text-[#848086] flex my-3 rounded-md">
             <p className="p-3 text-xs w-80 ">https://twitter.com/</p>
