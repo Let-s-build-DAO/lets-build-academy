@@ -9,8 +9,12 @@ const CommunitySection = () => {
         <h1 className='text-3xl font-bold'>Join Our Community</h1>
         <p className='my-4'>Ready to take the first step toward an exciting tech career? Join our community of learners and start your journey today.</p>
         <div>
-          <button className='border border-white rounded-full mx-2 p-3 w-32'>Discord</button>
-          <button className='border border-white rounded-full mx-2 p-3 w-32'>Telegram</button>
+          <a href="https://discord.gg/M9jx85nJkN">
+            <button className='border border-white rounded-full mx-2 p-3 w-32'>Discord</button>
+          </a>
+          <a href="https://t.me/letsbuilddaocommunity">
+            <button className='border border-white rounded-full mx-2 p-3 w-32'>Telegram</button>
+          </a>
         </div>
       </div>
     </div>

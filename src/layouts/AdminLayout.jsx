@@ -16,6 +16,20 @@ const AdminLayout = ({ children, header }) => {
   const router = useRouter();
   const token = getCookie("token");
 
+  const [isMobile, setIsMobile] = useState(false);
+
+useEffect(() => {
+  const handleResize = () => {
+    setIsMobile(window.innerWidth <= 768); 
+  };
+  handleResize();
+
+
+  window.addEventListener("resize", handleResize);
+
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
+
   useEffect(() => {
     // if (!token) {
     //   router.push('/auth/login')
@@ -30,7 +44,9 @@ const AdminLayout = ({ children, header }) => {
   return (
     <div className="lg:flex">
       <div className={showBar ? "block " : "hidden"}>
-        <AdminSideNav setShowBar={() => setShowBar(false)} />
+      <AdminSideNav setShowBar={() => {
+  if (isMobile) setShowBar(false);
+}} />
       </div>
       <section className="lg:w-[80%] lg:ml-auto lg:p-6 p-4">
         <div className="sm:flex w-full justify-between">

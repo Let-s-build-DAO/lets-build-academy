@@ -73,7 +73,7 @@ const CoursesCard = ({ course, userId }) => {
   };
 
   return (
-    <div className="bg-white rounded-md p-4 lg:w-[49%] my-3">
+    <div className="bg-white rounded-md p-4 lg:w-[49%] w-full my-3">
       <div className="flex justify-between">
         <div className="flex">
           <img
@@ -92,6 +92,7 @@ const CoursesCard = ({ course, userId }) => {
             percent={progress}
             strokeColor={twoColors}
             size={60}
+            className="custom-progress"
           />
         ) : (
           <button
