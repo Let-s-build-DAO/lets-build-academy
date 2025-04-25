@@ -114,31 +114,6 @@ const SingleCourse = ({ data, userId, courseId }) => {
       await updateCourseProgress(courseId, prevLesson);
     }
   };
-
-  const expectedSolutions = {
-    html: {
-      regex: /<h1.*>.*Hello, World!.*<\/h1>/i,
-      // code: '<h1>Hello, World!</h1>' // Exact match
-    },
-    css: {
-      rules: ["font-family:", "color:"],
-    },
-    js: {
-      testFunction: (code) => {
-        return (
-          code.includes("console.log") &&
-          code.includes("Hello from JavaScript!")
-        );
-      },
-    },
-    solidity: {
-      contractParts: [
-        "contract HelloWorld",
-        "string public greet",
-        "Hello, Solidity",
-      ],
-    },
-  };
   return data ? (
     <>
       {hasProgress && lesson > 0 ? (
@@ -170,12 +145,7 @@ const SingleCourse = ({ data, userId, courseId }) => {
             </div>
             {active?.handsOn ? (
               <div className="w-[38%] fixed right-5 top-10">
-                {/* <CodeEditor editors={data?.lessons[lesson - 1]?.editor || []} /> */}
-                <CodeEditor
-                  editors={data?.lessons[lesson - 1]?.editor || []}
-                  expectedSolutions={expectedSolutions}
-                  // onCorrectSolution={() => alert("All solutions are correct!")}
-                />
+                <CodeEditor editors={data?.lessons[lesson - 1]?.editor || []} />
               </div>
             ) : null}
           </div>
