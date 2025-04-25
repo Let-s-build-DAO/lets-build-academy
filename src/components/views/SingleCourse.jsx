@@ -43,23 +43,23 @@ const SingleCourse = ({ data, userId, courseId }) => {
           const enrollmentData = enrollmentSnapshot.data();
           const progress = enrollmentData.progress || 0;
           const lastLesson = enrollmentData.lastLesson || 0;
-          
+
           setHasProgress(progress > 0);
-          
+
           if (progress > 0) {
             setLesson(lastLesson);
             setActive(data?.lessons[lastLesson - 1]);
           } else {
-            setLesson(0); 
+            setLesson(0);
           }
         } else {
           setHasProgress(false);
-          setLesson(0); 
+          setLesson(0);
         }
       } catch (error) {
         console.error("Error fetching progress:", error);
         setHasProgress(false);
-        setLesson(0); 
+        setLesson(0);
       }
     };
 
@@ -91,7 +91,7 @@ const SingleCourse = ({ data, userId, courseId }) => {
   const handleStartCourse = () => {
     setLesson(1);
     setActive(data?.lessons[0]);
-    updateCourseProgress(courseId, 1); 
+    updateCourseProgress(courseId, 1);
   };
 
   const handleNextLesson = async () => {
@@ -115,6 +115,30 @@ const SingleCourse = ({ data, userId, courseId }) => {
     }
   };
 
+  const expectedSolutions = {
+    html: {
+      regex: /<h1.*>.*Hello, World!.*<\/h1>/i,
+      // code: '<h1>Hello, World!</h1>' // Exact match
+    },
+    css: {
+      rules: ["font-family:", "color:"],
+    },
+    js: {
+      testFunction: (code) => {
+        return (
+          code.includes("console.log") &&
+          code.includes("Hello from JavaScript!")
+        );
+      },
+    },
+    solidity: {
+      contractParts: [
+        "contract HelloWorld",
+        "string public greet",
+        "Hello, Solidity",
+      ],
+    },
+  };
   return data ? (
     <>
       {hasProgress && lesson > 0 ? (
@@ -146,82 +170,87 @@ const SingleCourse = ({ data, userId, courseId }) => {
             </div>
             {active?.handsOn ? (
               <div className="w-[38%] fixed right-5 top-10">
-                <CodeEditor editors={data?.lessons[lesson - 1]?.editor || []} />
+                {/* <CodeEditor editors={data?.lessons[lesson - 1]?.editor || []} /> */}
+                <CodeEditor
+                  editors={data?.lessons[lesson - 1]?.editor || []}
+                  expectedSolutions={expectedSolutions}
+                  // onCorrectSolution={() => alert("All solutions are correct!")}
+                />
               </div>
             ) : null}
           </div>
         </section>
       ) : (
         <section>
-      <div className="lg:flex justify-between">
-        <div className="lg:w-[48%]">
-          <h1 className="text-4xl font-bold">{data?.title}</h1>
-          <div className="my-3">
-            <img
-              className="w-full h-52 object-cover"
-              src={data?.imgUrl}
-              alt=""
-            />
-            {/* <video controls>
+          <div className="lg:flex justify-between">
+            <div className="lg:w-[48%]">
+              <h1 className="text-4xl font-bold">{data?.title}</h1>
+              <div className="my-3">
+                <img
+                  className="w-full h-52 object-cover"
+                  src={data?.imgUrl}
+                  alt=""
+                />
+                {/* <video controls>
               <source src="/images/video.mp4" type="video/mp4" />
             </video> */}
-          </div>
-          <div className="flex justify-between">
-            <div>
-              <p className="text-sm">Timeframe</p>
-              <h3 className="font-bold text-sm">{data?.timeframe}</h3>
-            </div>
-            <div>
-              <p className="text-sm">Skill Level</p>
-              <h3 className="font-bold text-sm"> {data?.skill}</h3>
-            </div>
-            {/* <Link href={'&lesson=0'}> */}
-            {/* <button
+              </div>
+              <div className="flex justify-between">
+                <div>
+                  <p className="text-sm">Timeframe</p>
+                  <h3 className="font-bold text-sm">{data?.timeframe}</h3>
+                </div>
+                <div>
+                  <p className="text-sm">Skill Level</p>
+                  <h3 className="font-bold text-sm"> {data?.skill}</h3>
+                </div>
+                {/* <Link href={'&lesson=0'}> */}
+                {/* <button
               onClick={() => setLesson(lesson || 1)}
               className="p-3 rounded-full bg-purple text-white px-10"
             >
               Start
                   </button> */}
-                  <button
+                <button
                   onClick={handleStartCourse}
                   className="p-3 rounded-full bg-purple text-white px-10"
                 >
                   Start Course
                 </button>
-            {/* </Link> */}
-          </div>
-        </div>
-        <div className="lg:w-[48%] mt-10">
-          <h3 className="font-bold text-lg my-2">Introduction</h3>
-          <p className="text-sm">{data?.description}</p>
-        </div>
-      </div>
-      <div className="mt-10">
-        <h3 className="text-xl my-4 font-bold text-center">Syllabus</h3>
-        <div className="lg:flex flex-wrap justify-between">
-          {data?.lessons.map((lesson, index) => (
-            <div
-              key={index}
-              className="p-4 rounded-md bg-white flex justify-between sm:my-3 lg:w-[48%]"
-            >
-              <p className="font-bold">Lesson {index + 1}</p>
-              <div>
-                <h3 className="font-bold text-lg">{lesson.title}</h3>
-                <p className="text-xs">{lesson.subtitle}</p>
+                {/* </Link> */}
               </div>
             </div>
-          ))}
+            <div className="lg:w-[48%] mt-10">
+              <h3 className="font-bold text-lg my-2">Introduction</h3>
+              <p className="text-sm">{data?.description}</p>
+            </div>
+          </div>
+          <div className="mt-10">
+            <h3 className="text-xl my-4 font-bold text-center">Syllabus</h3>
+            <div className="lg:flex flex-wrap justify-between">
+              {data?.lessons.map((lesson, index) => (
+                <div
+                  key={index}
+                  className="p-4 rounded-md bg-white flex justify-between sm:my-3 lg:w-[48%]"
+                >
+                  <p className="font-bold">Lesson {index + 1}</p>
+                  <div>
+                    <h3 className="font-bold text-lg">{lesson.title}</h3>
+                    <p className="text-xs">{lesson.subtitle}</p>
+                  </div>
+                </div>
+              ))}
 
-          {/* <div className='p-4 rounded-md bg-white flex justify-between sm:my-3 lg:w-[48%]'>
+              {/* <div className='p-4 rounded-md bg-white flex justify-between sm:my-3 lg:w-[48%]'>
             <p className='font-bold'>Lesson 1</p>
             <div>
               <h3 className='font-bold text-lg'>The Basics</h3>
               <p className='text-xs'>The basics of Javascript</p>
             </div>
           </div> */}
-        </div>
-      </div>
-    </section>
+            </div>
+          </div>
+        </section>
       )}
     </>
   ) : null;

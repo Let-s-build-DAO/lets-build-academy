@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 
-const CodeEditor = ({ editors }) => {
+const CodeEditor = ({ editors, expectedSolutions = {} }) => {
   const [codeStates, setCodeStates] = useState({
     html: "<!DOCTYPE html>\n<html>\n<body>\n<h1>Hello, World!</h1>\n</body>\n</html>",
     css: "body { font-family: Arial, sans-serif; }",
@@ -17,10 +17,62 @@ contract HelloWorld {
   });
 
   const [output, setOutput] = useState("");
+  const [validationResults, setValidationResults] = useState({});
+
+  const validateCode = (language, code) => {
+    if (!expectedSolutions[language]) return null;
+
+    const expected = expectedSolutions[language];
+
+    switch (language) {
+      case "html":
+        return expected.regex
+          ? new RegExp(expected.regex).test(code)
+          : code.trim() === expected.code;
+
+      case "css":
+        return expected.rules.every((rule) => code.includes(rule));
+
+      case "js":
+        return expected.testFunction
+          ? expected.testFunction(code)
+          : code.includes(expected.snippet);
+
+      case "solidity":
+        // For Solidity we might check contract structure
+        return expected.contractParts.every((part) => code.includes(part));
+
+      default:
+        return false;
+    }
+  };
 
   useEffect(() => {
-    
-    if (editors.includes("html") || editors.includes("css") || editors.includes("js")) {
+    // Validate all active editors whenever code changes
+    const results = {};
+    let allCorrect = true;
+
+    editors.forEach((editorType) => {
+      if (expectedSolutions[editorType]) {
+        const isValid = validateCode(editorType, codeStates[editorType]);
+        results[editorType] = isValid;
+        if (!isValid) allCorrect = false;
+      }
+    });
+
+    setValidationResults(results);
+
+    // Notify parent component if all expected solutions are correct
+    // if (allCorrect && Object.keys(expectedSolutions).length > 0) {
+    //   onCorrectSolution?.();
+    // }
+
+    // Update output for HTML/CSS/JS preview
+    if (
+      editors.includes("html") ||
+      editors.includes("css") ||
+      editors.includes("js")
+    ) {
       const htmlContent = `
         <!DOCTYPE html>
         <html>
@@ -35,7 +87,7 @@ contract HelloWorld {
       `;
       setOutput(htmlContent);
     }
-  }, [codeStates, editors]);
+  }, [codeStates, editors, expectedSolutions]);
 
   const handleCodeChange = (language, value) => {
     setCodeStates((prev) => ({
@@ -53,11 +105,36 @@ contract HelloWorld {
     }
   };
 
+  // Get validation status for an editor
+  const getValidationStatus = (editorType) => {
+    if (!expectedSolutions[editorType]) return null;
+    return validationResults[editorType] ? "✅ Correct" : "❌ Needs work";
+  };
+
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <div style={{ flex: 1, margin: "10px" }}>
         {editors.map((editorType) => (
           <div key={editorType} style={{ marginBottom: "20px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <h3>{editorType.toUpperCase()}</h3>
+              {expectedSolutions[editorType] && (
+                <div
+                  style={{
+                    padding: "5px 10px",
+                    backgroundColor: validationResults[editorType]
+                      ? "#4CAF50"
+                      : "#f44336",
+                    color: "white",
+                    borderRadius: "4px",
+                    marginBottom: 10,
+                  }}
+                >
+                  {getValidationStatus(editorType)}
+                </div>
+              )}
+            </div>
+
             {editorType === "solidity" ? (
               <div>
                 <Editor
