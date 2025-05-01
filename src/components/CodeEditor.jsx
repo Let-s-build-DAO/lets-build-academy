@@ -126,8 +126,23 @@ contract HelloWorld {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-      <div style={{ flex: 1, margin: "10px" }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100vh",
+        overflow: "hidden",
+      }}
+    >
+      <div
+        style={{
+          flex: 1,
+          margin: "10px",
+          // overflowY: "auto", // Make this side scrollable
+          // height: "100%",
+          // paddingRight: "10px",
+        }}
+      >
         {editors.map((editorType) => (
           <div key={editorType} style={{ marginBottom: "20px" }}>
             {task?.[editorType]?.description && (
