@@ -103,7 +103,7 @@ const NewCourse = () => {
   const handleLessonInputChange = (index, field, value) => {
     setLessons((prevLessons) => {
       const updatedLessons = [...prevLessons];
-  
+
       // If the field is `task`, we need to merge objects
       if (field === "task") {
         updatedLessons[index] = {
@@ -122,17 +122,16 @@ const NewCourse = () => {
         };
       }
       // For everything else (title, category, description), just assign directly
-      else {  
+      else {
         updatedLessons[index] = {
           ...updatedLessons[index],
           [field]: value,
         };
       }
-  
+
       return updatedLessons;
     });
   };
-  
 
   const handleValidation = () => {
     if (!title || !description || !timeframe || !author || !skill || !img) {
@@ -385,7 +384,7 @@ const NewCourse = () => {
                         ></textarea>
                       </div>
 
-                      {(lang === "html" || lang === "css") && (
+                      {/* {(lang === "html" || lang === "css") && (
                         <div className="lg:w-[49%] my-3">
                           <label htmlFor="">{lang} Expected Output</label>
 
@@ -405,15 +404,14 @@ const NewCourse = () => {
                             }}
                           />
                         </div>
-                      )}
+                      )} */}
                     </div>
 
-                    <div className="lg:flex justify-between lg:my-3">
+                    {/* <div className="lg:flex justify-between lg:my-3">
                       {(lang === "js" || lang === "solidity") && (
                         <div className="lg:w-[49%] my-3">
                           <h4>{lang} Test Cases</h4>
 
-                          {/* Ensure testCases exists */}
                           {(single.task?.[lang]?.testCases || []).map(
                             (test, i) => (
                               <div key={i} className="test-case">
@@ -483,7 +481,6 @@ const NewCourse = () => {
                             )
                           )}
 
-                          {/* Add Test Case Button */}
                           <button className="p-3 w-[1/3] text-white bg-purple rounded-md "
                             onClick={() => {
                               const newTestCases = [
@@ -503,7 +500,7 @@ const NewCourse = () => {
                           </button>
                         </div>
                       )}
-                    </div>
+                    </div> */}
                   </div>
                 ))}
 

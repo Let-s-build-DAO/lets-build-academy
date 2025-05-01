@@ -3,9 +3,7 @@ import Editor from "@monaco-editor/react";
 
 const CodeEditor = ({ editors, task }) => {
   const initialCodeStates = {
-    html:
-      task?.html?.boilerplate ||
-      "<!DOCTYPE html>\n<html>\n<body>\n<h1>Hello, World!</h1>\n</body>\n</html>",
+    html: task?.html?.boilerplate,
     css: task?.css?.boilerplate || "body { font-family: Arial, sans-serif; }",
     js: task?.js?.boilerplate || 'console.log("Hello from JavaScript!");',
     solidity:
@@ -23,64 +21,40 @@ contract HelloWorld {
   const [codeStates, setCodeStates] = useState(initialCodeStates);
   const [output, setOutput] = useState("");
   const [validationResults, setValidationResults] = useState({});
-
-  const expectedSolutions = {
-    html: task?.html?.solution,
-    css: task?.css?.solution,
-    js: task?.js?.solution,
-    solidity: task?.solidity?.solution,
-  };
+  const [manualCheckResults, setManualCheckResults] = useState({});
 
   const validateCode = (language, code) => {
-    if (!expectedSolutions[language]) return null;
+    const taskSolution =
+      task?.[language]?.solution || task?.solution?.[language];
+    if (!taskSolution) return null;
 
-    const expected = expectedSolutions[language];
+    const normalize = (str) => str.trim().replace(/\r\n/g, "\n");
+    return normalize(code) === normalize(taskSolution);
+  };
 
-    switch (language) {
-      case "html":
-        return expected.regex
-          ? new RegExp(expected.regex).test(code)
-          : expected.code
-          ? code.trim() === expected.code.trim()
-          : false;
+  const handleManualCheck = (editorType) => {
+    const isValid = validateCode(editorType, codeStates[editorType]);
+    setManualCheckResults((prev) => ({
+      ...prev,
+      [editorType]: isValid,
+    }));
 
-      case "css":
-        return expected.rules
-          ? expected.rules.every((rule) => code.includes(rule))
-          : expected.code
-          ? code.trim() === expected.code.trim()
-          : false;
+    // if (isValid) {
+    //   alert("✅ Correct! Your code matches the solution.");
+    // } else {
+    //   alert("❌ Incorrect. Your code doesn't match the expected solution.");
+    // }
 
-      case "js":
-        // For JS we might check function definitions or output
-        return expected.testFunction
-          ? expected.testFunction(code)
-          : expected.snippet
-          ? code.includes(expected.snippet)
-          : expected.code
-          ? code.trim() === expected.code.trim()
-          : false;
-
-      case "solidity":
-        // For Solidity we might check contract structure
-        return expected.contractParts
-          ? expected.contractParts.every((part) => code.includes(part))
-          : expected.code
-          ? code.trim() === expected.code.trim()
-          : false;
-
-      default:
-        return false;
-    }
+    return isValid;
   };
 
   useEffect(() => {
-    // Validate all active editors whenever code changes
+    // Automatic validation on code change
     const results = {};
     let allCorrect = true;
 
     editors.forEach((editorType) => {
-      if (expectedSolutions[editorType]) {
+      if (task?.[editorType]?.solution) {
         const isValid = validateCode(editorType, codeStates[editorType]);
         results[editorType] = isValid;
         if (!isValid) allCorrect = false;
@@ -90,16 +64,12 @@ contract HelloWorld {
     setValidationResults(results);
 
     // Notify parent component if all expected solutions are correct
-    if (allCorrect && Object.keys(expectedSolutions).length > 0) {
+    if (allCorrect && Object.keys(results).length > 0) {
       task?.onCorrectSolution?.();
     }
 
     // Update output for HTML/CSS/JS preview
-    if (
-      editors.includes("html") ||
-      editors.includes("css") ||
-      editors.includes("js")
-    ) {
+    if (editors.some((editor) => ["html", "css", "js"].includes(editor))) {
       const htmlContent = `
         <!DOCTYPE html>
         <html>
@@ -114,7 +84,7 @@ contract HelloWorld {
       `;
       setOutput(htmlContent);
     }
-  }, [codeStates, editors, expectedSolutions, task]);
+  }, [codeStates, editors, task]);
 
   const handleCodeChange = (language, value) => {
     setCodeStates((prev) => ({
@@ -132,16 +102,27 @@ contract HelloWorld {
     }
   };
 
-  const getValidationStatus = (editorType) => {
-    if (!expectedSolutions[editorType]) return null;
-    return validationResults[editorType] ? "✅ Correct" : "❌ Needs work";
-  };
-
   const resetCode = (language) => {
     setCodeStates((prev) => ({
       ...prev,
       [language]: initialCodeStates[language],
     }));
+    // Clear manual check result when resetting
+    setManualCheckResults((prev) => {
+      const newResults = { ...prev };
+      delete newResults[language];
+      return newResults;
+    });
+  };
+
+  const getValidationStatus = (editorType) => {
+    if (!task?.[editorType]?.solution) return null;
+
+    if (manualCheckResults.hasOwnProperty(editorType)) {
+      return manualCheckResults[editorType] ? "✅ Correct" : "❌ Incorrect";
+    }
+
+    return validationResults[editorType] ? "✅ Correct" : "✏️ Needs work";
   };
 
   return (
@@ -149,30 +130,59 @@ contract HelloWorld {
       <div style={{ flex: 1, margin: "10px" }}>
         {editors.map((editorType) => (
           <div key={editorType} style={{ marginBottom: "20px" }}>
+            {task?.[editorType]?.description && (
+              <div style={{ marginBottom: "10px" }}>
+                <h4>Task:</h4>
+                <p style={{ margin: "5px 0", fontStyle: "italic" }}>
+                  {task?.[editorType]?.description}
+                </p>
+              </div>
+            )}
             <div
               style={{
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
+                marginBottom: 10,
               }}
             >
               <h3>{editorType.toUpperCase()}</h3>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                {expectedSolutions[editorType] && (
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+              >
+                {task?.[editorType]?.solution && (
                   <div
                     style={{
                       padding: "5px 10px",
-                      backgroundColor: validationResults[editorType]
+                      backgroundColor: manualCheckResults.hasOwnProperty(
+                        editorType
+                      )
+                        ? manualCheckResults[editorType]
+                          ? "#4CAF50"
+                          : "#f44336"
+                        : validationResults[editorType]
                         ? "#4CAF50"
-                        : "#f44336",
+                        : "#FF9800",
                       color: "white",
                       borderRadius: "4px",
-                      marginRight: "10px",
                     }}
                   >
                     {getValidationStatus(editorType)}
                   </div>
                 )}
+                <button
+                  onClick={() => handleManualCheck(editorType)}
+                  style={{
+                    padding: "5px 10px",
+                    backgroundColor: "#FF9800",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Check
+                </button>
                 <button
                   onClick={() => resetCode(editorType)}
                   style={{
@@ -184,7 +194,7 @@ contract HelloWorld {
                     cursor: "pointer",
                   }}
                 >
-                  Reset Code
+                  Reset
                 </button>
               </div>
             </div>

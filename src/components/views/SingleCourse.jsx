@@ -145,7 +145,10 @@ const SingleCourse = ({ data, userId, courseId }) => {
             </div>
             {active?.handsOn ? (
               <div className="w-[38%] fixed right-5 top-10">
-                <CodeEditor editors={data?.lessons[lesson - 1]?.editor || []} />
+                <CodeEditor
+                  editors={data?.lessons[lesson - 1]?.editor || []}
+                  task={data?.lessons[lesson - 1]?.task || {}}
+                />
               </div>
             ) : null}
           </div>
