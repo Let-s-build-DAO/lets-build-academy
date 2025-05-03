@@ -131,22 +131,29 @@ contract HelloWorld {
         display: "flex",
         flexDirection: "column",
         height: "100vh",
-        overflow: "hidden",
+        overflowY: "auto",
+        paddingBottom: "80px",
       }}
     >
       <div
         style={{
           flex: 1,
           margin: "10px",
-          // overflowY: "auto", // Make this side scrollable
-          // height: "100%",
-          // paddingRight: "10px",
+          // overflow: "hidden",
+          paddingRight: "10px",
         }}
       >
         {editors.map((editorType) => (
           <div key={editorType} style={{ marginBottom: "20px" }}>
             {task?.[editorType]?.description && (
-              <div style={{ marginBottom: "10px" }}>
+              <div
+                style={{
+                  marginBottom: "30px",
+                  backgroundColor: "white",
+                  padding: "10px",
+                  borderRadius: "5px",
+                }}
+              >
                 <h4>Task:</h4>
                 <p style={{ margin: "5px 0", fontStyle: "italic" }}>
                   {task?.[editorType]?.description}

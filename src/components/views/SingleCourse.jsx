@@ -144,7 +144,7 @@ const SingleCourse = ({ data, userId, courseId }) => {
               <MdPreview editorId={id} modelValue={active?.body} />
             </div>
             {active?.handsOn ? (
-              <div className="w-[38%] fixed right-5 top-10 overflow-y-scroll">
+              <div className="w-[38%] fixed right-5 top-10">
                 <CodeEditor
                   editors={data?.lessons[lesson - 1]?.editor || []}
                   task={data?.lessons[lesson - 1]?.task || {}}
