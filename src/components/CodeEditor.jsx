@@ -1,7 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import Editor from "@monaco-editor/react";
 
-const CodeEditor = ({ editors, task }) => {
+const CodeEditor = forwardRef(({ editors, task }, ref) => {
   const initialCodeStates = {
     html: task?.html?.boilerplate,
     css: task?.css?.boilerplate || "body { font-family: Arial, sans-serif; }",
@@ -86,6 +91,27 @@ contract HelloWorld {
     }
   }, [codeStates, editors, task]);
 
+  useImperativeHandle(ref, () => ({
+    validateAll: () => {
+      const results = {};
+      editors.forEach((editorType) => {
+        if (task?.[editorType]?.solution) {
+          results[editorType] = validateCode(
+            editorType,
+            codeStates[editorType]
+          );
+        }
+      });
+      return results;
+    },
+    hasCorrectSolution: () => {
+      return editors.every((editorType) => {
+        if (!task?.[editorType]?.solution) return true;
+        return validateCode(editorType, codeStates[editorType]);
+      });
+    },
+  }));
+
   const handleCodeChange = (language, value) => {
     setCodeStates((prev) => ({
       ...prev,
@@ -126,21 +152,13 @@ contract HelloWorld {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100vh",
-        overflowY: "auto",
-        paddingBottom: "80px",
-      }}
-    >
+    <div className="flex flex-col pb-[50px] content-center mb-10 lg:h-[100vh] lg:overflow-y-auto">
       <div
+        className="lg:pr-[10px]"
         style={{
           flex: 1,
           margin: "10px",
           // overflow: "hidden",
-          paddingRight: "10px",
         }}
       >
         {editors.map((editorType) => (
@@ -263,6 +281,6 @@ contract HelloWorld {
       )}
     </div>
   );
-};
+});
 
 export default CodeEditor;

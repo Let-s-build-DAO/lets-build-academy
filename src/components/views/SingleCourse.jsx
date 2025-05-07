@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { MdPreview } from "md-editor-rt";
 import "md-editor-rt/lib/preview.css";
 import {
@@ -28,6 +28,7 @@ const SingleCourse = ({ data, userId, courseId }) => {
   const [lesson, setLesson] = useState(0);
   const [hasProgress, setHasProgress] = useState(false);
   const router = useRouter;
+  const codeEditorRef = useRef(null);
 
   useEffect(() => {
     const fetchProgress = async () => {
@@ -95,6 +96,22 @@ const SingleCourse = ({ data, userId, courseId }) => {
   };
 
   const handleNextLesson = async () => {
+    if (active?.task && codeEditorRef.current) {
+      try {
+        const isValid = codeEditorRef.current.hasCorrectSolution();
+        if (!isValid) {
+          toast.error(
+            "Please complete the current task correctly before proceeding to the next lesson."
+          );
+          return;
+        }
+      } catch (error) {
+        console.error("Validation error:", error);
+        toast.error("Error validating your solution. Please try again.");
+        return;
+      }
+    }
+
     if (lesson < data?.lessons.length) {
       const nextLesson = lesson + 1;
       setLesson(nextLesson);
@@ -118,8 +135,8 @@ const SingleCourse = ({ data, userId, courseId }) => {
     <>
       {hasProgress && lesson > 0 ? (
         <section className="mt-4">
-          <div className="flex justify-between relative">
-            <div className={`${active?.handsOn ? "w-1/2" : "w-full"}`}>
+          <div className="lg:flex justify-between relative">
+            <div className={`${active?.handsOn ? "lg:w-1/2" : "w-full"}`}>
               <div className="flex my-3 justify-between">
                 <button onClick={handlePreviousLesson} disabled={lesson === 1}>
                   <img src="/arrow_circle_left.png" alt="Previous Lesson" />
@@ -144,8 +161,9 @@ const SingleCourse = ({ data, userId, courseId }) => {
               <MdPreview editorId={id} modelValue={active?.body} />
             </div>
             {active?.handsOn ? (
-              <div className="w-[38%] fixed right-5 top-10">
+              <div className="w-full lg:w-[38%] relative lg:fixed lg:right-5 top-10">
                 <CodeEditor
+                  ref={codeEditorRef}
                   editors={data?.lessons[lesson - 1]?.editor || []}
                   task={data?.lessons[lesson - 1]?.task || {}}
                 />
