@@ -152,7 +152,7 @@ contract HelloWorld {
   };
 
   return (
-    <div className="flex flex-col pb-[50px] content-center mb-10 lg:h-[100vh] lg:overflow-y-auto">
+    <div className="flex flex-col pb-[50px] lg:pb-[100px] content-center mb-10 lg:h-[100vh] lg:overflow-y-auto">
       <div
         className="lg:pr-[10px]"
         style={{
