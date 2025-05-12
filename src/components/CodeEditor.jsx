@@ -1,12 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import Editor from "@monaco-editor/react";
 
-const CodeEditor = ({ editors }) => {
-  const [codeStates, setCodeStates] = useState({
-    html: "<!DOCTYPE html>\n<html>\n<body>\n<h1>Hello, World!</h1>\n</body>\n</html>",
-    css: "body { font-family: Arial, sans-serif; }",
-    js: 'console.log("Hello from JavaScript!");',
-    solidity: `
+const CodeEditor = forwardRef(({ editors, task }, ref) => {
+  const initialCodeStates = {
+    html: task?.html?.boilerplate,
+    css: task?.css?.boilerplate || "body { font-family: Arial, sans-serif; }",
+    js: task?.js?.boilerplate || 'console.log("Hello from JavaScript!");',
+    solidity:
+      task?.solidity?.boilerplate ||
+      `
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -14,13 +21,60 @@ contract HelloWorld {
     string public greet = "Hello, Solidity!";
 }
 `,
-  });
+  };
 
+  const [codeStates, setCodeStates] = useState(initialCodeStates);
   const [output, setOutput] = useState("");
+  const [validationResults, setValidationResults] = useState({});
+  const [manualCheckResults, setManualCheckResults] = useState({});
+
+  const validateCode = (language, code) => {
+    const taskSolution =
+      task?.[language]?.solution || task?.solution?.[language];
+    if (!taskSolution) return null;
+
+    const normalize = (str) => str.trim().replace(/\r\n/g, "\n");
+    return normalize(code) === normalize(taskSolution);
+  };
+
+  const handleManualCheck = (editorType) => {
+    const isValid = validateCode(editorType, codeStates[editorType]);
+    setManualCheckResults((prev) => ({
+      ...prev,
+      [editorType]: isValid,
+    }));
+
+    // if (isValid) {
+    //   alert("✅ Correct! Your code matches the solution.");
+    // } else {
+    //   alert("❌ Incorrect. Your code doesn't match the expected solution.");
+    // }
+
+    return isValid;
+  };
 
   useEffect(() => {
-    
-    if (editors.includes("html") || editors.includes("css") || editors.includes("js")) {
+    // Automatic validation on code change
+    const results = {};
+    let allCorrect = true;
+
+    editors.forEach((editorType) => {
+      if (task?.[editorType]?.solution) {
+        const isValid = validateCode(editorType, codeStates[editorType]);
+        results[editorType] = isValid;
+        if (!isValid) allCorrect = false;
+      }
+    });
+
+    setValidationResults(results);
+
+    // Notify parent component if all expected solutions are correct
+    if (allCorrect && Object.keys(results).length > 0) {
+      task?.onCorrectSolution?.();
+    }
+
+    // Update output for HTML/CSS/JS preview
+    if (editors.some((editor) => ["html", "css", "js"].includes(editor))) {
       const htmlContent = `
         <!DOCTYPE html>
         <html>
@@ -35,7 +89,28 @@ contract HelloWorld {
       `;
       setOutput(htmlContent);
     }
-  }, [codeStates, editors]);
+  }, [codeStates, editors, task]);
+
+  useImperativeHandle(ref, () => ({
+    validateAll: () => {
+      const results = {};
+      editors.forEach((editorType) => {
+        if (task?.[editorType]?.solution) {
+          results[editorType] = validateCode(
+            editorType,
+            codeStates[editorType]
+          );
+        }
+      });
+      return results;
+    },
+    hasCorrectSolution: () => {
+      return editors.every((editorType) => {
+        if (!task?.[editorType]?.solution) return true;
+        return validateCode(editorType, codeStates[editorType]);
+      });
+    },
+  }));
 
   const handleCodeChange = (language, value) => {
     setCodeStates((prev) => ({
@@ -53,11 +128,117 @@ contract HelloWorld {
     }
   };
 
+  const resetCode = (language) => {
+    setCodeStates((prev) => ({
+      ...prev,
+      [language]: initialCodeStates[language],
+    }));
+    // Clear manual check result when resetting
+    setManualCheckResults((prev) => {
+      const newResults = { ...prev };
+      delete newResults[language];
+      return newResults;
+    });
+  };
+
+  const getValidationStatus = (editorType) => {
+    if (!task?.[editorType]?.solution) return null;
+
+    if (manualCheckResults.hasOwnProperty(editorType)) {
+      return manualCheckResults[editorType] ? "✅ Correct" : "❌ Incorrect";
+    }
+
+    return validationResults[editorType] ? "✅ Correct" : "✏️ Needs work";
+  };
+
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-      <div style={{ flex: 1, margin: "10px" }}>
+    <div className="flex flex-col pb-[50px] lg:pb-[100px] content-center mb-10 lg:h-[100vh] lg:overflow-y-auto">
+      <div
+        className="lg:pr-[10px]"
+        style={{
+          flex: 1,
+          margin: "10px",
+          // overflow: "hidden",
+        }}
+      >
         {editors.map((editorType) => (
           <div key={editorType} style={{ marginBottom: "20px" }}>
+            {task?.[editorType]?.description && (
+              <div
+                style={{
+                  marginBottom: "30px",
+                  backgroundColor: "white",
+                  padding: "10px",
+                  borderRadius: "5px",
+                }}
+              >
+                <h4>Task:</h4>
+                <p style={{ margin: "5px 0", fontStyle: "italic" }}>
+                  {task?.[editorType]?.description}
+                </p>
+              </div>
+            )}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: 10,
+              }}
+            >
+              <h3>{editorType.toUpperCase()}</h3>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "10px" }}
+              >
+                {task?.[editorType]?.solution && (
+                  <div
+                    style={{
+                      padding: "5px 10px",
+                      backgroundColor: manualCheckResults.hasOwnProperty(
+                        editorType
+                      )
+                        ? manualCheckResults[editorType]
+                          ? "#4CAF50"
+                          : "#f44336"
+                        : validationResults[editorType]
+                        ? "#4CAF50"
+                        : "#FF9800",
+                      color: "white",
+                      borderRadius: "4px",
+                    }}
+                  >
+                    {getValidationStatus(editorType)}
+                  </div>
+                )}
+                <button
+                  onClick={() => handleManualCheck(editorType)}
+                  style={{
+                    padding: "5px 10px",
+                    backgroundColor: "#FF9800",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Check
+                </button>
+                <button
+                  onClick={() => resetCode(editorType)}
+                  style={{
+                    padding: "5px 10px",
+                    backgroundColor: "#2196F3",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "4px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Reset
+                </button>
+              </div>
+            </div>
+
             {editorType === "solidity" ? (
               <div>
                 <Editor
@@ -100,6 +281,8 @@ contract HelloWorld {
       )}
     </div>
   );
-};
+});
+
+CodeEditor.displayName = "CodeEditor";
 
 export default CodeEditor;
