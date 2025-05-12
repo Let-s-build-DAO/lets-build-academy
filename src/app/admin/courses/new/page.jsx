@@ -324,8 +324,8 @@ const NewCourse = () => {
                     </div>
                   </div>
                 </div>
-                {single.editor.map((lang) => (
-                  <div>
+                {single.editor.map((lang, index) => (
+                  <div key={index}>
                     <div className="lg:flex justify-between lg:my-3">
                       <div className="lg:w-[49%] my-3">
                         <label htmlFor="">{lang} Task Description</label>

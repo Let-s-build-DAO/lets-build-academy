@@ -283,4 +283,6 @@ contract HelloWorld {
   );
 });
 
+CodeEditor.displayName = "CodeEditor";
+
 export default CodeEditor;
