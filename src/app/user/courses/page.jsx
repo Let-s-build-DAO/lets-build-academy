@@ -4,7 +4,7 @@ import CoursesCard from "@/src/components/cards/CoursesCard";
 import React, { useEffect, useState } from "react";
 import AdminLayout from "@/src/layouts/AdminLayout";
 import Link from "next/link";
-import { collection, query, getDocs, getFirestore } from "firebase/firestore";
+import { collection, query, getDocs, getFirestore, where  } from "firebase/firestore";
 import firebase_app from "../../../firebase/config";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
 import { useAtom } from "jotai";
@@ -32,11 +32,13 @@ const Courses = () => {
 
   const getData = async () => {
     const all = [];
-    const data = await getDocs(collection(db, "courses"));
+    const q = query(collection(db, "courses"), where("enabled", "==", true));
+    const data = await getDocs(q);
+
     data.forEach((doc) => {
       all.push({ ...doc.data(), id: doc.id });
-      // console.log(doc.id, " => ", doc.data());
     });
+
     setCourses(all);
   };
   useEffect(() => {

@@ -174,6 +174,7 @@ const NewCourse = () => {
       author,
       imgUrl,
       slug: createSlug(title),
+      enabled:false
     };
 
     if (courseId) {

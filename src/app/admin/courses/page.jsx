@@ -26,6 +26,8 @@ const Courses = () => {
     getData()
   }, [])
 
+  
+
   // console.log(courses)
   return (
     <AdminLayout>

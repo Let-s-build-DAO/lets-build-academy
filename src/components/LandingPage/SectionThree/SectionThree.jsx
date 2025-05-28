@@ -15,7 +15,7 @@ function SectionThree() {
                     </div>
                 </Link>
             </div>
-           <DisplayCourses />
+            <DisplayCourses page={false} />
         </section>
     )
 }

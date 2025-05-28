@@ -29,7 +29,7 @@ const courses = () => {
               </div>
             </Link>
           </div>
-          <DisplayCourses />
+          <DisplayCourses page={true} />
           {/* <main className="flex sm:flex-col flex-wrap items-center justify-evenly sm:p-4 mt-12">
             {[1, 2, 3, 4, 5, 6].map((item) => (
               <div key={item} className="first-div text-white mb-8 sm:mb-5">

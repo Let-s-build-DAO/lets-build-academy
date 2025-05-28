@@ -3,7 +3,7 @@ import React from "react";
 const MentorStatCard = ({ text, count, color, bg, img }) => {
   return (
     <div
-      className={`lg:w-[24%] flex p-4 sm:my-3 rounded-md ${color} ${bg} relative`}
+      className={`w-full flex p-4 rounded-md ${color} ${bg} relative`}
     >
       <div className="lg:w-1/2">
         <p>{text}</p>

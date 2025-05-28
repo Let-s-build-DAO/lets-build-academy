@@ -30,7 +30,7 @@ const Login = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         const userCred = userCredential.user;
-        const userDoc = await getDoc(doc(db, "users", userCred.uid));
+        const userDoc = await getDoc(doc(db, "usersProd", userCred.uid));
         if (userDoc.exists()) {
           setCookie("token", userCred.accessToken);
           setLoading(false);

@@ -27,7 +27,7 @@ const PersonalInfo = () => {
       .then(async (userCredential) => {
         // Signed up 
         const user = userCredential.user;
-        await setDoc(doc(db, "users", user.uid), {
+        await setDoc(doc(db, "usersProd", user.uid), {
           username: username,
           email: email,
           wallet: address,

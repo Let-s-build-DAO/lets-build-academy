@@ -22,9 +22,13 @@ const Mentor = () => {
   async function getData() {
     const usercol = collection(db, "usersProd");
     const citySnapshot = await getDocs(usercol);
+
+    const courseList = collection(db, "courses");
+    const courses = await getDocs(courseList);
+    const totalCourses = courses.docs.map((doc) => doc.data());
     const userList = citySnapshot.docs.map((doc) => doc.data());
 
-    setStats((prevStats) => ({ ...prevStats, totalStudents: userList.length }));
+    setStats((prevStats) => ({ ...prevStats, totalStudents: userList.length, totalCourses: totalCourses.length }));
   }
 
   useEffect(() => {
@@ -38,7 +42,7 @@ const Mentor = () => {
           <h1 className="text-4xl font-bold">Hey Admin 👋 </h1>
           <p className="mt-5">Keep track of your courses!</p>
         </div>
-        <section className="lg:flex flex-wrap mt-8 justify-between">
+        <section className="grid lg:grid-cols-2 mt-8 gap-4">
           <MentorStatCard
             text={"Total Students"}
             count={stats.totalStudents}
@@ -67,8 +71,6 @@ const Mentor = () => {
             color={"text-[#EB1C1C]"}
             bg={"bg-[#EB1C1C1A]"}
           />
-        </section>
-        <div className="lg:flex justify-between mt-4">
           <MentorStatCard
             text={"Total Mentors"}
             count={stats.totalMentors}
@@ -83,8 +85,11 @@ const Mentor = () => {
             color={"text-[#40196C]"}
             bg={"bg-[#E9CFF1]"}
           />
+        </section>
+        {/* <div className="lg:flex justify-between mt-4">
+         
 
-          <div className="lg:w-[49%] flex justify-between bg-[#22A8451A] rounded-md p-4 sm:my-3">
+           <div className="lg:w-[49%] flex justify-between bg-[#22A8451A] rounded-md p-4 sm:my-3">
             <div>
               <p className="text-[#22A845]">Top Rated Mentor</p>
               <p className="text-2xl my-6 font-bold text-[#22A845]">
@@ -92,8 +97,8 @@ const Mentor = () => {
               </p>
             </div>
             <img src="/images/user.png" className="w-20 h-20 my-auto" alt="" />
-          </div>
-        </div>
+          </div> 
+        </div> */}
       </section>
     </AdminLayout>
   );
