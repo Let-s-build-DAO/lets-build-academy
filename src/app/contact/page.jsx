@@ -61,7 +61,7 @@ const Contact = () => {
               Leave us a message
             </h1>
             <p className="text-center">
-              We're here to help. Feel free to get in touch with us for any
+              We&apos;re here to help. Feel free to get in touch with us for any
               inquiries, course information, or assistance. Our team is ready to
               assist you on your tech education journey.
             </p>
