@@ -30,15 +30,42 @@ const Login = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         const userCred = userCredential.user;
-        const userDoc = await getDoc(doc(db, "users", userCred.uid));
+
+        // Check users collection first (for admins)
+        let userDoc = await getDoc(doc(db, "users", userCred.uid));
+        let userData = null;
+
         if (userDoc.exists()) {
+          userData = userDoc.data();
+        } else {
+          // Check usersProd collection (for regular users only)
+          userDoc = await getDoc(doc(db, "usersProd", userCred.uid));
+          if (userDoc.exists()) {
+            userData = userDoc.data();
+            // Only allow non-admin users from usersProd
+            if (userData.role === 'admin') {
+              setLoading(false);
+              toast.error("Admin accounts must be created through the admin panel.");
+              return;
+            }
+          }
+        }
+
+        if (userData) {
+          // Check if admin is deactivated (only for users from "users" collection)
+          if (userData.role === 'admin' && userData.isActive === false) {
+            setLoading(false);
+            toast.error("Your admin account has been deactivated. Please contact support.");
+            return;
+          }
+
           setCookie("token", userCred.accessToken);
           setLoading(false);
           toast("Logged in Successfully!");
-          const userRole = userDoc.data().role;
-          setUser({ ...userDoc.data(), id: userCred.uid });
+          const userRole = userData.role;
+          setUser({ ...userData, id: userCred.uid });
           console.log(user.id);
-          console.log("User data:", userDoc.data());
+          console.log("User data:", userData);
           router.push(`/${userRole}`);
         } else {
           setLoading(false);
