@@ -18,7 +18,7 @@ const Contact = () => {
 
     try {
       const response = await fetch(
-        "https://formsubmit.co/academy@letsbuilddao.org",
+        "https://formsubmit.co/8ddc3b1dce457965df0cc2d21fa2ae75",
         {
           method: "POST",
           headers: {
