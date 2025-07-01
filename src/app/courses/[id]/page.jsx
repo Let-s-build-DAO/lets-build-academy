@@ -43,7 +43,7 @@ const CoursePage = () => {
           {loading ? (
             <p className="text-center">Loading...</p>
           ) : !course ? (
-            <p className="text-center text-red-500">Course not found</p>
+            <p className="text-center text-[#EB1515]">Course not found</p>
           ) : (
             <>
               <img

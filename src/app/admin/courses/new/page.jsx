@@ -56,6 +56,7 @@ const NewCourse = () => {
     task: {},
   };
   const [lessons, setLessons] = useState([lesson]);
+  const [invalidFields, setInvalidFields] = useState([]);
 
   useEffect(() => {
     if (page) {
@@ -134,8 +135,18 @@ const NewCourse = () => {
   };
 
   const handleValidation = () => {
-    if (!title || !description || !timeframe || !author || !skill || !img) {
-      toast.error("Please fill in all fields.");
+    const missing = [];
+    if (!title) missing.push("title");
+    if (!description) missing.push("description");
+    if (!timeframe) missing.push("timeframe");
+    if (!author) missing.push("author");
+    if (!skill) missing.push("skill");
+    if (!img) missing.push("img");
+
+    setInvalidFields(missing);
+
+    if (missing.length > 0) {
+      toast.error("Please fill in all required fields.");
       return false;
     }
     return true;
@@ -174,7 +185,7 @@ const NewCourse = () => {
       author,
       imgUrl,
       slug: createSlug(title),
-      enabled:false
+      enabled: false
     };
 
     if (courseId) {
@@ -269,39 +280,41 @@ const NewCourse = () => {
                       <option value="article">Article</option>
                     </select>
                   </div>
-                  <div className="lg:w-[49%] sm:my-3">
-                    <label htmlFor="">Lesson Code Editor</label>
-                    <div className="flex flex-col mt-2">
-                      {["html", "css", "js", "solidity"].map((option) => (
-                        <label
-                          key={option}
-                          className="flex items-center space-x-2"
-                        >
-                          <input
-                            type="checkbox"
-                            value={option}
-                            checked={single.editor.includes(option)}
-                            onChange={(e) => {
-                              const selectedEditors = single.editor.includes(
-                                option
-                              )
-                                ? single.editor.filter(
+                  {single.handsOn && (
+                    <div className="lg:w-[49%] sm:my-3">
+                      <label htmlFor="">Lesson Code Editor</label>
+                      <div className="flex flex-col mt-2">
+                        {["html", "css", "js", "solidity"].map((option) => (
+                          <label
+                            key={option}
+                            className="flex items-center space-x-2"
+                          >
+                            <input
+                              type="checkbox"
+                              value={option}
+                              checked={single.editor.includes(option)}
+                              onChange={(e) => {
+                                const selectedEditors = single.editor.includes(
+                                  option
+                                )
+                                  ? single.editor.filter(
                                     (lang) => lang !== option
                                   )
-                                : [...single.editor, option];
-                              handleLessonInputChange(
-                                index,
-                                "editor",
-                                selectedEditors
-                              );
-                            }}
-                            className="mr-2"
-                          />
-                          <span className="capitalize">{option}</span>
-                        </label>
-                      ))}
+                                  : [...single.editor, option];
+                                handleLessonInputChange(
+                                  index,
+                                  "editor",
+                                  selectedEditors
+                                );
+                              }}
+                              className="mr-2"
+                            />
+                            <span className="capitalize">{option}</span>
+                          </label>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
                 <div className="lg:flex justify-between lg:my-3">
                   <div className="lg:w-[49%] sm:my-3">
@@ -602,9 +615,12 @@ const NewCourse = () => {
               {img ? (
                 <img className="mx-auto" src={img} alt="" />
               ) : (
-                <div className="bg-white p-6 rounded-md w-full">
+                <div className={`bg-white p-6 rounded-md w-full ${invalidFields.includes("img") ? "border border-[#EB1515]" : ""}`}>
                   <img className="mx-auto" src="/file_upload.png" alt="" />
                 </div>
+              )}
+              {invalidFields.includes("img") && (
+                <span className="text-[#EB1515] text-xs block text-center mt-2">Course image is required.</span>
               )}
               <input
                 id={`img`}
@@ -629,9 +645,12 @@ const NewCourse = () => {
                   onChange={(e) => setTitle(e.target.value)}
                   value={title}
                   type="text"
-                  className="bg-white mt-2 rounded-md p-3 w-full"
+                  className={`bg-white mt-2 rounded-md p-3 w-full ${invalidFields.includes("title") ? "border border-[#EB1515]" : ""}`}
                   placeholder="Enter Course Title"
                 />
+                {invalidFields.includes("title") && (
+                  <span className="text-[#EB1515] text-xs">Course title is required.</span>
+                )}
               </div>
               <div className="my-3">
                 <label className="test-sm" htmlFor="">
@@ -642,9 +661,12 @@ const NewCourse = () => {
                   value={description}
                   name=""
                   id=""
-                  className="bg-white mt-2 rounded-md h-32 p-3 w-full"
+                  className={`bg-white mt-2 rounded-md h-32 p-3 w-full ${invalidFields.includes("description") ? "border border-[#EB1515]" : ""}`}
                   placeholder="Enter Course Description"
                 ></textarea>
+                {invalidFields.includes("description") && (
+                  <span className="text-[#EB1515] text-xs">Description is required.</span>
+                )}
               </div>
               <div className="my-3">
                 <label className="test-sm" htmlFor="">
@@ -654,9 +676,12 @@ const NewCourse = () => {
                   onChange={(e) => setTimeframe(e.target.value)}
                   value={timeframe}
                   type="text"
-                  className="bg-white mt-2 rounded-md p-3 w-full"
+                  className={`bg-white mt-2 rounded-md p-3 w-full ${invalidFields.includes("timeframe") ? "border border-[#EB1515]" : ""}`}
                   placeholder="E.g Two (2) Weeks"
                 />
+                {invalidFields.includes("timeframe") && (
+                  <span className="text-[#EB1515] text-xs">Timeframe is required.</span>
+                )}
               </div>
               <div className="my-3">
                 <label className="test-sm" htmlFor="">
@@ -666,9 +691,12 @@ const NewCourse = () => {
                   onChange={(e) => setAuthor(e.target.value)}
                   value={author}
                   type="text"
-                  className="bg-white mt-2 rounded-md p-3 w-full"
+                  className={`bg-white mt-2 rounded-md p-3 w-full ${invalidFields.includes("author") ? "border border-[#EB1515]" : ""}`}
                   placeholder="John Doe"
                 />
+                {invalidFields.includes("author") && (
+                  <span className="text-[#EB1515] text-xs">Author is required.</span>
+                )}
               </div>
               <div className="my-3">
                 <label className="test-sm" htmlFor="">
@@ -677,7 +705,7 @@ const NewCourse = () => {
                 <select
                   onChange={(e) => setSkill(e.target.value)}
                   value={skill}
-                  className="bg-white mt-2 rounded-md p-3 w-full"
+                  className={`bg-white mt-2 rounded-md p-3 w-full ${invalidFields.includes("skill") ? "border border-[#EB1515]" : ""}`}
                   name=""
                   id=""
                 >
@@ -688,6 +716,9 @@ const NewCourse = () => {
                   <option value="intermediate">Intermediate</option>
                   <option value="advance">Advance</option>
                 </select>
+                {invalidFields.includes("skill") && (
+                  <span className="text-[#EB1515] text-xs">Skill level is required.</span>
+                )}
               </div>
               <div className="my-3">
                 <Link href={"?content=true"}>
