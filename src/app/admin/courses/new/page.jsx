@@ -24,6 +24,7 @@ import {
 import { createSlug } from "@/src/utils/createSlug";
 import Spinner from "@/src/components/Spinner";
 import { toast } from "react-toastify";
+import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 
 const storage = getStorage();
 
@@ -57,6 +58,7 @@ const NewCourse = () => {
   };
   const [lessons, setLessons] = useState([lesson]);
   const [invalidFields, setInvalidFields] = useState([]);
+  const [expandedLessons, setExpandedLessons] = useState([0]);
 
   useEffect(() => {
     if (page) {
@@ -185,7 +187,7 @@ const NewCourse = () => {
       author,
       imgUrl,
       slug: createSlug(title),
-      enabled: false
+      enabled: false,
     };
 
     if (courseId) {
@@ -201,6 +203,12 @@ const NewCourse = () => {
 
     setLoading(false);
     router.push("/admin/courses");
+  };
+
+  const toggleLesson = (index) => {
+    setExpandedLessons((prev) =>
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+    );
   };
 
   return (
@@ -225,180 +233,198 @@ const NewCourse = () => {
               </button>
             </div>
           </div>
-          <div>
+          <div className="mt-5">
             {lessons.map((single, index) => (
-              <div key={index}>
-                <h2 className="font-bold my-3 text-lg">Lesson {index + 1}</h2>
-                <div className="lg:flex justify-between lg:my-3">
-                  <div className="lg:w-[49%] sm:my-3">
-                    <label htmlFor="">Lesson Title</label>
-                    <input
-                      onChange={(e) =>
-                        handleLessonInputChange(index, "title", e.target.value)
-                      }
-                      value={single.title}
-                      type="text"
-                      className="p-3 rounded-md w-full mt-2"
-                    />
-                  </div>
-                  <div className="lg:w-[49%] sm:my-3">
-                    <label htmlFor="">Lesson Subtitle (Optional)</label>
-                    <input
-                      onChange={(e) =>
-                        handleLessonInputChange(
-                          index,
-                          "subtitle",
-                          e.target.value
-                        )
-                      }
-                      value={single.subtitle}
-                      type="text"
-                      className="p-3 rounded-md w-full mt-2"
-                    />
-                  </div>
+              <div key={index} className=" rounded-lg p-4 mb-4 bg-white">
+                <div
+                  className="flex justify-between items-center cursor-pointer"
+                  onClick={() => toggleLesson(index)}
+                >
+                  <h2 className="font-bold text-lg">
+                    Lesson {index + 1}: {single.title || "Untitled"}
+                  </h2>
+                  <button className="p-2">
+                    {expandedLessons.includes(index) ? (
+                      <FaAngleUp className="h-5 w-5" />
+                    ) : (
+                      <FaAngleDown className="h-5 w-5" />
+                    )}
+                  </button>
                 </div>
-                <div className="lg:flex justify-between lg:my-3">
-                  <div className="lg:w-[49%] sm:my-3">
-                    <label htmlFor="">Lesson Category</label>
-                    <select
-                      onChange={(e) =>
-                        handleLessonInputChange(
-                          index,
-                          "category",
-                          e.target.value
-                        )
-                      }
-                      value={single.category}
-                      name=""
-                      className="p-3 rounded-md w-full mt-2"
-                      id=""
-                    >
-                      <option className="hidden" value="">
-                        Select Lesson Category
-                      </option>
-                      <option value="video">Video</option>
-                      <option value="article">Article</option>
-                    </select>
-                  </div>
-                  {single.handsOn && (
-                    <div className="lg:w-[49%] sm:my-3">
-                      <label htmlFor="">Lesson Code Editor</label>
-                      <div className="flex flex-col mt-2">
-                        {["html", "css", "js", "solidity"].map((option) => (
-                          <label
-                            key={option}
-                            className="flex items-center space-x-2"
-                          >
-                            <input
-                              type="checkbox"
-                              value={option}
-                              checked={single.editor.includes(option)}
-                              onChange={(e) => {
-                                const selectedEditors = single.editor.includes(
-                                  option
-                                )
-                                  ? single.editor.filter(
-                                    (lang) => lang !== option
-                                  )
-                                  : [...single.editor, option];
-                                handleLessonInputChange(
-                                  index,
-                                  "editor",
-                                  selectedEditors
-                                );
-                              }}
-                              className="mr-2"
-                            />
-                            <span className="capitalize">{option}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <div className="lg:flex justify-between lg:my-3">
-                  <div className="lg:w-[49%] sm:my-3">
-                    <label htmlFor="">Hands On</label>
-                    <div className="mt-3">
-                      <label className="switch">
+
+                {expandedLessons.includes(index) && (
+                  <div className="mt-4">
+                    <div className="lg:flex justify-between lg:my-3">
+                      <div className="lg:w-[49%] sm:my-3">
+                        <label htmlFor="">Lesson Title</label>
                         <input
-                          type="checkbox"
-                          checked={single.handsOn}
                           onChange={(e) =>
                             handleLessonInputChange(
                               index,
-                              "handsOn",
-                              e.target.checked
+                              "title",
+                              e.target.value
                             )
                           }
+                          value={single.title}
+                          type="text"
+                          className="p-3 rounded-md w-full mt-2"
                         />
-                        <span className="slider round"></span>
-                      </label>
-                      {/* <input type="checkbox" className='p-3' checked={single.handsOn} /> */}
-                    </div>
-                  </div>
-                </div>
-                {single.editor.map((lang, index) => (
-                  <div key={index}>
-                    <div className="lg:flex justify-between lg:my-3">
-                      <div className="lg:w-[49%] my-3">
-                        <label htmlFor="">{lang} Task Description</label>
-                        <textarea
-                          onChange={(e) => {
-                            handleLessonInputChange(index, "task", {
-                              ...single.task,
-                              [lang]: {
-                                ...((single.task ?? {})[lang] || {}),
-                                description: e.target.value,
-                              },
-                            });
-                          }}
-                          value={single.task?.[lang]?.description || ""}
-                          name=""
-                          id=""
-                          className="w-full mt-2 p-3 rounded-md h-20"
-                        ></textarea>
                       </div>
-                      <div className=" lg:w-[49%] my-3">
-                        <label htmlFor="">{lang} Boilerplate Code</label>
-                        <textarea
-                          onChange={(e) => {
-                            handleLessonInputChange(index, "task", {
-                              ...single.task,
-                              [lang]: {
-                                ...((single.task ?? {})[lang] || {}),
-                                boilerplate: e.target.value,
-                              },
-                            });
-                          }}
-                          value={single.task?.[lang]?.boilerplate || ""}
-                          name=""
-                          id=""
-                          className="w-full mt-2 p-3 rounded-md h-20"
-                        ></textarea>
+                      <div className="lg:w-[49%] sm:my-3">
+                        <label htmlFor="">Lesson Subtitle (Optional)</label>
+                        <input
+                          onChange={(e) =>
+                            handleLessonInputChange(
+                              index,
+                              "subtitle",
+                              e.target.value
+                            )
+                          }
+                          value={single.subtitle}
+                          type="text"
+                          className="p-3 rounded-md w-full mt-2"
+                        />
                       </div>
                     </div>
                     <div className="lg:flex justify-between lg:my-3">
-                      <div className="lg:w-[49%] my-3">
-                        <label htmlFor="">{lang} Task Solution</label>
-                        <textarea
-                          onChange={(e) => {
-                            handleLessonInputChange(index, "task", {
-                              ...single.task,
-                              [lang]: {
-                                ...((single.task ?? {})[lang] || {}),
-                                solution: e.target.value,
-                              },
-                            });
-                          }}
-                          value={single.task?.[lang]?.solution || ""}
+                      <div className="lg:w-[49%] sm:my-3">
+                        <label htmlFor="">Lesson Category</label>
+                        <select
+                          onChange={(e) =>
+                            handleLessonInputChange(
+                              index,
+                              "category",
+                              e.target.value
+                            )
+                          }
+                          value={single.category}
                           name=""
+                          className="p-3 rounded-md w-full mt-2"
                           id=""
-                          className="w-full mt-2 p-3 rounded-md h-20"
-                        ></textarea>
+                        >
+                          <option className="hidden" value="">
+                            Select Lesson Category
+                          </option>
+                          <option value="video">Video</option>
+                          <option value="article">Article</option>
+                        </select>
                       </div>
+                      <div className="lg:w-[49%] sm:my-3">
+                        <label htmlFor="">Lesson Code Editor</label>
+                        <div className="flex flex-col mt-2">
+                          {["html", "css", "js", "solidity"].map((option) => (
+                            <label
+                              key={option}
+                              className="flex items-center space-x-2"
+                            >
+                              <input
+                                type="checkbox"
+                                value={option}
+                                checked={single.editor.includes(option)}
+                                onChange={(e) => {
+                                  const selectedEditors =
+                                    single.editor.includes(option)
+                                      ? single.editor.filter(
+                                          (lang) => lang !== option
+                                        )
+                                      : [...single.editor, option];
+                                  handleLessonInputChange(
+                                    index,
+                                    "editor",
+                                    selectedEditors
+                                  );
+                                }}
+                                className="mr-2"
+                              />
+                              <span className="capitalize">{option}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="lg:flex justify-between lg:my-3">
+                      <div className="lg:w-[49%] sm:my-3">
+                        <label htmlFor="">Hands On</label>
+                        <div className="mt-3">
+                          <label className="switch">
+                            <input
+                              type="checkbox"
+                              checked={single.handsOn}
+                              onChange={(e) =>
+                                handleLessonInputChange(
+                                  index,
+                                  "handsOn",
+                                  e.target.checked
+                                )
+                              }
+                            />
+                            <span className="slider round"></span>
+                          </label>
+                          {/* <input type="checkbox" className='p-3' checked={single.handsOn} /> */}
+                        </div>
+                      </div>
+                    </div>
+                    {single.editor.map((lang, index) => (
+                      <div key={index}>
+                        <div className="lg:flex justify-between lg:my-3">
+                          <div className="lg:w-[49%] my-3">
+                            <label htmlFor="">{lang} Task Description</label>
+                            <textarea
+                              onChange={(e) => {
+                                handleLessonInputChange(index, "task", {
+                                  ...single.task,
+                                  [lang]: {
+                                    ...((single.task ?? {})[lang] || {}),
+                                    description: e.target.value,
+                                  },
+                                });
+                              }}
+                              value={single.task?.[lang]?.description || ""}
+                              name=""
+                              id=""
+                              className="w-full mt-2 p-3 rounded-md h-20"
+                            ></textarea>
+                          </div>
+                          <div className=" lg:w-[49%] my-3">
+                            <label htmlFor="">{lang} Boilerplate Code</label>
+                            <textarea
+                              onChange={(e) => {
+                                handleLessonInputChange(index, "task", {
+                                  ...single.task,
+                                  [lang]: {
+                                    ...((single.task ?? {})[lang] || {}),
+                                    boilerplate: e.target.value,
+                                  },
+                                });
+                              }}
+                              value={single.task?.[lang]?.boilerplate || ""}
+                              name=""
+                              id=""
+                              className="w-full mt-2 p-3 rounded-md h-20"
+                            ></textarea>
+                          </div>
+                        </div>
+                        <div className="lg:flex justify-between lg:my-3">
+                          <div className="lg:w-[49%] my-3">
+                            <label htmlFor="">{lang} Task Solution</label>
+                            <textarea
+                              onChange={(e) => {
+                                handleLessonInputChange(index, "task", {
+                                  ...single.task,
+                                  [lang]: {
+                                    ...((single.task ?? {})[lang] || {}),
+                                    solution: e.target.value,
+                                  },
+                                });
+                              }}
+                              value={single.task?.[lang]?.solution || ""}
+                              name=""
+                              id=""
+                              className="w-full mt-2 p-3 rounded-md h-20"
+                            ></textarea>
+                          </div>
 
-                      {/* {(lang === "html" || lang === "css") && (
+                          {/* {(lang === "html" || lang === "css") && (
                         <div className="lg:w-[49%] my-3">
                           <label htmlFor="">{lang} Expected Output</label>
 
@@ -419,9 +445,9 @@ const NewCourse = () => {
                           />
                         </div>
                       )} */}
-                    </div>
+                        </div>
 
-                    {/* <div className="lg:flex justify-between lg:my-3">
+                        {/* <div className="lg:flex justify-between lg:my-3">
                       {(lang === "js" || lang === "solidity") && (
                         <div className="lg:w-[49%] my-3">
                           <h4>{lang} Test Cases</h4>
@@ -515,82 +541,88 @@ const NewCourse = () => {
                         </div>
                       )}
                     </div> */}
-                  </div>
-                ))}
-
-                {single.category === "video" && (
-                  <div>
-                    <div className="my-3">
-                      <div className="flex">
-                        <img className="w-8" src="/file_upload.png" alt="" />
-                        <input
-                          type="file"
-                          onChange={(e) => handleVideoChange(e, index)}
-                          className="my-2 w-[100%] hidden max-w-[400px] lg:w-[100rem]"
-                          ref={uploadRef}
-                        />
-                        <p
-                          className="my-auto ml-3"
-                          onClick={() => uploadRef.current.click()}
-                        >
-                          CLick to upload video
-                        </p>
                       </div>
-                      {single.videoFile && (
-                        <button
-                          onClick={() => handleVideoUpload(index)}
-                          className="p-2 mt-2 bg-purple text-white rounded-md"
-                        >
-                          Upload Video
-                        </button>
-                      )}
-                      {single.videoUrl && (
-                        <p className="text-green-500 mt-2">
-                          Video uploaded successfully!
-                        </p>
-                      )}
-                    </div>
-                    <div className="my-3">
-                      <label htmlFor="">Description</label>
-                      <textarea
-                        onChange={(e) =>
-                          handleLessonInputChange(
-                            index,
-                            "description",
-                            e.target.value
-                          )
-                        }
-                        value={single.description}
-                        name=""
-                        id=""
-                        className="w-full mt-2 p-3 rounded-md h-20"
-                      ></textarea>
-                    </div>
-                  </div>
-                )}
-                {single.category === "article" && (
-                  <div>
-                    <MdEditor
-                      modelValue={single.body}
-                      onChange={(e) =>
-                        handleLessonInputChange(index, "body", e)
-                      }
-                      language="en-US"
-                      toolbars={[
-                        "bold",
-                        "underline",
-                        "italic",
-                        "strikeThrough",
-                        "title",
-                        "sub",
-                        "sup",
-                        "quote",
-                        "unorderedList",
-                        "orderedList",
-                        "link",
-                        "code",
-                      ]}
-                    />
+                    ))}
+
+                    {single.category === "video" && (
+                      <div>
+                        <div className="my-3">
+                          <div className="flex">
+                            <img
+                              className="w-8"
+                              src="/file_upload.png"
+                              alt=""
+                            />
+                            <input
+                              type="file"
+                              onChange={(e) => handleVideoChange(e, index)}
+                              className="my-2 w-[100%] hidden max-w-[400px] lg:w-[100rem]"
+                              ref={uploadRef}
+                            />
+                            <p
+                              className="my-auto ml-3"
+                              onClick={() => uploadRef.current.click()}
+                            >
+                              CLick to upload video
+                            </p>
+                          </div>
+                          {single.videoFile && (
+                            <button
+                              onClick={() => handleVideoUpload(index)}
+                              className="p-2 mt-2 bg-purple text-white rounded-md"
+                            >
+                              Upload Video
+                            </button>
+                          )}
+                          {single.videoUrl && (
+                            <p className="text-green-500 mt-2">
+                              Video uploaded successfully!
+                            </p>
+                          )}
+                        </div>
+                        <div className="my-3">
+                          <label htmlFor="">Description</label>
+                          <textarea
+                            onChange={(e) =>
+                              handleLessonInputChange(
+                                index,
+                                "description",
+                                e.target.value
+                              )
+                            }
+                            value={single.description}
+                            name=""
+                            id=""
+                            className="w-full mt-2 p-3 rounded-md h-20"
+                          ></textarea>
+                        </div>
+                      </div>
+                    )}
+                    {single.category === "article" && (
+                      <div>
+                        <MdEditor
+                          modelValue={single.body}
+                          onChange={(e) =>
+                            handleLessonInputChange(index, "body", e)
+                          }
+                          language="en-US"
+                          toolbars={[
+                            "bold",
+                            "underline",
+                            "italic",
+                            "strikeThrough",
+                            "title",
+                            "sub",
+                            "sup",
+                            "quote",
+                            "unorderedList",
+                            "orderedList",
+                            "link",
+                            "code",
+                          ]}
+                        />
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -615,12 +647,20 @@ const NewCourse = () => {
               {img ? (
                 <img className="mx-auto" src={img} alt="" />
               ) : (
-                <div className={`bg-white p-6 rounded-md w-full ${invalidFields.includes("img") ? "border border-[#EB1515]" : ""}`}>
+                <div
+                  className={`bg-white p-6 rounded-md w-full ${
+                    invalidFields.includes("img")
+                      ? "border border-[#EB1515]"
+                      : ""
+                  }`}
+                >
                   <img className="mx-auto" src="/file_upload.png" alt="" />
                 </div>
               )}
               {invalidFields.includes("img") && (
-                <span className="text-[#EB1515] text-xs block text-center mt-2">Course image is required.</span>
+                <span className="text-[#EB1515] text-xs block text-center mt-2">
+                  Course image is required.
+                </span>
               )}
               <input
                 id={`img`}
@@ -645,11 +685,17 @@ const NewCourse = () => {
                   onChange={(e) => setTitle(e.target.value)}
                   value={title}
                   type="text"
-                  className={`bg-white mt-2 rounded-md p-3 w-full ${invalidFields.includes("title") ? "border border-[#EB1515]" : ""}`}
+                  className={`bg-white mt-2 rounded-md p-3 w-full ${
+                    invalidFields.includes("title")
+                      ? "border border-[#EB1515]"
+                      : ""
+                  }`}
                   placeholder="Enter Course Title"
                 />
                 {invalidFields.includes("title") && (
-                  <span className="text-[#EB1515] text-xs">Course title is required.</span>
+                  <span className="text-[#EB1515] text-xs">
+                    Course title is required.
+                  </span>
                 )}
               </div>
               <div className="my-3">
@@ -661,11 +707,17 @@ const NewCourse = () => {
                   value={description}
                   name=""
                   id=""
-                  className={`bg-white mt-2 rounded-md h-32 p-3 w-full ${invalidFields.includes("description") ? "border border-[#EB1515]" : ""}`}
+                  className={`bg-white mt-2 rounded-md h-32 p-3 w-full ${
+                    invalidFields.includes("description")
+                      ? "border border-[#EB1515]"
+                      : ""
+                  }`}
                   placeholder="Enter Course Description"
                 ></textarea>
                 {invalidFields.includes("description") && (
-                  <span className="text-[#EB1515] text-xs">Description is required.</span>
+                  <span className="text-[#EB1515] text-xs">
+                    Description is required.
+                  </span>
                 )}
               </div>
               <div className="my-3">
@@ -676,11 +728,17 @@ const NewCourse = () => {
                   onChange={(e) => setTimeframe(e.target.value)}
                   value={timeframe}
                   type="text"
-                  className={`bg-white mt-2 rounded-md p-3 w-full ${invalidFields.includes("timeframe") ? "border border-[#EB1515]" : ""}`}
+                  className={`bg-white mt-2 rounded-md p-3 w-full ${
+                    invalidFields.includes("timeframe")
+                      ? "border border-[#EB1515]"
+                      : ""
+                  }`}
                   placeholder="E.g Two (2) Weeks"
                 />
                 {invalidFields.includes("timeframe") && (
-                  <span className="text-[#EB1515] text-xs">Timeframe is required.</span>
+                  <span className="text-[#EB1515] text-xs">
+                    Timeframe is required.
+                  </span>
                 )}
               </div>
               <div className="my-3">
@@ -691,11 +749,17 @@ const NewCourse = () => {
                   onChange={(e) => setAuthor(e.target.value)}
                   value={author}
                   type="text"
-                  className={`bg-white mt-2 rounded-md p-3 w-full ${invalidFields.includes("author") ? "border border-[#EB1515]" : ""}`}
+                  className={`bg-white mt-2 rounded-md p-3 w-full ${
+                    invalidFields.includes("author")
+                      ? "border border-[#EB1515]"
+                      : ""
+                  }`}
                   placeholder="John Doe"
                 />
                 {invalidFields.includes("author") && (
-                  <span className="text-[#EB1515] text-xs">Author is required.</span>
+                  <span className="text-[#EB1515] text-xs">
+                    Author is required.
+                  </span>
                 )}
               </div>
               <div className="my-3">
@@ -705,7 +769,11 @@ const NewCourse = () => {
                 <select
                   onChange={(e) => setSkill(e.target.value)}
                   value={skill}
-                  className={`bg-white mt-2 rounded-md p-3 w-full ${invalidFields.includes("skill") ? "border border-[#EB1515]" : ""}`}
+                  className={`bg-white mt-2 rounded-md p-3 w-full ${
+                    invalidFields.includes("skill")
+                      ? "border border-[#EB1515]"
+                      : ""
+                  }`}
                   name=""
                   id=""
                 >
@@ -717,7 +785,9 @@ const NewCourse = () => {
                   <option value="advance">Advance</option>
                 </select>
                 {invalidFields.includes("skill") && (
-                  <span className="text-[#EB1515] text-xs">Skill level is required.</span>
+                  <span className="text-[#EB1515] text-xs">
+                    Skill level is required.
+                  </span>
                 )}
               </div>
               <div className="my-3">
