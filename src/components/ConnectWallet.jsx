@@ -74,7 +74,7 @@ const ConnectWallet = () => {
         <p className="mb-4 text-xl text-center">You don&apos;t have our NFT, to claim our NFT click the button below.</p>
         <div className="flex justify-center">
           <a
-            href="https://lazy.letsbuilddao.org/"
+            href="https://lazy.lbdao.xyz/"
             target="_blank"
             rel="noopener noreferrer"
           >

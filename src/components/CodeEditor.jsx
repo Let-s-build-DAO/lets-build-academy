@@ -14,13 +14,13 @@ const CodeEditor = forwardRef(({ editors, task }, ref) => {
     solidity:
       task?.solidity?.boilerplate ||
       `
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+      // SPDX-License-Identifier: MIT
+      pragma solidity ^0.8.0;
 
-contract HelloWorld {
-    string public greet = "Hello, Solidity!";
-}
-`,
+      contract HelloWorld {
+        string public greet = "Hello, Solidity!";
+      }
+      `,
   };
 
   const [codeStates, setCodeStates] = useState(initialCodeStates);
@@ -158,7 +158,6 @@ contract HelloWorld {
         style={{
           flex: 1,
           margin: "10px",
-          // overflow: "hidden",
         }}
       >
         {editors.map((editorType) => (

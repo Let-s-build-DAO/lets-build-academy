@@ -27,11 +27,11 @@ export const metadata = {
     title: "Let's Build Academy | Learn Web3, Blockchain & Decentralized Tech",
     description:
       "Join Let's Build Academy to access expert-led Web3 and blockchain courses, bootcamps, and real-world DAO projects.",
-    url: "https://academy.letsbuilddao.org/", // Replace with actual page URL
+    url: "https://academy.lbdao.xyz/", // Replace with actual page URL
     type: "website",
     images: [
       {
-        url: "https://academy.letsbuilddao.org/images/academy.png", // Replace with actual OG image URL
+        url: "https://academy.lbdao.xyz/images/academy.png", // Replace with actual OG image URL
         width: 1200,
         height: 630,
         alt: "Let's Build Academy - Web3 Learning Platform",
@@ -43,7 +43,7 @@ export const metadata = {
     title: "Let's Build Academy | Learn Web3, Blockchain & More",
     description:
       "Explore hands-on courses in Web3 and blockchain development through Let's Build Academy – a learning hub powered by Let's Build DAO.",
-    images: ["https://academy.letsbuilddao.org/"], // Replace with actual image URL
+    images: ["https://academy.lbdao.xyz/"], // Replace with actual image URL
   },
 };
 
