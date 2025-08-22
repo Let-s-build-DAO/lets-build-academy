@@ -1,6 +1,7 @@
 "use client";
 
-import AdminLayout from "@/src/layouts/AdminLayout";
+import AdminLayout from "@/src/components/layouts/AdminLayout";
+
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";

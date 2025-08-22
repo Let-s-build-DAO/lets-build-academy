@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import AdminLayout from "../../layouts/AdminLayout";
+import AdminLayout from "../../components/layouts/AdminLayout";
 import { Progress } from "antd";
 import UserCountCard from "../../components/cards/UserCountCard";
 import ProfileCard from "../../components/cards/ProfileCard";

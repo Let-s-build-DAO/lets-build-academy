@@ -1,12 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import AdminHeader from "../components/AdminHeader";
-import AdminSideNav from "../components/AdminSideNav";
+import AdminSideNav from "../AdminSideNav";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useAtom } from "jotai";
-import { userAtom } from "../store";
+import { userAtom } from "../../store";
 import { getCookie } from "cookies-next";
 
 const AdminLayout = ({ children, header }) => {

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import AdminLayout from "../../layouts/AdminLayout";
+import AdminLayout from "../../components/layouts/AdminLayout";
 import MentorStatCard from "../../components/cards/MentorStatCard";
 import firebase_app from "../../firebase/config";
 import { getFirestore, collection, getDocs } from "firebase/firestore";

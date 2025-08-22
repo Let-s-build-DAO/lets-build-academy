@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import AdminLayout from "../../layouts/AdminLayout";
+import AdminLayout from "../../components/layouts/AdminLayout";
 import ProfileCard from "../cards/ProfileCard";
 import { useAtom } from "jotai";
 import { toast } from "react-toastify";
