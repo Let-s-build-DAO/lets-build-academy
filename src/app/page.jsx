@@ -142,7 +142,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                <button className='w-full bg-purple text-white py-3 rounded-lg font-semibold hover:bg-purple/90 transition-colors flex items-center justify-center gap-2 group'>
+                <button className='w-full bg-purple text-white py-3 rounded-full font-semibold hover:bg-purple/90 transition-colors flex items-center justify-center gap-2 group'>
                   Start Learning
                   <ArrowRight size={18} className='group-hover:translate-x-1 transition-transform' />
                 </button>
@@ -153,7 +153,7 @@ export default function Home() {
             {/* View All Courses Button */}
             <div className='text-center mt-12'>
               <Link href='/courses'>
-                <button className='bg-transparent border-2 border-purple text-purple px-8 py-3 rounded-lg font-semibold hover:bg-purple hover:text-white transition-all duration-300 flex items-center gap-2 mx-auto'>
+                <button className='bg-transparent border-2 border-purple text-purple px-8 py-3 rounded-full font-semibold hover:bg-purple hover:text-white transition-all duration-300 flex items-center gap-2 mx-auto'>
                   View All Courses
                   <ArrowRight size={20} />
                 </button>
@@ -229,38 +229,54 @@ export default function Home() {
           </div>
         </section>
 
-        <section>
-          <div className='max-w-7xl mx-auto py-20 px-6'>
+        <section className='bg-gradient-to-br from-gray-50 to-white py-20'>
+          <div className='max-w-7xl mx-auto px-6'>
             <div className='text-center mb-16'>
-              <h2 className='text-3xl md:text-4xl font-bold mb-4'>
-                Join the <span className=''>Web3 Revolution</span>
+              <div className='inline-flex items-center gap-2 bg-purple/10 text-purple px-4 py-2 rounded-full text-sm font-semibold mb-6'>
+                <span className='w-2 h-2 bg-purple rounded-full animate-pulse'></span>
+                More Amazing Features
+              </div>
+              <h2 className='text-3xl md:text-4xl font-bold text-gray mb-4'>
+                Join the <span className='text-purple'>Web3 Revolution</span>
               </h2>
-              <p className='text-lg max-w-2xl mx-auto'>
-                Sign up today and start building the future of the internet.
+              <p className='text-lg text-gray/70 max-w-2xl mx-auto'>
+                Discover additional features that make Let&apos;s Build Academy the perfect choice for your Web3 learning journey.
               </p>
             </div>
-            <div className='grid grid-cols-1 md:grid-cols-3 gap-8 mb-12'>
-              {otherFeats.map((feat) => (
-                <div key={feat.id} className='p-6 bg-white rounded-2xl shadow-md'>
-                  <h3 className='text-lg font-bold mb-2'>{feat.title}</h3>
-                  <p className='text-gray mb-4'>{feat.description}</p>
-                  <Link href={'/auth'}>
-                    <button className='bg-purple text-white px-4 py-2 rounded-full font-semibold hover:bg-purple/80 transition-all duration-300'>
-                      Learn More
-                    </button>
-                  </Link>
+
+            {/* Enhanced Feature Cards */}
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-8 mb-16'>
+              {otherFeats.map((feat, index) => (
+                <div
+                  key={feat.id}
+                  className='group relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden'
+                >
+
+                  {/* Icon */}
+                  <div className='relative z-10 mb-6'>
+                    <div className='w-16 h-16 bg-gradient-to-br from-purple/10 to-purple/20 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300'>
+                      <span className='text-3xl'>{feat.icon}</span>
+                    </div>
+                    <h3 className='text-xl font-bold text-gray mb-3 group-hover:text-purple transition-colors'>{feat.title}</h3>
+                    <p className='text-gray/70 leading-relaxed mb-6'>{feat.description}</p>
+                  </div>
+
+
+
+                  {/* CTA Button */}
+                  <div className='relative z-10'>
+                    <Link href={'/auth'}>
+                      <button className='w-full bg-purple text-white px-6 py-3 rounded-full font-semibold hover:from-purple/90 hover:to-purple/70 transition-all duration-300 flex items-center justify-center gap-2 group'>
+                        Get Started
+                        <ArrowRight size={16} className='group-hover:translate-x-1 transition-transform' />
+                      </button>
+                    </Link>
+                  </div>
+
                 </div>
               ))}
             </div>
 
-
-            <div className='text-center'>
-              <Link href='/auth'>
-                <button className='bg-purple text-white px-8 py-3 rounded-full font-semibold hover:bg-purple/80 transition-all duration-300'>
-                  Get Started
-                </button>
-              </Link>
-            </div>
           </div>
         </section>
       </>

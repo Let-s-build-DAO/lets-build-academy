@@ -91,7 +91,7 @@ const courses = () => {
                 </div>
               </div>
 
-              <button className='w-full bg-purple text-white py-3 rounded-lg font-semibold hover:bg-purple/90 transition-colors flex items-center justify-center gap-2 group'>
+              <button className='w-full bg-purple text-white py-3 rounded-full font-semibold hover:bg-purple/90 transition-colors flex items-center justify-center gap-2 group'>
                 Start Learning
                 <ArrowRight size={18} className='group-hover:translate-x-1 transition-transform' />
               </button>
