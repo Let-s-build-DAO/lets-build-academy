@@ -183,13 +183,17 @@ const AdminSideNav = ({ setShowBar, collapsed, setCollapsed }) => {
         <img src="/academylogo.png" className={`mb-10 transition-all duration-300 ${collapsed ? 'w-10 mx-auto' : 'w-40'}`} alt="Academy Logo" />
         {nav?.map((item, idx) => (
           <Link onClick={() => setShowBar()} href={item.href} key={idx}>
-            <div
-              className={`
-                ${item.href === pathname
-                  ? "bg-purple flex my-3 text-white p-3 rounded-full"
-                  : "flex my-3 p-3"
-                } justify-center items-center transition-all duration-300 ${collapsed ? 'flex-col' : ''}`}
-            >
+              <div
+                className={`
+                  ${
+                    (idx === 0
+                      ? pathname === item.href
+                      : pathname.startsWith(item.href)
+                    )
+                      ? "bg-purple flex my-3 text-white p-3 rounded-full"
+                      : "flex my-3 p-3"
+                  } justify-center items-center transition-all duration-300 ${collapsed ? 'flex-col' : ''}`}
+              >
               {item.icon}
               {!collapsed && <p className="ml-4 flex-grow">{item.name}</p>}
               <div
