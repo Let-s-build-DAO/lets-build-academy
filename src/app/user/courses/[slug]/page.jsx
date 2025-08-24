@@ -1,7 +1,7 @@
 'use client'
 
 import SingleCourse from '@/src/components/views/SingleCourse';
-import AdminLayout from '@/src/layouts/AdminLayout';
+import AdminLayout from '../../../../components/layouts/AdminLayout';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { doc, getDoc } from "firebase/firestore";
@@ -46,7 +46,7 @@ const CoursesPage = () => {
     getCourse()
   }, [])
   return (
-    <AdminLayout header={false}>
+    <AdminLayout collapsedProps={true}>
       <SingleCourse data={data} userId={userId} courseId={slug} />
     </AdminLayout>
   );

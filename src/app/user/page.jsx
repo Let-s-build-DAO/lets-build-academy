@@ -21,7 +21,7 @@ import { onAuthStateChanged, getAuth } from "firebase/auth";
 import firebase_app from "../../firebase/config";
 import CoursesCard from "../../components/cards/CoursesCard";
 import { toast } from "react-toastify";
-import UserLeaderboard from "@/src/components/UserLeaderboard";
+// import UserLeaderboard from "@/src/components/UserLeaderboard";
 
 const auth = getAuth(firebase_app);
 const db = getFirestore(firebase_app);

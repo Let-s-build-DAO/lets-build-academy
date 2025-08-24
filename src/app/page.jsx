@@ -112,7 +112,7 @@ export default function Home() {
               </p>
             </div>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
-              {[1, 2, 3, 4, 5, 6].map(item => <div key={item} className='rounded-xl p-6 border border-purple/10 hover:border-purple/30 transition-all duration-300 hover:shadow-lg group' >
+              {[1, 2, 3].map(item => <div key={item} className='rounded-xl p-6 border border-purple/10 hover:border-purple/30 transition-all duration-300 hover:shadow-lg group' >
                 <div className='relative mb-6'>
                   <div className='w-full h-48 bg-gradient-to-br from-purple/20 to-purple/40 rounded-lg flex items-center justify-center'>
                     <span className='text-4xl'>🔗</span>
@@ -182,9 +182,9 @@ export default function Home() {
                   <div
                     key={feature.id}
                     onClick={() => setActiveFeature(index)}
-                    className={`backdrop-blur-sm rounded-2xl p-6 transition-all duration-300 group cursor-pointer border-2 border-white/20 ${activeFeature === index
-                      ? 'bg-white/20 border-white/40 scale-105'
-                      : 'hover:bg-white/15'
+                    className={`backdrop-blur-sm rounded-2xl p-6 transition-all duration-300 group cursor-pointer ${activeFeature === index
+                      ? 'bg-white/20 border-2 border-white/40 scale-105'
+                      : 'hover:bg-white/10'
                       }`}
                   >
                     <div className='mb-4'>

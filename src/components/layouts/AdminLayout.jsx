@@ -8,8 +8,9 @@ import { useAtom } from "jotai";
 import { userAtom } from "../../store";
 import { getCookie } from "cookies-next";
 
-const AdminLayout = ({ children, header }) => {
+const AdminLayout = ({ children, collapsedProps }) => {
   const [showBar, setShowBar] = useState(true);
+  const [collapsed, setCollapsed] = useState(collapsedProps ? true : false);
   const [user] = useAtom(userAtom);
   const pathname = usePathname();
   const router = useRouter();
@@ -17,17 +18,14 @@ const AdminLayout = ({ children, header }) => {
 
   const [isMobile, setIsMobile] = useState(false);
 
-useEffect(() => {
-  const handleResize = () => {
-    setIsMobile(window.innerWidth <= 768); 
-  };
-  handleResize();
-
-
-  window.addEventListener("resize", handleResize);
-
-  return () => window.removeEventListener("resize", handleResize);
-}, []);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     // if (!token) {
@@ -40,14 +38,19 @@ useEffect(() => {
     //   router.push(`/${user.role}`)
     // }
   }, []);
+
   return (
-    <div className="lg:flex">
-      <div className={showBar ? "block " : "hidden"}>
-      <AdminSideNav setShowBar={() => {
-  if (isMobile) setShowBar(false);
-}} />
+    <div className="lg:flex w-full">
+      <div className={`${showBar ? "block" : "hidden"} transition-all duration-300`}>
+        <AdminSideNav
+          setShowBar={() => {
+            if (isMobile) setShowBar(false);
+          }}
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+        />
       </div>
-      <section className="lg:w-[80%] lg:ml-auto lg:p-6 p-4">
+      <section className={`${collapsed ? 'lg:w-[94%]' : "lg:w-[80%]"} transition-all duration-300 lg:ml-auto lg:p-6 p-4`}>
         <div className="sm:flex w-full justify-between">
           <button
             onClick={() => setShowBar(true)}
