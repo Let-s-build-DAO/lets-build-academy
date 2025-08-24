@@ -121,7 +121,25 @@ const AdminSideNav = ({ setShowBar, collapsed, setCollapsed }) => {
     },
     {
       href: "/admin/admins",
-      name: "Admins",
+      name: "Mentors",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          fill="currentColor"
+          className="bi bi-person-workspace"
+          viewBox="0 0 16 16"
+        >
+          <path d="M6 2a3 3 0 1 1 6 0 3 3 0 0 1-6 0zm3 2a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" />
+          <path d="M2 14s-1 0-1-1 1-4 7-4 7 3 7 4-1 1-1 1H2zm13-1c0-.26-.164-1.03-.76-1.724-.545-.636-1.492-1.256-3.16-1.275-1.717 0-2.687.63-3.24 1.276-.593.69-.758 1.457-.76 1.72l.008.002.014.002H15z" />
+          <rect x="4" y="8" width="8" height="2" rx="1" />
+        </svg>
+      ),
+    },
+    {
+      href: "/admin/students",
+      name: "Students",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -152,6 +170,7 @@ const AdminSideNav = ({ setShowBar, collapsed, setCollapsed }) => {
       ),
     },
   ];
+
   useEffect(() => {
     pathname.includes("user")
       ? setNav(userNav)
@@ -183,17 +202,16 @@ const AdminSideNav = ({ setShowBar, collapsed, setCollapsed }) => {
         <img src="/academylogo.png" className={`mb-10 transition-all duration-300 ${collapsed ? 'w-10 mx-auto' : 'w-40'}`} alt="Academy Logo" />
         {nav?.map((item, idx) => (
           <Link onClick={() => setShowBar()} href={item.href} key={idx}>
-              <div
-                className={`
-                  ${
-                    (idx === 0
-                      ? pathname === item.href
-                      : pathname.startsWith(item.href)
-                    )
-                      ? "bg-purple flex my-3 text-white p-3 rounded-full"
-                      : "flex my-3 p-3"
-                  } justify-center items-center transition-all duration-300 ${collapsed ? 'flex-col' : ''}`}
-              >
+            <div
+              className={`
+                  ${(idx === 0
+                  ? pathname === item.href
+                  : pathname.startsWith(item.href)
+                )
+                  ? "bg-purple flex my-3 text-white p-3 rounded-full"
+                  : "flex my-3 p-3"
+                } justify-center items-center transition-all duration-300 ${collapsed ? 'flex-col' : ''}`}
+            >
               {item.icon}
               {!collapsed && <p className="ml-4 flex-grow">{item.name}</p>}
               <div
