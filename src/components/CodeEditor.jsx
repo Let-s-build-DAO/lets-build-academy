@@ -161,10 +161,10 @@ const compareCSSAST = (userNode, solutionNode) => {
 const CodeEditor = forwardRef(({ editors, task }, ref) => {
   // Always use latest boilerplate for resets
   const getBoilerplate = useCallback((language) => {
-    if (language === "html") return task?.html?.boilerplate || "";
-    if (language === "css") return task?.css?.boilerplate || "body { font-family: Arial, sans-serif; }";
-    if (language === "js") return task?.js?.boilerplate || 'console.log("Hello from JavaScript!");';
-    if (language === "solidity") return task?.solidity?.boilerplate || `\n      // SPDX-License-Identifier: MIT\n      pragma solidity ^0.8.0;\n\n      contract HelloWorld {\n        string public greet = "Hello, Solidity!";\n      }\n      `;
+    if (language.toLowerCase() === "html") return task?.html?.boilerplate || "";
+    if (language.toLowerCase() === "css") return task?.css?.boilerplate || "body { font-family: Arial, sans-serif; }";
+    if (language.toLowerCase() === "js") return task?.js?.boilerplate || 'console.log("Hello from JavaScript!");';
+    if (language.toLowerCase() === "solidity") return task?.solidity?.boilerplate || `\n      // SPDX-License-Identifier: MIT\n      pragma solidity ^0.8.0;\n\n      contract HelloWorld {\n        string public greet = "Hello, Solidity!";\n      }\n      `;
     return "";
   }, [task]);
 

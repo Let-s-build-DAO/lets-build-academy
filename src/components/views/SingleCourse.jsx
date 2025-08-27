@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Spinner from "../Spinner";
 import Image from "next/image";
+import { FaSpinner } from "react-icons/fa";
 
 const db = getFirestore(firebase_app);
 
@@ -171,7 +172,7 @@ const SingleCourse = ({ data, userId, courseId }) => {
       {isLoading ? (
         <section className="min-h-screen flex items-center justify-center bg-gray-50">
           <div className="text-center">
-            <Spinner />
+            <FaSpinner className="animate-spin text-purple text-4xl mb-2" />
             <p className="mt-4 text-lg text-gray-600">Loading course...</p>
           </div>
         </section>
@@ -200,7 +201,7 @@ const SingleCourse = ({ data, userId, courseId }) => {
                       className="disabled:opacity-50"
                     >
                       {isNavigating ? (
-                        <Spinner />
+                        <FaSpinner className="animate-spin text-purple" />
                       ) : (
                         <Image src="/arrow_circle_right.png" alt="Next Lesson" width={32} height={32} />
                       )}
