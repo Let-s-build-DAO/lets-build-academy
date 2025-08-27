@@ -40,7 +40,7 @@ const Dashboard = () => {
 
   const fetchEnrolledCourses = async (userId) => {
     try {
-      const coursesQuery = query(collection(db, "courses"));
+      const coursesQuery = query(collection(db, "courses"), where("enabled", "==", true));
       const coursesSnapshot = await getDocs(coursesQuery);
       const enrolledCourses = [];
 
@@ -86,7 +86,7 @@ const Dashboard = () => {
 
   const fetchMostRecentEnrolledCourse = async (userId) => {
     try {
-      const coursesQuery = query(collection(db, "courses"));
+      const coursesQuery = query(collection(db, "courses"), where("enabled", "==", true));
       const coursesSnapshot = await getDocs(coursesQuery);
       let recentCourse = null;
       let recentTimestamp = null;
@@ -139,7 +139,7 @@ const Dashboard = () => {
 
   const fetchTotalEnrolledCourses = async (userId) => {
     try {
-      const coursesQuery = query(collection(db, "courses"));
+      const coursesQuery = query(collection(db, "courses"), where("enabled", "==", true));
       const coursesSnapshot = await getDocs(coursesQuery);
       let totalEnrolledCourses = 0;
 
@@ -168,7 +168,7 @@ const Dashboard = () => {
 
   const fetchTotalCompletedCourses = async (userId) => {
     try {
-      const coursesQuery = query(collection(db, "courses"));
+      const coursesQuery = query(collection(db, "courses"), where("enabled", "==", true));
       const coursesSnapshot = await getDocs(coursesQuery);
       let completedCourses = 0;
 
@@ -198,7 +198,7 @@ const Dashboard = () => {
 
   const fetchCoursesInProgress = async (userId) => {
     try {
-      const coursesQuery = query(collection(db, "courses"));
+      const coursesQuery = query(collection(db, "courses"), where("enabled", "==", true));
       const coursesSnapshot = await getDocs(coursesQuery);
       let coursesInProgress = 0;
 
@@ -309,7 +309,7 @@ const Dashboard = () => {
           </h1>
           <p className="text-sm mt-5">Let’s Learn something new today!!</p>
         </div>
-        <Link href={"/user/courses "}>
+        <Link href={"/user/courses"}>
           <button className="text-purple sm:my-3 flex my-auto">
             <p className="text-sm">Courses</p>
             <img
@@ -322,44 +322,50 @@ const Dashboard = () => {
       </section>
       <section>
         <div className="lg:flex mt-10">
-          <div className="lg:w-[65%]">
-            <section>
-              {/* <h3 className="font-semibold mb-3">Most Recent Course</h3> */}
-              {enrolledCourses.length > 0 && (
-                <div>
-                  <div className="p-6 shadow-lg lg:flex justify-between items-center bg-white rounded-lg mb-3">
-                    <div className="flex gap-3 items-center">
-                      <img
-                        className="h-8 w-8 my-auto mx-4"
-                        src="./images/icons/local_library.svg"
-                        alt=""
-                      />
-                      <div className="my-auto w-44">
-                        <h4 className="font-bold my-3 text-lg">
-                          {enrolledCourses[0].title}
-                        </h4>
-                        <p className="text-xs my-3">
-                          By {enrolledCourses[0].author}
-                        </p>
-                      </div>
-                      <Progress
-                        type="circle"
-                        percent={enrolledCourses[0].progress}
-                        strokeColor={twoColors}
-                        size={60}
-                      />
+          <div className="lg:w-[65%] space-y-5">
+            {enrolledCourses.length > 0 ? (
+              <div>
+                <div className="p-6 shadow-lg lg:flex justify-between items-center bg-white rounded-lg mb-3">
+                  <div className="flex gap-3 items-center">
+                    <img
+                      className="h-8 w-8 my-auto mx-4"
+                      src="./images/icons/local_library.svg"
+                      alt=""
+                    />
+                    <div className="my-auto w-44">
+                      <h4 className="font-bold my-3 text-lg">
+                        {enrolledCourses[0].title}
+                      </h4>
+                      <p className="text-xs my-3">
+                        By {enrolledCourses[0].author}
+                      </p>
                     </div>
-                    <Link href={`/user/courses/${enrolledCourses[0].id}`}>
-                      <button className="py-3 sm:mt-4 my-auto px-7 bg-purple text-white rounded-full">
-                        Continue
-                      </button>
-                    </Link>
+                    <Progress
+                      type="circle"
+                      percent={enrolledCourses[0].progress}
+                      strokeColor={twoColors}
+                      size={60}
+                    />
                   </div>
+                  <Link href={`/user/courses/${enrolledCourses[0].id}`}>
+                    <button className="py-3 sm:mt-4 my-auto px-7 bg-purple text-white rounded-full">
+                      Continue
+                    </button>
+                  </Link>
                 </div>
-              )}
-            </section>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-4 bg-white rounded-lg shadow-lg">
+                <p className="text-lg font-semibold mb-4">You have not enrolled in any courses yet.</p>
+                <Link href="/user/courses">
+                  <button className="bg-purple text-white px-6 py-3 rounded-full font-medium shadow hover:bg-purple/90 transition">
+                    Explore Courses
+                  </button>
+                </Link>
+              </div>
+            )}
 
-            <div className="my-3 mt-5 grid lg:grid-cols-3 gap-4">
+            <div className="grid lg:grid-cols-3 gap-4">
               <UserCountCard
                 text={"Total Enrolled Courses"}
                 count={totalEnrolledCourses}
@@ -376,7 +382,7 @@ const Dashboard = () => {
             {/* <UserLeaderboard /> */}
           </div>
           <div className="lg:w-[35%] mt-10 lg:mt-0 lg:ml-4">
-            <div className="shadow-lg bg-white p-4 rounded-md">
+            <div className="shadow-lg bg-white p-4 rounded-lg">
               <div className="flex justify-between">
                 <h3 className="text-lg font-bold">Performance</h3>
                 {/* <select

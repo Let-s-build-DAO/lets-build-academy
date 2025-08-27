@@ -173,7 +173,7 @@ const SingleCourse = ({ data, userId, courseId }) => {
         <section className="min-h-screen flex items-center justify-center bg-gray-50">
           <div className="text-center">
             <FaSpinner className="animate-spin text-purple text-4xl mb-2" />
-            <p className="mt-4 text-lg text-gray-600">Loading course...</p>
+            {/* <p className="mt-4 text-lg text-gray-600">Loading course...</p> */}
           </div>
         </section>
       ) : data ? (
