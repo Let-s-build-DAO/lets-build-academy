@@ -36,7 +36,7 @@ export default function Home() {
       title: 'Interactive Learning',
       description: 'Hands-on coding exercises, real-world projects, and interactive simulations that make learning Web3 engaging and practical.',
       image: '/images/abt1.png',
-      bgGradient: 'from-blue-400/20 to-blue-600/40'
+      bgGradient: 'from-purple/20 to-purple/40'
     },
 
     {
@@ -45,7 +45,7 @@ export default function Home() {
       title: 'Real-World Projects',
       description: 'Build actual DApps, smart contracts, and blockchain solutions that you can showcase in your portfolio.',
       image: '/images/academy.png',
-      bgGradient: 'from-purple-400/20 to-purple-600/40'
+      bgGradient: 'from-purple/20 to-purple/40'
     },
     {
       id: 3,
@@ -53,7 +53,7 @@ export default function Home() {
       title: 'Community Support',
       description: 'Join a vibrant community of builders, get help when stuck, and collaborate on exciting Web3 projects.',
       image: '/images/user.png',
-      bgGradient: 'from-orange-400/20 to-red-500/40'
+      bgGradient: 'from-purple/20 to-purple/40'
     },
 
   ]
@@ -64,7 +64,6 @@ export default function Home() {
       icon: '👨‍🏫',
       title: 'Expert Instructors',
       description: 'Learn from industry veterans and blockchain pioneers who have built successful Web3 projects.',
-      image: '/images/abt2.png',
       bgGradient: 'from-green-400/20 to-green-600/40'
     },
     {
@@ -72,7 +71,6 @@ export default function Home() {
       icon: '🏆',
       title: 'NFT Certificates',
       description: 'Earn verifiable NFT certificates stored on-chain that prove your Web3 skills to employers and the community.',
-      image: '/images/metrics.png',
       bgGradient: 'from-yellow-400/20 to-orange-500/40'
     },
     {
@@ -80,7 +78,6 @@ export default function Home() {
       icon: '💼',
       title: 'Career Support',
       description: 'Get guidance on career transitions, job placements, and connections with top Web3 companies hiring developers.',
-      image: '/images/deso.png',
       bgGradient: 'from-indigo-400/20 to-purple-600/40'
     }
   ]
