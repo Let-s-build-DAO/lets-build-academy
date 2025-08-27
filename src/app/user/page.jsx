@@ -72,9 +72,9 @@ const Dashboard = () => {
           0
         );
         const average = Math.round(total / enrolledCourses.length);
-        setProgress(average); 
+        setProgress(average);
       } else {
-        setProgress(0); 
+        setProgress(0);
       }
 
       return enrolledCourses;
@@ -327,7 +327,7 @@ const Dashboard = () => {
               {/* <h3 className="font-semibold mb-3">Most Recent Course</h3> */}
               {enrolledCourses.length > 0 && (
                 <div>
-                  <div className="p-6 lg:flex justify-between items-center bg-white rounded-lg mb-3">
+                  <div className="p-6 shadow-lg lg:flex justify-between items-center bg-white rounded-lg mb-3">
                     <div className="flex gap-3 items-center">
                       <img
                         className="h-8 w-8 my-auto mx-4"
@@ -339,7 +339,7 @@ const Dashboard = () => {
                           {enrolledCourses[0].title}
                         </h4>
                         <p className="text-xs my-3">
-                          {enrolledCourses[0].author}
+                          By {enrolledCourses[0].author}
                         </p>
                       </div>
                       <Progress
@@ -359,7 +359,7 @@ const Dashboard = () => {
               )}
             </section>
 
-            <div className="my-3 mt-5 grid lg:grid-cols-2 gap-4">
+            <div className="my-3 mt-5 grid lg:grid-cols-3 gap-4">
               <UserCountCard
                 text={"Total Enrolled Courses"}
                 count={totalEnrolledCourses}
@@ -376,10 +376,9 @@ const Dashboard = () => {
             {/* <UserLeaderboard /> */}
           </div>
           <div className="lg:w-[35%] mt-10 lg:mt-0 lg:ml-4">
-            <ProfileCard user={user} />
-            <div className="mt-4 bg-white p-4 rounded-md">
+            <div className="shadow-lg bg-white p-4 rounded-md">
               <div className="flex justify-between">
-                <h3 className="text-sm font-bold">Performance</h3>
+                <h3 className="text-lg font-bold">Performance</h3>
                 {/* <select
                   // value={selectedOption}
                   // onChange={(e) => setSelectedOption(e.target.value)}
@@ -391,7 +390,7 @@ const Dashboard = () => {
                 </select> */}
               </div>
 
-              <div className="flex my-4 justify-between">
+              <div className="flex my-9 justify-between">
                 <img
                   className="w-6 h-6 my-auto"
                   src="/images/disappointed-face.png"
@@ -416,7 +415,7 @@ const Dashboard = () => {
         {enrolledCourses.length > 1 && (
           <div className="lg:mt-2 mt-6">
             <p className="font-semibold">Enrolled Courses</p>
-            <div className="flex flex-wrap justify-between">
+            <div className="grid lg:grid-cols-3 gap-4">
               {enrolledCourses.slice(1).map((course) => (
                 <CoursesCard key={course.id} course={course} userId={userId} />
               ))}

@@ -20,7 +20,7 @@ module.exports = {
         223: "223px",
       },
       colors: {
-        white: "#F8F8F8",
+        white: "#fff",
         purple: "#40196C",
         gray: "#5C555E",
       },

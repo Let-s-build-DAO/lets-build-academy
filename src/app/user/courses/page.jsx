@@ -61,7 +61,7 @@ const Courses = () => {
         </button> */}
       </section>
       <section>
-        <div className="flex flex-wrap justify-between">
+        <div className="grid grid-cols-3 gap-4">
           {courses.map((course, index) => (
             <CoursesCard key={index} course={course} userId={userId} />
           ))}
