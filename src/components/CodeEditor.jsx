@@ -186,7 +186,7 @@ const CodeEditor = forwardRef(({ editors, task }, ref) => {
   };
 
   return (
-    <div className="flex flex-col pb-[50px] lg:pb-[100px] content-center mb-10 lg:h-[100vh] lg:overflow-y-auto">
+    <div className="flex flex-col content-center mb-10 lg:h-[100vh] lg:overflow-y-auto">
       {/* Tabs for language editors and preview */}
       <div className="flex gap-2 border-b mb-4 px-2">
         {editors.map((editorType) => (

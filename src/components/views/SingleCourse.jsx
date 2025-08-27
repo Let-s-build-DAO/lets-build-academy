@@ -134,7 +134,7 @@ const SingleCourse = ({ data, userId, courseId }) => {
     <>
       {hasProgress && lesson > 0 ? (
         <section className="mt-4">
-          <div className="lg:flex justify-between relative">
+          <div className="lg:flex justify-between">
             <div className={`${active?.handsOn ? "lg:w-1/2" : "w-full"}`}>
               <div className="flex my-3 justify-between">
                 <button onClick={handlePreviousLesson} disabled={lesson === 1}>
@@ -151,10 +151,10 @@ const SingleCourse = ({ data, userId, courseId }) => {
               </div>
               {active?.videoUrl && (
                 <video
-                  className="custom-video w-full"
+                  className="w-full"
                   src={active.videoUrl}
                   controls
-                  height={300}
+                  height={500}
                 ></video>
               )}
               <MdPreview editorId={id} modelValue={active?.body} />
