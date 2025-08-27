@@ -9,6 +9,154 @@ import React, {
 import Editor from "@monaco-editor/react";
 import { FaSpinner } from "react-icons/fa";
 import { FaPlay, FaUndo, FaEye } from "react-icons/fa";
+import * as acorn from "acorn";
+import { parse } from "parse5";
+import postcss from "postcss";
+
+// AST-based validation functions
+const validateJavaScriptAST = (userCode, solutionCode) => {
+  try {
+    // Skip validation for empty or very short code
+    if (!userCode.trim() || !solutionCode.trim() || userCode.trim().length < 10) {
+      return userCode.trim() === solutionCode.trim();
+    }
+
+    const userAST = acorn.parse(userCode, { ecmaVersion: 2020 });
+    const solutionAST = acorn.parse(solutionCode, { ecmaVersion: 2020 });
+
+    return compareAST(userAST, solutionAST);
+  } catch (error) {
+    // Fallback to string comparison if AST parsing fails
+    console.warn("AST parsing failed, falling back to string comparison:", error.message);
+    const normalize = (str) => {
+      if (!str) return "";
+      return str
+        .trim()
+        .replace(/\r\n/g, "\n")
+        .replace(/\s+/g, " ")
+        .replace(/;\s*/g, ";")
+        .replace(/{\s*/g, "{")
+        .replace(/}\s*/g, "}")
+        .replace(/,\s*/g, ",")
+        .replace(/:\s*/g, ":");
+    };
+    return normalize(userCode) === normalize(solutionCode);
+  }
+};
+
+const compareAST = (userAST, solutionAST) => {
+  const cleanAST = (node) => {
+    if (node && typeof node === 'object') {
+      const { start, end, ...cleanNode } = node;
+      Object.keys(cleanNode).forEach(key => {
+        if (Array.isArray(cleanNode[key])) {
+          cleanNode[key] = cleanNode[key].map(cleanAST);
+        } else if (typeof cleanNode[key] === 'object') {
+          cleanNode[key] = cleanAST(cleanNode[key]);
+        }
+      });
+      return cleanNode;
+    }
+    return node;
+  };
+
+  return JSON.stringify(cleanAST(userAST)) === JSON.stringify(cleanAST(solutionAST));
+};
+
+const validateHTMLSemantic = (userHTML, solutionHTML) => {
+  try {
+    // Skip validation for empty or very short HTML
+    if (!userHTML.trim() || !solutionHTML.trim()) {
+      return userHTML.trim() === solutionHTML.trim();
+    }
+
+    const userDoc = parse(userHTML);
+    const solutionDoc = parse(solutionHTML);
+
+    return compareHTMLStructure(userDoc, solutionDoc);
+  } catch (error) {
+    // Fallback to string comparison if HTML parsing fails
+    console.warn("HTML parsing failed, falling back to string comparison:", error.message);
+    const normalize = (str) => {
+      if (!str) return "";
+      return str
+        .trim()
+        .replace(/\r\n/g, "\n")
+        .replace(/\s+/g, " ")
+        .replace(/>\s*</g, "><")
+        .replace(/>\s+/g, ">")
+        .replace(/\s+</g, "<");
+    };
+    return normalize(userHTML) === normalize(solutionHTML);
+  }
+};
+
+const compareHTMLStructure = (userNode, solutionNode) => {
+  if (userNode.nodeName !== solutionNode.nodeName) return false;
+  if (userNode.tagName !== solutionNode.tagName) return false;
+
+  const userAttrs = userNode.attrs || [];
+  const solutionAttrs = solutionNode.attrs || [];
+  if (userAttrs.length !== solutionAttrs.length) return false;
+
+  const sortAttrs = attrs => attrs.sort((a, b) => a.name.localeCompare(b.name));
+
+  return JSON.stringify(sortAttrs(userAttrs)) === JSON.stringify(sortAttrs(solutionAttrs)) &&
+    compareChildNodes(userNode.childNodes, solutionNode.childNodes);
+};
+
+const compareChildNodes = (userChildren, solutionChildren) => {
+  if (userChildren.length !== solutionChildren.length) return false;
+  return userChildren.every((child, index) =>
+    compareHTMLStructure(child, solutionChildren[index])
+  );
+};
+
+const validateCSSAST = (userCSS, solutionCSS) => {
+  try {
+    // Skip validation for empty or very short CSS
+    if (!userCSS.trim() || !solutionCSS.trim()) {
+      return userCSS.trim() === solutionCSS.trim();
+    }
+
+    const userRoot = postcss.parse(userCSS);
+    const solutionRoot = postcss.parse(solutionCSS);
+
+    return compareCSSAST(userRoot, solutionRoot);
+  } catch (error) {
+    // Fallback to string comparison if CSS parsing fails
+    console.warn("CSS parsing failed, falling back to string comparison:", error.message);
+    const normalize = (str) => {
+      if (!str) return "";
+      return str
+        .trim()
+        .replace(/\r\n/g, "\n")
+        .replace(/\s+/g, " ")
+        .replace(/;\s*/g, ";")
+        .replace(/{\s*/g, "{")
+        .replace(/}\s*/g, "}")
+        .replace(/,\s*/g, ",")
+        .replace(/:\s*/g, ":");
+    };
+    return normalize(userCSS) === normalize(solutionCSS);
+  }
+};
+
+const compareCSSAST = (userNode, solutionNode) => {
+  if (userNode.type !== solutionNode.type) return false;
+
+  if (userNode.selector !== solutionNode.selector) return false;
+
+  if (userNode.nodes && solutionNode.nodes) {
+    if (userNode.nodes.length !== solutionNode.nodes.length) return false;
+    return userNode.nodes.every((decl, index) =>
+      decl.prop === solutionNode.nodes[index].prop &&
+      decl.value === solutionNode.nodes[index].value
+    );
+  }
+
+  return true;
+};
 
 const CodeEditor = forwardRef(({ editors, task }, ref) => {
   // Always use latest boilerplate for resets
@@ -38,12 +186,11 @@ const CodeEditor = forwardRef(({ editors, task }, ref) => {
   const previewEnabled = editors.some((editor) => ["html", "css", "js"].includes(editor));
   const iframeRef = useRef(null);
 
-  // Cleanup iframe on unmount
+  // Cleanup timeout on unmount
   useEffect(() => {
     return () => {
-      if (iframeRef.current) {
-        document.body.removeChild(iframeRef.current);
-        iframeRef.current = null;
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
       }
     };
   }, []);
@@ -52,20 +199,45 @@ const CodeEditor = forwardRef(({ editors, task }, ref) => {
     const taskSolution = task?.[language]?.solution || task?.solution?.[language];
     if (!taskSolution) return null;
 
-    const normalize = (str) => {
-      if (!str) return "";
-      return str
-        .trim()
-        .replace(/\r\n/g, "\n")
-        .replace(/\s+/g, " ")
-        .replace(/;\s*/g, ";")
-        .replace(/{\s*/g, "{")
-        .replace(/}\s*/g, "}")
-        .replace(/,\s*/g, ",")
-        .replace(/:\s*/g, ":");
-    };
-
-    return normalize(code) === normalize(taskSolution);
+    switch (language.toLowerCase()) {
+      case 'js':
+        return validateJavaScriptAST(code, taskSolution);
+      case 'html':
+        return validateHTMLSemantic(code, taskSolution);
+      case 'css':
+        return validateCSSAST(code, taskSolution);
+      case 'solidity':
+        // For Solidity, we'll use string normalization as fallback for now
+        // In a real implementation, you'd use the Solidity compiler
+        const normalize = (str) => {
+          if (!str) return "";
+          return str
+            .trim()
+            .replace(/\r\n/g, "\n")
+            .replace(/\s+/g, " ")
+            .replace(/;\s*/g, ";")
+            .replace(/{\s*/g, "{")
+            .replace(/}\s*/g, "}")
+            .replace(/,\s*/g, ",")
+            .replace(/:\s*/g, ":");
+        };
+        return normalize(code) === normalize(taskSolution);
+      default:
+        // Fallback to string normalization for other languages
+        const normalizeDefault = (str) => {
+          if (!str) return "";
+          return str
+            .trim()
+            .replace(/\r\n/g, "\n")
+            .replace(/\s+/g, " ")
+            .replace(/;\s*/g, ";")
+            .replace(/{\s*/g, "{")
+            .replace(/}\s*/g, "}")
+            .replace(/,\s*/g, ",")
+            .replace(/:\s*/g, ":");
+        };
+        return normalizeDefault(code) === normalizeDefault(taskSolution);
+    }
   }, [task]);
 
   const handleManualCheck = useCallback(async (editorType) => {
@@ -89,25 +261,33 @@ const CodeEditor = forwardRef(({ editors, task }, ref) => {
     }
   }, [validateCode, codeStates]);
 
+  const debounceTimeoutRef = useRef(null);
+
   // Debounced validation to improve performance
   const debouncedValidate = useCallback(
-    (() => {
-      let timeoutId;
-      return (language, code) => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-          if (task?.[language]?.solution) {
-            const isValid = validateCode(language, code);
-            setValidationResults((prev) => ({
-              ...prev,
-              [language]: isValid,
-            }));
-          }
-        }, 500); // 500ms debounce
-      };
-    })(),
+    (language, code) => {
+      clearTimeout(debounceTimeoutRef.current);
+      debounceTimeoutRef.current = setTimeout(() => {
+        if (task?.[language]?.solution) {
+          const isValid = validateCode(language, code);
+          setValidationResults((prev) => ({
+            ...prev,
+            [language]: isValid,
+          }));
+        }
+      }, 500); // 500ms debounce
+    },
     [task, validateCode]
   );
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const updateOutput = useCallback(() => {
     if (editors.some((editor) => ["html", "css", "js"].includes(editor))) {
@@ -254,8 +434,8 @@ const CodeEditor = forwardRef(({ editors, task }, ref) => {
           <button
             key={editorType}
             className={`px-4 py-2 rounded-t-md font-semibold transition-colors duration-200 whitespace-nowrap ${activeTab === editorType
-                ? "bg-purple text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-purple/10"
+              ? "bg-purple text-white"
+              : "bg-gray-100 text-gray-700 hover:bg-purple/10"
               }`}
             onClick={() => setActiveTab(editorType)}
           >
@@ -266,8 +446,8 @@ const CodeEditor = forwardRef(({ editors, task }, ref) => {
           <button
             key="preview"
             className={`px-4 py-2 rounded-t-md font-semibold transition-colors duration-200 whitespace-nowrap ${activeTab === "preview"
-                ? "bg-green-600 text-white"
-                : "bg-gray-100 text-gray-700 hover:bg-green-100"
+              ? "bg-green-600 text-white"
+              : "bg-gray-100 text-gray-700 hover:bg-green-100"
               }`}
             onClick={() => setActiveTab("preview")}
           >
@@ -293,12 +473,12 @@ const CodeEditor = forwardRef(({ editors, task }, ref) => {
               {task?.[activeTab]?.solution && (
                 <span
                   className={`px-3 py-1 rounded text-xs font-bold shadow-sm ${manualCheckResults.hasOwnProperty(activeTab)
-                      ? manualCheckResults[activeTab]
-                        ? "bg-green-600 text-white border-green-700"
-                        : "bg-red-600 text-white border-red-700"
-                      : validationResults[activeTab]
-                        ? "bg-green-600 text-white border-green-700"
-                        : "bg-yellow-400 text-black border-yellow-500"
+                    ? manualCheckResults[activeTab]
+                      ? "bg-green-600 text-white border-green-700"
+                      : "bg-red-600 text-white border-red-700"
+                    : validationResults[activeTab]
+                      ? "bg-green-600 text-white border-green-700"
+                      : "bg-yellow-400 text-black border-yellow-500"
                     }`}
                 >
                   {getValidationStatus(activeTab)}
