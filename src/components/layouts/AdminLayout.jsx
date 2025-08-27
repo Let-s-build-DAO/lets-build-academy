@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useAtom } from "jotai";
 import { userAtom } from "../../store";
-import { getCookie } from "cookies-next";
 
 const AdminLayout = ({ children, collapsedProps }) => {
   const [showBar, setShowBar] = useState(true);
@@ -14,7 +13,6 @@ const AdminLayout = ({ children, collapsedProps }) => {
   const [user] = useAtom(userAtom);
   const pathname = usePathname();
   const router = useRouter();
-  const token = getCookie("token");
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -28,9 +26,6 @@ const AdminLayout = ({ children, collapsedProps }) => {
   }, []);
 
   useEffect(() => {
-    if (!token) {
-      router.push('/auth/login')
-    }
     if (user !== undefined) {
       if (pathname.includes(user.role)) {
         return
