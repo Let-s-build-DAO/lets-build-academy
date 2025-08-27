@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import AdminLayout from "../../components/layouts/AdminLayout";
 import MentorStatCard from "../../components/cards/MentorStatCard";
 import firebase_app from "../../firebase/config";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getFirestore, collection, getDocs, query, where } from "firebase/firestore";
 
 const db = getFirestore(firebase_app);
 
@@ -23,9 +23,22 @@ const Mentor = () => {
     const courses = await getDocs(courseList);
     const totalCourses = courses.docs.map((doc) => doc.data());
     const userList = citySnapshot.docs.map((doc) => doc.data());
-    setStats((prevStats) => ({ ...prevStats, totalStudents: userList.length, totalCourses: totalCourses.length }));
+
+    // Fetch admins (mentors)
+    const adminQuery = query(collection(db, "users"), where("role", "==", "admin"));
+    const adminSnapshot = await getDocs(adminQuery);
+    const mentorsList = adminSnapshot.docs.map(doc => doc.data());
+
+    setStats((prevStats) => ({
+      ...prevStats,
+      totalStudents: userList.length,
+      totalCourses: totalCourses.length,
+      totalMentors: mentorsList.length
+    }));
     setStudents(citySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
   }
+
+
 
   useEffect(() => {
     getData();

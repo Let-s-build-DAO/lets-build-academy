@@ -70,7 +70,6 @@ const SingleCourse = ({ data, userId, courseId }) => {
   const updateCourseProgress = async (courseId, completedLessons) => {
     try {
       if (!courseId || !userId) throw new Error("Missing courseId or userId");
-
       const enrollmentRef = doc(
         db,
         `courses/${courseId}/enrolledStudents`,

@@ -26,21 +26,10 @@ import { createSlug } from "@/src/utils/createSlug";
 import Spinner from "@/src/components/Spinner";
 import { toast } from "react-toastify";
 
-const storage = getStorage();
+
 
 const NewCourse = () => {
   const content = useSearchParams().get("content");
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [author, setAuthor] = useState("");
-  const [timeframe, setTimeframe] = useState("");
-  const [skill, setSkill] = useState("");
-  const [img, setImg] = useState("");
-  const [file, setFile] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [videoFile, setVideoFile] = useState(null);
-  const [courseId, setCourseId] = useState("");
-  // const [video, setVideo] = useState("")
   const router = useRouter();
   const uploadRef = useRef(null);
   const page = useSearchParams().get("id");
@@ -56,7 +45,59 @@ const NewCourse = () => {
     editor: [],
     task: {},
   };
-  const [lessons, setLessons] = useState([lesson]);
+
+  // Load initial state from localStorage if available
+  const getInitialState = () => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("newCourseForm");
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch {
+          return null;
+        }
+      }
+    }
+    return null;
+  };
+
+  const initial = getInitialState() || {
+    title: "",
+    description: "",
+    author: "",
+    timeframe: "",
+    skill: "",
+    img: "",
+    lessons: [lesson],
+  };
+
+  const [title, setTitle] = useState(initial.title);
+  const [description, setDescription] = useState(initial.description);
+  const [author, setAuthor] = useState(initial.author);
+  const [timeframe, setTimeframe] = useState(initial.timeframe);
+  const [skill, setSkill] = useState(initial.skill);
+  const [img, setImg] = useState(initial.img);
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [videoFile, setVideoFile] = useState(null);
+  const [courseId, setCourseId] = useState("");
+  const [lessons, setLessons] = useState(initial.lessons);
+
+  // Save form state to localStorage on change
+  useEffect(() => {
+    if (!courseId) {
+      const formState = {
+        title,
+        description,
+        author,
+        timeframe,
+        skill,
+        img,
+        lessons,
+      };
+      localStorage.setItem("newCourseForm", JSON.stringify(formState));
+    }
+  }, [title, description, author, timeframe, skill, img, lessons, courseId]);
 
   useEffect(() => {
     if (page) {
@@ -85,15 +126,14 @@ const NewCourse = () => {
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
     setFile(file);
-    const reader = new FileReader();
+    if (!file) return;
 
+    // Show preview only
+    const reader = new FileReader();
     reader.onloadend = () => {
       setImg(reader.result?.toString() || "");
     };
-
-    if (file) {
-      reader.readAsDataURL(file);
-    }
+    reader.readAsDataURL(file);
   };
 
   // const handleLessonInputChange = (index, field, value) => {
@@ -135,9 +175,19 @@ const NewCourse = () => {
   };
 
   const handleValidation = () => {
-    if (!title || !description || !timeframe || !author || !skill || !img) {
-      toast.error("Please fill in all fields.");
-      return false;
+    const fields = [
+      { key: "title", label: "Course Title" },
+      { key: "description", label: "Description" },
+      { key: "timeframe", label: "Timeframe" },
+      { key: "author", label: "Author" },
+      { key: "skill", label: "Skill Level" },
+      { key: "img", label: "Course Image" },
+    ];
+    for (const field of fields) {
+      if (!eval(field.key)) {
+        toast.error(`Please fill in the '${field.label}' field.`);
+        return false;
+      }
     }
     return true;
   };
@@ -146,24 +196,30 @@ const NewCourse = () => {
     if (!handleValidation()) return;
     setLoading(true);
     let imgUrl = img;
-    if (file) {
-      const storageRef = ref(storage, `images/${file.name}`);
-      const uploadTask = uploadBytesResumable(storageRef, file);
 
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log(progress);
-        },
-        (error) => {
-          console.error("Upload failed", error);
-        },
-        async () => {
-          imgUrl = await getDownloadURL(uploadTask.snapshot.ref());
+    // Upload image to Cloudinary if file exists and not already a Cloudinary URL
+    if (file && (!img || !img.startsWith("https://res.cloudinary.com/"))) {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "ml_default"); // Replace with your preset
+      try {
+        const res = await fetch("https://api.cloudinary.com/v1_1/dcgbfycr6/image/upload", {
+          method: "POST",
+          body: formData,
+        });
+        const data = await res.json();
+        if (data.secure_url) {
+          imgUrl = data.secure_url;
+        } else {
+          toast.error("Image upload failed");
+          setLoading(false);
+          return;
         }
-      );
+      } catch (err) {
+        toast.error("Image upload error");
+        setLoading(false);
+        return;
+      }
     }
 
     const courseData = {
@@ -175,7 +231,7 @@ const NewCourse = () => {
       author,
       imgUrl,
       slug: createSlug(title),
-      enabled:false
+      enabled: false
     };
 
     if (courseId) {
@@ -189,6 +245,8 @@ const NewCourse = () => {
       toast("Course created successfully!");
     }
 
+    // Clear localStorage after course creation
+    localStorage.removeItem("newCourseForm");
     setLoading(false);
     router.push("/admin/courses");
   };
@@ -270,66 +328,67 @@ const NewCourse = () => {
                       <option value="article">Article</option>
                     </select>
                   </div>
-                  <div className="lg:w-[49%] sm:my-3">
-                    <label htmlFor="">Lesson Code Editor</label>
-                    <div className="flex flex-col mt-2">
-                      {["html", "css", "js", "solidity"].map((option) => (
-                        <label
-                          key={option}
-                          className="flex items-center space-x-2"
-                        >
+                  <div className="lg:w-[49%] grid grid-cols-3 gap-5 ">
+                    <div className="sm:my-3">
+                      <label htmlFor="">Hands On</label>
+                      <div className="mt-3">
+                        <label className="switch">
                           <input
                             type="checkbox"
-                            value={option}
-                            checked={single.editor.includes(option)}
-                            onChange={(e) => {
-                              const selectedEditors = single.editor.includes(
-                                option
-                              )
-                                ? single.editor.filter(
-                                    (lang) => lang !== option
-                                  )
-                                : [...single.editor, option];
+                            checked={single.handsOn}
+                            onChange={(e) =>
                               handleLessonInputChange(
                                 index,
-                                "editor",
-                                selectedEditors
-                              );
-                            }}
-                            className="mr-2"
+                                "handsOn",
+                                e.target.checked
+                              )
+                            }
                           />
-                          <span className="capitalize">{option}</span>
+                          <span className="slider round"></span>
                         </label>
-                      ))}
+                        {/* <input type="checkbox" className='p-3' checked={single.handsOn} /> */}
+                      </div>
                     </div>
+                    {single.handsOn && <div className="col-span-2 sm:my-3">
+                      <label htmlFor="">Lesson Code Editor</label>
+                      <div className="grid grid-cols-2 mt-2">
+                        {["HTML", "CSS", "JS", "Solidity"].map((option) => (
+                          <label
+                            key={option}
+                            className="flex items-center space-x-2"
+                          >
+                            <input
+                              type="checkbox"
+                              value={option}
+                              checked={single.editor.includes(option)}
+                              onChange={(e) => {
+                                const selectedEditors = single.editor.includes(
+                                  option
+                                )
+                                  ? single.editor.filter(
+                                    (lang) => lang !== option
+                                  )
+                                  : [...single.editor, option];
+                                handleLessonInputChange(
+                                  index,
+                                  "editor",
+                                  selectedEditors
+                                );
+                              }}
+                              className="mr-2"
+                            />
+                            <span className="capitalize">{option}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                    }
                   </div>
                 </div>
-                <div className="lg:flex justify-between lg:my-3">
-                  <div className="lg:w-[49%] sm:my-3">
-                    <label htmlFor="">Hands On</label>
-                    <div className="mt-3">
-                      <label className="switch">
-                        <input
-                          type="checkbox"
-                          checked={single.handsOn}
-                          onChange={(e) =>
-                            handleLessonInputChange(
-                              index,
-                              "handsOn",
-                              e.target.checked
-                            )
-                          }
-                        />
-                        <span className="slider round"></span>
-                      </label>
-                      {/* <input type="checkbox" className='p-3' checked={single.handsOn} /> */}
-                    </div>
-                  </div>
-                </div>
-                {single.editor.map((lang, index) => (
-                  <div key={index}>
-                    <div className="lg:flex justify-between lg:my-3">
-                      <div className="lg:w-[49%] my-3">
+                <div className="my-3">
+                  {single.editor.map((lang, index) => (
+                    <div className="grid grid-cols-3 gap-5 my-3" key={index}>
+                      <div>
                         <label htmlFor="">{lang} Task Description</label>
                         <textarea
                           onChange={(e) => {
@@ -342,12 +401,10 @@ const NewCourse = () => {
                             });
                           }}
                           value={single.task?.[lang]?.description || ""}
-                          name=""
-                          id=""
-                          className="w-full mt-2 p-3 rounded-md h-20"
+                          className="w-full mt-2 p-3 rounded-md h-32"
                         ></textarea>
                       </div>
-                      <div className=" lg:w-[49%] my-3">
+                      <div>
                         <label htmlFor="">{lang} Boilerplate Code</label>
                         <textarea
                           onChange={(e) => {
@@ -360,14 +417,10 @@ const NewCourse = () => {
                             });
                           }}
                           value={single.task?.[lang]?.boilerplate || ""}
-                          name=""
-                          id=""
-                          className="w-full mt-2 p-3 rounded-md h-20"
+                          className="w-full mt-2 p-3 rounded-md h-32"
                         ></textarea>
                       </div>
-                    </div>
-                    <div className="lg:flex justify-between lg:my-3">
-                      <div className="lg:w-[49%] my-3">
+                      <div>
                         <label htmlFor="">{lang} Task Solution</label>
                         <textarea
                           onChange={(e) => {
@@ -380,131 +433,13 @@ const NewCourse = () => {
                             });
                           }}
                           value={single.task?.[lang]?.solution || ""}
-                          name=""
-                          id=""
-                          className="w-full mt-2 p-3 rounded-md h-20"
+                          className="w-full mt-2 p-3 rounded-md h-32"
                         ></textarea>
                       </div>
-
-                      {/* {(lang === "html" || lang === "css") && (
-                        <div className="lg:w-[49%] my-3">
-                          <label htmlFor="">{lang} Expected Output</label>
-
-                          <textarea
-                            name=""
-                            id=""
-                            className="w-full mt-2 p-3 rounded-md h-20"
-                            value={single.task?.[lang]?.expectedOutput || ""}
-                            onChange={(e) => {
-                              handleLessonInputChange(index, "task", {
-                                ...single.task,
-                                [lang]: {
-                                  ...single.task[lang],
-                                  expectedOutput: e.target.value,
-                                },
-                              });
-                            }}
-                          />
-                        </div>
-                      )} */}
                     </div>
+                  ))}
+                </div>
 
-                    {/* <div className="lg:flex justify-between lg:my-3">
-                      {(lang === "js" || lang === "solidity") && (
-                        <div className="lg:w-[49%] my-3">
-                          <h4>{lang} Test Cases</h4>
-
-                          {(single.task?.[lang]?.testCases || []).map(
-                            (test, i) => (
-                              <div key={i} className="test-case">
-                                <input
-                                  type="text"
-                                  placeholder="Input (comma-separated)"
-                                  className="bg-white mt-2 rounded-md p-3 w-full mb-3"
-                                  value={test.input?.join(", ") || ""}
-                                  onChange={(e) => {
-                                    const newTestCases = [
-                                      ...(single.task[lang]?.testCases || []),
-                                    ];
-                                    newTestCases[i] = {
-                                      ...newTestCases[i],
-                                      input: e.target.value
-                                        .split(",")
-                                        .map((x) => x.trim()),
-                                    };
-                                    handleLessonInputChange(index, "task", {
-                                      ...single.task,
-                                      [lang]: {
-                                        ...single.task[lang],
-                                        testCases: newTestCases,
-                                      },
-                                    });
-                                  }}
-                                />
-                                <input
-                                  type="text"
-                                  className="bg-white mt-2 rounded-md p-3 w-full mb-3"
-                                  placeholder="Expected Output"
-                                  value={test.expectedOutput || ""}
-                                  onChange={(e) => {
-                                    const newTestCases = [
-                                      ...(single.task[lang]?.testCases || []),
-                                    ];
-                                    newTestCases[i] = {
-                                      ...newTestCases[i],
-                                      expectedOutput: e.target.value,
-                                    };
-                                    handleLessonInputChange(index, "task", {
-                                      ...single.task,
-                                      [lang]: {
-                                        ...single.task[lang],
-                                        testCases: newTestCases,
-                                      },
-                                    });
-                                  }}
-                                />
-                                <button className="p-3 w-[1/3] text-white bg-purple rounded-md mb-5"
-                                  onClick={() => {
-                                    const newTestCases = (
-                                      single.task[lang]?.testCases || []
-                                    ).filter((_, idx) => idx !== i);
-                                    handleLessonInputChange(index, "task", {
-                                      ...single.task,
-                                      [lang]: {
-                                        ...single.task[lang],
-                                        testCases: newTestCases,
-                                      },
-                                    });
-                                  }}
-                                >
-                                  Remove
-                                </button>
-                              </div>
-                            )
-                          )}
-
-                          <button className="p-3 w-[1/3] text-white bg-purple rounded-md "
-                            onClick={() => {
-                              const newTestCases = [
-                                ...(single.task?.[lang]?.testCases || []),
-                                { input: [], expectedOutput: "" },
-                              ];
-                              handleLessonInputChange(index, "task", {
-                                ...single.task,
-                                [lang]: {
-                                  ...(single.task?.[lang] || {}),
-                                  testCases: newTestCases,
-                                },
-                              });
-                            }}
-                          >
-                            Add Test Case
-                          </button>
-                        </div>
-                      )}
-                    </div> */}
-                  </div>
-                ))}
 
                 {single.category === "video" && (
                   <div>
