@@ -25,14 +25,14 @@ const AdminLayout = ({ children, collapsedProps }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => {
-    if (user !== undefined) {
-      if (pathname.includes(user.role)) {
-        return
-      }
-      router.push(`/auth/login`)
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (user !== undefined) {
+  //     if (pathname.includes(user.role)) {
+  //       return
+  //     }
+  //     router.push(`/auth/login`)
+  //   }
+  // }, []);
 
   return (
     <div className="lg:flex w-full">

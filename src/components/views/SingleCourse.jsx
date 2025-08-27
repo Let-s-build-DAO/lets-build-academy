@@ -95,6 +95,7 @@ const SingleCourse = ({ data, userId, courseId }) => {
       setHasProgress(true);
     } catch (error) {
       console.error("Error updating course progress:", error);
+      throw error; // Re-throw to handle in calling function
     }
   };
 
@@ -102,42 +103,49 @@ const SingleCourse = ({ data, userId, courseId }) => {
     if (isNavigating) return;
 
     setIsNavigating(true);
-    setLesson(1);
-    setActive(data?.lessons[0]);
-    await updateCourseProgress(courseId, 1);
-    setIsNavigating(false);
+    try {
+      setLesson(1);
+      setActive(data?.lessons[0]);
+      await updateCourseProgress(courseId, 1);
+    } catch (error) {
+      console.error("Error starting course:", error);
+      toast.error("Failed to start course. Please try again.");
+    } finally {
+      setIsNavigating(false);
+    }
   };
 
   const handleNextLesson = async () => {
     if (isNavigating) return;
 
-    if (active?.task && codeEditorRef.current) {
-      setIsNavigating(true);
-      try {
+    setIsNavigating(true);
+
+    try {
+      // Validate hands-on tasks if present
+      if (active?.task && codeEditorRef.current) {
         const isValid = codeEditorRef.current.hasCorrectSolution();
         if (!isValid) {
           toast.error(
             "Please complete the current task correctly before proceeding to the next lesson."
           );
-          setIsNavigating(false);
           return;
         }
-      } catch (error) {
-        console.error("Validation error:", error);
-        toast.error("Error validating your solution. Please try again.");
-        setIsNavigating(false);
-        return;
       }
-    }
 
-    if (lesson < data?.lessons.length) {
-      const nextLesson = lesson + 1;
-      setLesson(nextLesson);
-      setActive(data?.lessons[nextLesson - 1]);
-      await updateCourseProgress(courseId, nextLesson);
-    } else {
-      toast.success("Congratulations! You have completed the course.");
-      router.push("/user/courses");
+      if (lesson < data?.lessons.length) {
+        const nextLesson = lesson + 1;
+        setLesson(nextLesson);
+        setActive(data?.lessons[nextLesson - 1]);
+        await updateCourseProgress(courseId, nextLesson);
+      } else {
+        toast.success("Congratulations! You have completed the course.");
+        router.push("/user/courses");
+      }
+    } catch (error) {
+      console.error("Error navigating to next lesson:", error);
+      toast.error("Failed to proceed to next lesson. Please try again.");
+    } finally {
+      setIsNavigating(false);
     }
   };
 
@@ -145,12 +153,19 @@ const SingleCourse = ({ data, userId, courseId }) => {
     if (isNavigating || lesson <= 1) return;
 
     setIsNavigating(true);
-    const prevLesson = lesson - 1;
-    setLesson(prevLesson);
-    setActive(data?.lessons[prevLesson - 1]);
-    await updateCourseProgress(courseId, prevLesson);
-    setIsNavigating(false);
+    try {
+      const prevLesson = lesson - 1;
+      setLesson(prevLesson);
+      setActive(data?.lessons[prevLesson - 1]);
+      await updateCourseProgress(courseId, prevLesson);
+    } catch (error) {
+      console.error("Error navigating to previous lesson:", error);
+      toast.error("Failed to go to previous lesson. Please try again.");
+    } finally {
+      setIsNavigating(false);
+    }
   };
+
   return (
     <>
       {isLoading ? (
@@ -167,7 +182,11 @@ const SingleCourse = ({ data, userId, courseId }) => {
               <div className="lg:flex justify-between">
                 <div className={`${active?.handsOn ? "lg:w-1/2" : "w-full"}`}>
                   <div className="flex my-3 justify-between">
-                    <button onClick={handlePreviousLesson} disabled={lesson === 1 || isNavigating}>
+                    <button
+                      onClick={handlePreviousLesson}
+                      disabled={lesson === 1 || isNavigating}
+                      className="disabled:opacity-50"
+                    >
                       <Image src="/arrow_circle_left.png" alt="Previous Lesson" width={32} height={32} />
                     </button>
                     <div className="text-center lg:w-[60%] w-[70%]">
@@ -175,7 +194,11 @@ const SingleCourse = ({ data, userId, courseId }) => {
                       <h1 className="font-bold lg:text-xl">{active?.title}</h1>
                       <p>{active?.subtitle}</p>
                     </div>
-                    <button onClick={handleNextLesson} disabled={isNavigating}>
+                    <button
+                      onClick={handleNextLesson}
+                      disabled={isNavigating}
+                      className="disabled:opacity-50"
+                    >
                       {isNavigating ? (
                         <Spinner />
                       ) : (
@@ -185,7 +208,7 @@ const SingleCourse = ({ data, userId, courseId }) => {
                   </div>
                   {active?.videoUrl && (
                     <video
-                      className="w-full"
+                      className="w-full mb-4"
                       src={active.videoUrl}
                       controls
                       height={500}
@@ -194,7 +217,7 @@ const SingleCourse = ({ data, userId, courseId }) => {
                   <MdPreview editorId={id} modelValue={active?.body} />
                 </div>
                 {active?.handsOn ? (
-                  <div className="w-full lg:w-[38%] relative lg:fixed lg:right-5 top-20">
+                  <div className="w-full lg:w-[38%] relative lg:fixed lg:right-5 top-15">
                     <CodeEditor
                       ref={codeEditorRef}
                       editors={data?.lessons[lesson - 1]?.editor || []}
@@ -217,9 +240,6 @@ const SingleCourse = ({ data, userId, courseId }) => {
                       width={400}
                       height={208}
                     />
-                    {/* <video controls>
-              <source src="/images/video.mp4" type="video/mp4" />
-            </video> */}
                   </div>
                   <div className="flex justify-between">
                     <div>
@@ -230,13 +250,6 @@ const SingleCourse = ({ data, userId, courseId }) => {
                       <p className="text-sm">Skill Level</p>
                       <h3 className="font-bold text-sm"> {data?.skill}</h3>
                     </div>
-                    {/* <Link href={'&lesson=0'}> */}
-                    {/* <button
-              onClick={() => setLesson(lesson || 1)}
-              className="p-3 rounded-full bg-purple text-white px-10"
-            >
-              Start
-                  </button> */}
                     <button
                       onClick={handleStartCourse}
                       disabled={isNavigating}
@@ -251,7 +264,6 @@ const SingleCourse = ({ data, userId, courseId }) => {
                         'Start Course'
                       )}
                     </button>
-                    {/* </Link> */}
                   </div>
                 </div>
                 <div className="lg:w-[48%] mt-10">
@@ -274,14 +286,6 @@ const SingleCourse = ({ data, userId, courseId }) => {
                       </div>
                     </div>
                   ))}
-
-                  {/* <div className='p-4 rounded-md bg-white flex justify-between sm:my-3 lg:w-[48%]'>
-            <p className='font-bold'>Lesson 1</p>
-            <div>
-              <h3 className='font-bold text-lg'>The Basics</h3>
-              <p className='text-xs'>The basics of Javascript</p>
-            </div>
-          </div> */}
                 </div>
               </div>
             </section>
