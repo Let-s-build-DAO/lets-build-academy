@@ -3,10 +3,31 @@ import MainLayout from '../components/layouts/MainLayout'
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { collection, query, getDocs, getFirestore, where, limit } from "firebase/firestore";
+import firebase_app from "../firebase/config";
 
 export default function Home() {
-  const [activeFeature, setActiveFeature] = useState(0)
+  const [activeFeature, setActiveFeature] = useState(0);
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const db = getFirestore(firebase_app);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      setLoading(true);
+      try {
+        const q = query(collection(db, "courses"), where("enabled", "==", true), limit(3));
+        const snapshot = await getDocs(q);
+        const courseList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setCourses(courseList);
+      } catch (err) {
+        setCourses([]);
+      }
+      setLoading(false);
+    };
+    fetchCourses();
+  }, []);
 
   const features = [
     {
@@ -42,7 +63,7 @@ export default function Home() {
       id: 0,
       icon: '👨‍🏫',
       title: 'Expert Instructors',
-      description: 'Learn from industry veterans and blockchain pioneers who have built successful Web3 projects and companies.',
+      description: 'Learn from industry veterans and blockchain pioneers who have built successful Web3 projects.',
       image: '/images/abt2.png',
       bgGradient: 'from-green-400/20 to-green-600/40'
     },
@@ -78,13 +99,17 @@ export default function Home() {
             </p>
 
             <div className='flex flex-row sm:flex-col gap-4 mt-8'>
-              <button className='p-3 rounded-full flex gap-2 items-center justify-center bg-purple text-white px-6 hover:bg-purple/90 transition-colors'>
-                Start Learning
-                <ArrowRight size={20} />
-              </button>
-              <button className='p-3 rounded-full flex gap-2 items-center justify-center border-2 text-purple border-purple font-semibold px-6 hover:bg-purple hover:text-white transition-colors'>
-                Explore Courses
-              </button>
+              <Link href={'/auth'}>
+                <button className='p-3 rounded-full flex gap-2 items-center justify-center bg-purple text-white px-6 hover:bg-purple/90 transition-colors'>
+                  Start Learning
+                  <ArrowRight size={20} />
+                </button>
+              </Link>
+              <Link href={'/courses'}>
+                <button className='p-3 rounded-full flex gap-2 items-center justify-center border-2 text-purple border-purple font-semibold px-6 hover:bg-purple hover:text-white transition-colors'>
+                  Explore Courses
+                </button>
+              </Link>
             </div>
           </div>
 
@@ -112,41 +137,56 @@ export default function Home() {
               </p>
             </div>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
-              {[1, 2, 3].map(item => <div key={item} className='rounded-xl p-6 border border-purple/10 hover:border-purple/30 transition-all duration-300 hover:shadow-lg group' >
-                <div className='relative mb-6'>
-                  <div className='w-full h-48 bg-gradient-to-br from-purple/20 to-purple/40 rounded-lg flex items-center justify-center'>
-                    <span className='text-4xl'>🔗</span>
+              {loading ? (
+                <div className="col-span-3 text-center py-12 text-gray-400">Loading courses...</div>
+              ) : courses.length === 0 ? (
+                <div className="col-span-3 text-center py-12 text-gray-400">No enabled courses found.</div>
+              ) : (
+                courses.slice(0, 3).map(course => (
+                  <div key={course.id} className='rounded-xl p-6 border border-purple/10 hover:border-purple/30 transition-all duration-300 hover:shadow-lg group'>
+                    <div className='relative mb-6'>
+                      <div className='w-full h-48 rounded-lg overflow-hidden flex items-center justify-center bg-gradient-to-br from-purple/20 to-purple/40'>
+                        {course.imgUrl ? (
+                          <img
+                            src={course.imgUrl}
+                            alt={course.title || 'Course Image'}
+                            className='object-cover w-full h-full'
+                          />
+                        ) : (
+                          <span className='text-4xl'>🔗</span>
+                        )}
+                      </div>
+                    </div>
+                    <div className='mb-4'>
+                      <h3 className='text-xl font-bold mb-2 group-hover:text-purple transition-colors'>
+                        {course.title}
+                      </h3>
+                      <p className='text-sm mb-3'>
+                        <span className="line-clamp-2">{course.description || 'No description provided.'}</span>
+                      </p>
+                      <div className='flex items-center gap-2 text-sm mb-2'>
+                        <span>By {course.author || 'Unknown'}</span>
+                      </div>
+                      <div className='flex items-center justify-between gap-4 text-sm text-gray/60'>
+                        <span className='flex items-center gap-1'>
+                          📚 {course.lessons ? `${course.lessons.length} Lessons` : 'N/A'}
+                        </span>
+                        <span className='flex items-center gap-1'>
+                          ⏱️ {course.timeframe ? course.timeframe : 'Duration N/A'}
+                        </span>
+                        <span className='flex items-center gap-1'>
+                          🏅 {course.skill ? course.skill : 'Skill N/A'}
+                        </span>
+                      </div>
+                    </div>
+                    <Link href={`/courses/${course.id}`}>
+                      <button className='w-full bg-purple text-white py-3 rounded-full font-semibold hover:bg-purple/90 transition-colors flex items-center justify-center gap-2 group'>
+                        Start Learning
+                        <ArrowRight size={18} className='group-hover:translate-x-1 transition-transform' />
+                      </button>
+                    </Link>
                   </div>
-                  {/* <div className='absolute top-4 right-4 bg-purple text-white px-3 py-1 rounded-full text-sm font-semibold'>
-                    New
-                  </div> */}
-                </div>
-
-                <div className='mb-4'>
-                  <h3 className='text-xl font-bold text-gray mb-2 group-hover:text-purple transition-colors'>
-                    Blockchain Fundamentals
-                  </h3>
-                  <p className='text-gray/70 text-sm mb-3'>
-                    Learn the core concepts of blockchain technology and how it&apos;s revolutionizing the digital world.
-                  </p>
-                  <div className='flex items-center gap-2 text-sm text-gray/60 mb-2'>
-                    <span>By Sarah Johnson</span>
-                  </div>
-                  <div className='flex items-center gap-4 text-sm text-gray/60'>
-                    <span className='flex items-center gap-1'>
-                      📚 12 Lessons
-                    </span>
-                    {/* <span className='flex items-center gap-1'>
-                      ⏱️ 8 hours
-                    </span> */}
-                  </div>
-                </div>
-
-                <button className='w-full bg-purple text-white py-3 rounded-full font-semibold hover:bg-purple/90 transition-colors flex items-center justify-center gap-2 group'>
-                  Start Learning
-                  <ArrowRight size={18} className='group-hover:translate-x-1 transition-transform' />
-                </button>
-              </div>
+                ))
               )}
             </div>
 
