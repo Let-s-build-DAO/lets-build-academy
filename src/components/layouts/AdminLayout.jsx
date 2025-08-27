@@ -28,15 +28,15 @@ const AdminLayout = ({ children, collapsedProps }) => {
   }, []);
 
   useEffect(() => {
-    // if (!token) {
-    //   router.push('/auth/login')
-    // }
-    // if (user !== undefined) {
-    //   if (pathname.includes(user.role)) {
-    //     return
-    //   }
-    //   router.push(`/${user.role}`)
-    // }
+    if (!token) {
+      router.push('/auth/login')
+    }
+    if (user !== undefined) {
+      if (pathname.includes(user.role)) {
+        return
+      }
+      router.push(`/auth/login`)
+    }
   }, []);
 
   return (
