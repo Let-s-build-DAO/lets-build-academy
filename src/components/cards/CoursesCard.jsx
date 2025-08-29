@@ -17,6 +17,7 @@ import firebase_app from "../../firebase/config";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import Spinner from "../Spinner";
+import { CheckCircle } from "lucide-react";
 
 const db = getFirestore(firebase_app);
 
@@ -169,8 +170,15 @@ const CoursesCard = ({ course, userId }) => {
                 <span className="font-medium">{progress}%</span> Complete
               </div> */}
               <Link href={`/user/courses/${course.id}`}>
-                <button className="bg-purple text-white font-medium py-2 px-6 rounded-full w-full transition-all duration-200 transform hover:scale-105">
-                  Continue Learning
+                <button className={`font-medium py-2 px-6 rounded-full w-full transition-all duration-200 transform hover:scale-105 bg-purple text-white hover:bg-purple/90`}>
+                  {progress === 100 ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <CheckCircle className="text-white" size={18} />
+                      <span>Completed</span>
+                    </div>
+                  ) : (
+                    <span>Continue Learning</span>
+                  )}
                 </button>
               </Link>
             </div>

@@ -1,17 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { ethers } from 'ethers'
 import { useWeb3Modal, } from '@web3modal/wagmi/react'
 import { useAccount, useReadContract } from 'wagmi'
 import { setCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation'
-import { getContract } from "thirdweb";
-import { liskSepolia } from "thirdweb/chains";
 import Link from 'next/link';
-import Modal from './Modal';
-import LazyABI from "../utils/ABI.js"
-import { config } from "../config/index"
-
-
 
 const ConnectWallet = () => {
   const { open } = useWeb3Modal()
@@ -20,6 +12,7 @@ const ConnectWallet = () => {
 
   useEffect(() => {
     if (account && account.address) {
+      setCookie('address', account.address)
       // Wallet is connected, route to personal info
       router.push('/auth/personal-info')
     }
@@ -39,9 +32,8 @@ const ConnectWallet = () => {
 
           </div>
 
-          <button onClick={() => open()} className="bg-purple w-full my-4 p-2 rounded-full text-white flex justify-center">
-            <img src="/images/icons/MetaMask.svg" alt="" />
-            <p className="my-auto mx-3">Connect with Metamask</p>
+          <button onClick={() => open()} className="bg-purple w-full my-4 p-4 rounded-full text-white flex justify-center">
+            <p className="my-auto">Connect Wallet</p>
           </button>
 
           <div className='my-6'>
