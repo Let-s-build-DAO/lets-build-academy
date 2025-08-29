@@ -146,7 +146,7 @@ const Admins = () => {
         setLoading(true);
         const adminRef = doc(db, "users", adminId);
         await updateDoc(adminRef, {
-          isActive: currentStatus ? true : false
+          isActive: !currentStatus
         });
         toast.success(`Admin ${action}d successfully!`);
         fetchAdmins(); // Refresh the list
