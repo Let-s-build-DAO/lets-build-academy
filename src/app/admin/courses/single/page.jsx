@@ -1,7 +1,8 @@
 "use client";
 
 import SingleCourse from "@/src/components/views/SingleCourse";
-import AdminLayout from "@/src/layouts/AdminLayout";
+import AdminLayout from "@/src/components/layouts/AdminLayout";
+
 import React, { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { useSearchParams } from "next/navigation";

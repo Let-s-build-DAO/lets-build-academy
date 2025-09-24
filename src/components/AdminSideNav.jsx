@@ -9,7 +9,7 @@ import { hasCookie } from "cookies-next";
 import { deleteCookie } from "cookies-next";
 import { FaAngleRight } from "react-icons/fa";
 
-const AdminSideNav = ({ setShowBar }) => {
+const AdminSideNav = ({ setShowBar, collapsed, setCollapsed }) => {
   const pathname = usePathname();
   const [nav, setNav] = useState([]);
   const router = useRouter();
@@ -81,44 +81,7 @@ const AdminSideNav = ({ setShowBar }) => {
       ),
     },
   ];
-  const mentorNav = [
-    {
-      href: "/mentor",
-      name: "Dashboard",
-      icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          fill="currentColor"
-          className="bi bi-speedometer2"
-          viewBox="0 0 16 16"
-        >
-          <path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4M3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707M2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10m9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5m.754-4.246a.39.39 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.39.39 0 0 0-.029-.518z" />
-          <path
-            fillRule="evenodd"
-            d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A8 8 0 0 1 0 10m8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3"
-          />
-        </svg>
-      ),
-    },
-    {
-      href: "/mentor/profile",
-      name: "Profile",
-      icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          fill="currentColor"
-          className="bi bi-person"
-          viewBox="0 0 16 16"
-        >
-          <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
-        </svg>
-      ),
-    },
-  ];
+
   const adminNav = [
     {
       href: "/admin",
@@ -158,7 +121,25 @@ const AdminSideNav = ({ setShowBar }) => {
     },
     {
       href: "/admin/admins",
-      name: "Admins",
+      name: "Mentors",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          fill="currentColor"
+          className="bi bi-person-workspace"
+          viewBox="0 0 16 16"
+        >
+          <path d="M6 2a3 3 0 1 1 6 0 3 3 0 0 1-6 0zm3 2a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" />
+          <path d="M2 14s-1 0-1-1 1-4 7-4 7 3 7 4-1 1-1 1H2zm13-1c0-.26-.164-1.03-.76-1.724-.545-.636-1.492-1.256-3.16-1.275-1.717 0-2.687.63-3.24 1.276-.593.69-.758 1.457-.76 1.72l.008.002.014.002H15z" />
+          <rect x="4" y="8" width="8" height="2" rx="1" />
+        </svg>
+      ),
+    },
+    {
+      href: "/admin/students",
+      name: "Students",
       icon: (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -189,14 +170,13 @@ const AdminSideNav = ({ setShowBar }) => {
       ),
     },
   ];
+
   useEffect(() => {
     pathname.includes("user")
       ? setNav(userNav)
       : pathname.includes("admin")
-      ? setNav(adminNav)
-      : pathname.includes("mentor")
-      ? setNav(mentorNav)
-      : setNav(null);
+        ? setNav(adminNav)
+        : setNav(null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -206,43 +186,45 @@ const AdminSideNav = ({ setShowBar }) => {
         onClick={() => setShowBar()}
         className="bg-[#000] lg:hidden opacity-20 w-full h-screen sm:fixed top-0 right-0 left-0"
       ></div>
-      <aside className="p-6 bg-white h-screen fixed lg:w-[20%] z-10 w-[70%]">
-        <img src="/academylogo.png" className="mb-10 w-40" alt="" />
+      <aside className={`p-6 bg-white h-screen fixed z-10 transition-all duration-300 ${collapsed ? 'lg:w-[80px] w-[80px]' : 'lg:w-[20%] w-[70%]'}`}>
+        {/* Collapse/Expand Button */}
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="absolute top-12 -right-4 bg-purple text-white rounded-full p-2 shadow-md hover:bg-purple/80 transition-colors z-20"
+          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          {collapsed ? (
+            <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M4 12h16M12 4l8 8-8 8" /></svg>
+          ) : (
+            <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M20 12H4M12 20l-8-8 8-8" /></svg>
+          )}
+        </button>
+        <img src="/academylogo.png" className={`mb-10 transition-all duration-300 ${collapsed ? 'w-10 mx-auto' : 'w-40'}`} alt="Academy Logo" />
         {nav?.map((item, idx) => (
           <Link onClick={() => setShowBar()} href={item.href} key={idx}>
             <div
               className={`
-                ${
-                  item.href === pathname
-                    ? "bg-purple flex my-3 text-white p-3 rounded-full"
-                    : "flex my-3 p-3"
-                } justify-between
-              `}
+                  ${(idx === 0
+                  ? pathname === item.href
+                  : pathname.startsWith(item.href)
+                )
+                  ? "bg-purple flex my-3 text-white p-3 rounded-full"
+                  : "flex my-3 p-3"
+                } justify-center items-center transition-all duration-300 ${collapsed ? 'flex-col' : ''}`}
             >
               {item.icon}
-              <p className="ml-4 flex-grow">{item.name}</p>
+              {!collapsed && <p className="ml-4 flex-grow">{item.name}</p>}
               <div
-                className={`${
-                  item.href === pathname ? "flex" : "hidden"
-                } items-center`}
+                className={`${item.href === pathname ? "flex" : "hidden"} items-center`}
               >
-                <FaAngleRight />
+                {!collapsed && <FaAngleRight />}
               </div>
             </div>
           </Link>
         ))}
-        {/* <Link href={'/profile'}>
-        <div className={pathname === '/profile' ? "bg-purple flex my-3 text-white p-3 rounded-md" : "flex my-3 p-3"}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-person" viewBox="0 0 16 16">
-            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z" />
-          </svg>
-          <p className='ml-4'>Profile</p>
-        </div>
-      </Link> */}
-        {/* <Link href={'/auth'}> */}
         <div
           onClick={() => logout()}
-          className="text-[#EB1515] p-3 cursor-pointer flex mt-44"
+          className={`text-[#EB1515] p-3 cursor-pointer flex mt-44 items-center ${collapsed ? 'flex-col' : ''}`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -258,9 +240,8 @@ const AdminSideNav = ({ setShowBar }) => {
               d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
             />
           </svg>
-          <p className="ml-4">Logout</p>
+          {!collapsed && <p className="ml-4">Logout</p>}
         </div>
-        {/* </Link> */}
       </aside>
     </>
   );

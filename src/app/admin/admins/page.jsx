@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import AdminLayout from '@/src/layouts/AdminLayout';
+import AdminLayout from '@/src/components/layouts/AdminLayout';
 import { collection, getDocs, addDoc, deleteDoc, doc, query, where, updateDoc, setDoc } from "firebase/firestore";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import firebase_app from '../../../firebase/config';
@@ -146,7 +146,7 @@ const Admins = () => {
         setLoading(true);
         const adminRef = doc(db, "users", adminId);
         await updateDoc(adminRef, {
-          isActive: currentStatus ? true : false
+          isActive: !currentStatus
         });
         toast.success(`Admin ${action}d successfully!`);
         fetchAdmins(); // Refresh the list

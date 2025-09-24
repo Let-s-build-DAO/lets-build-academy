@@ -49,9 +49,6 @@ const PersonalInfo = () => {
 
   return (
     <div className="w-full bg-gray-200 justify-start items-center overflow-hidden flex">
-      <div className="w-1/2 md:flex justify-between items-center gap-4 inline-flex hidden">
-        <img className="h-screen w-full object-cover" src={"/auth-img.png"} />
-      </div>
       <div className="lg:w-1/2 w-full lg:p-10 p-4">
         <div className="">
           <h1 className="text-black text-3xl md:text-5xl font-bold font-['Poppins'] leading-[44px] md:leading-[64px]">
@@ -77,6 +74,9 @@ const PersonalInfo = () => {
           </div>
         </div>
 
+      </div>
+      <div className="w-1/2 md:flex justify-between items-center gap-4 inline-flex hidden">
+        <img className="h-screen w-full object-cover" src={"/auth-img.png"} />
       </div>
     </div>
   );

@@ -1,22 +1,24 @@
 'use client'
 
 import SingleCourse from '@/src/components/views/SingleCourse';
-import AdminLayout from '@/src/layouts/AdminLayout';
+import AdminLayout from '../../../../components/layouts/AdminLayout';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { doc, getDoc } from "firebase/firestore";
 import firebase_app from "../../../../firebase/config";
 import { getFirestore } from "firebase/firestore";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
+import { FaSpinner } from "react-icons/fa";
 
 const auth = getAuth(firebase_app);
 const db = getFirestore(firebase_app);
 
 const CoursesPage = () => {
-  const [data, setData] = useState()
+  const [data, setData] = useState();
   const params = useParams();
   const [userId, setUserId] = useState(null);
   const { slug } = params;
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -26,27 +28,37 @@ const CoursesPage = () => {
         setUserId(null);
       }
     });
-
     return () => unsubscribe();
   }, []);
 
   const getCourse = async () => {
+    setLoading(true);
     const docRef = doc(db, "courses", slug);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
-      setData(docSnap.data())
+      setData(docSnap.data());
     } else {
-      // docSnap.data() will be undefined in this case
-      console.log("No such document!");
+      setData(null);
     }
-  }
+    setLoading(false);
+  };
 
   useEffect(() => {
-    getCourse()
-  }, [])
+    getCourse();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <FaSpinner className="animate-spin text-purple text-4xl mb-2" />
+
+        {/* <span className="text-purple font-semibold text-xl">Loading...</span> */}
+      </div>
+    );
+  }
+
   return (
-    <AdminLayout header={false}>
+    <AdminLayout collapsedProps={true}>
       <SingleCourse data={data} userId={userId} courseId={slug} />
     </AdminLayout>
   );
