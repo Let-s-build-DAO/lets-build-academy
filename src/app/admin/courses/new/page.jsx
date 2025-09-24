@@ -242,7 +242,6 @@ const NewCourse = () => {
       imgUrl,
       slug: createSlug(title),
       enabled: false
-      enabled: false
     };
 
     if (courseId) {
