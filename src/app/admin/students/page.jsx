@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import AdminLayout from "../../../components/layouts/AdminLayout";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import firebase_app from "../../../firebase/config";
+import { Table } from "antd";
 
 const db = getFirestore(firebase_app);
 
@@ -14,51 +15,78 @@ const StudentsPage = () => {
 
   useEffect(() => {
     async function fetchStudents() {
+      // Fetch from usersProd
       const userCol = collection(db, "usersProd");
       const snapshot = await getDocs(userCol);
-      setStudents(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      const prodStudents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+      // Fetch from users collection with role 'user'
+      const usersCol = collection(db, "users");
+      const usersSnapshot = await getDocs(usersCol);
+      const usersStudents = usersSnapshot.docs
+        .map(doc => ({ id: doc.id, ...doc.data() }))
+        .filter(user => user.role === "user");
+
+      // Combine both lists
+      setStudents([...prodStudents, ...usersStudents]);
     }
     fetchStudents();
   }, []);
 
+  // Ant Design Table columns
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "username",
+      key: "username",
+      render: (text) => text || "-",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+      render: (text) => text || "-",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (text) => text || "Active",
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_, student) => (
+        <button
+          className="text-purple underline font-semibold hover:text-purple/80"
+          onClick={() => { setSelectedStudent(student); setShowModal(true); }}
+        >
+          View
+        </button>
+      ),
+    },
+  ];
+
   return (
     <AdminLayout>
       <section className="py-8 px-2 lg:px-8 min-h-screen">
-        <h1 className="text-3xl font-bold mb-6">All Students</h1>
-        <div className="overflow-x-auto bg-white rounded-lg shadow">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-purple/10">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-purple uppercase">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-purple uppercase">Email</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-purple uppercase">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-purple uppercase">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {students.map(student => (
-                <tr key={student.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">{student.username || "-"}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{student.email || "-"}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{student.status || "Active"}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <button
-                      className="text-purple underline font-semibold hover:text-purple/80"
-                      onClick={() => { setSelectedStudent(student); setShowModal(true); }}
-                    >
-                      View
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <h1 className="text-3xl font-bold mb-6">Students Management</h1>
+        <div className="bg-white rounded-lg shadow">
+          <div className='px-6 py-4 border-b border-gray-200'>
+            <h2 className='text-xl font-semibold'>All students ({students.length})</h2>
+          </div>
+          <Table
+            columns={columns}
+            dataSource={students}
+            rowKey="id"
+            pagination={{ pageSize: 10 }}
+          />
         </div>
 
         {/* Modal for student details */}
         {showModal && selectedStudent && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-            <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md relative">
+            <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-xl relative">
               <button
                 className="absolute top-2 right-2 text-gray-500 hover:text-purple text-xl"
                 onClick={() => setShowModal(false)}

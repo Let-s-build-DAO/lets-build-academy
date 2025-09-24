@@ -11,6 +11,7 @@ import Spinner from '@/src/components/Spinner';
 import Modal from '@/src/components/Modal';
 import { useAtom } from "jotai";
 import { userAtom } from "@/src/store";
+import { Table } from "antd";
 
 const db = getFirestore(firebase_app);
 const auth = getAuth(firebase_app);
@@ -266,84 +267,69 @@ const Admins = () => {
               No admins found. Add your first admin using the button above.
             </div>
           ) : (
-            <div className='overflow-x-auto'>
-              <table className='w-full'>
-                <thead className='bg-gray-50'>
-                  <tr>
-                    <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                      Admin
-                    </th>
-                    <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                      Email
-                    </th>
-                    <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                      Role
-                    </th>
-                    <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                      Status
-                    </th>
-                    <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className='bg-white divide-y divide-gray-200'>
-                  {admins.map((admin) => (
-                    <tr key={admin.id} className='hover:bg-gray-50'>
-                      <td className='px-6 py-4 whitespace-nowrap'>
-                        <div className='flex items-center'>
-                          <div className='h-10 w-10 rounded-full bg-purple flex items-center justify-center'>
-                            <span className='text-white font-semibold'>
-                              {admin.username?.charAt(0).toUpperCase()}
-                            </span>
-                          </div>
-                          <div className='ml-4'>
-                            <div className='text-sm font-medium text-gray-900'>
-                              {admin.username}
-                            </div>
-                            <div className='text-sm text-gray-500'>
-                              ID: {admin.id}
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-900'>
-                        {admin.email}
-                      </td>
-                      <td className='px-6 py-4 whitespace-nowrap'>
-                        <span className='inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800'>
-                          {admin.role}
-                        </span>
-                      </td>
-                      <td className='px-6 py-4 whitespace-nowrap'>
-                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${admin.isActive === false
-                          ? 'text-[#EB1515]'
-                          : 'text-[#008000]'
-                          }`}>
-                          {admin.isActive === false ? 'Inactive' : 'Active'}
-                        </span>
-                      </td>
-                      <td className='px-6 py-4 whitespace-nowrap text-sm font-medium'>
-                        {admin.isActive === false ? (
-                          <button
-                            onClick={() => toggleAdminStatus(admin.id, admin.isActive)}
-                            className='text-[#008000] transition-colors'
-                          >
-                            Activate
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => toggleAdminStatus(admin.id, admin.isActive)}
-                            className='text-[#EB1515] transition-colors'
-                          >
-                            Deactivate
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className='bg-white rounded-lg shadow mb-8'>
+              <Table
+                columns={[{
+                  title: 'Admin',
+                  dataIndex: 'username',
+                  key: 'username',
+                  render: (text, admin) => (
+                    <div className='flex items-center'>
+                      <div className='h-10 w-10 rounded-full bg-purple flex items-center justify-center'>
+                        <span className='text-white font-semibold'>{text?.charAt(0).toUpperCase()}</span>
+                      </div>
+                      <div className='ml-4'>
+                        <div className='text-sm font-medium text-gray-900'>{text}</div>
+                        <div className='text-sm text-gray-500'>ID: {admin.id}</div>
+                      </div>
+                    </div>
+                  ),
+                }, {
+                  title: 'Email',
+                  dataIndex: 'email',
+                  key: 'email',
+                  render: (text) => text,
+                }, {
+                  title: 'Role',
+                  dataIndex: 'role',
+                  key: 'role',
+                  render: (text) => (
+                    <span className='inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800'>{text}</span>
+                  ),
+                }, {
+                  title: 'Status',
+                  dataIndex: 'isActive',
+                  key: 'isActive',
+                  render: (isActive) => (
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${isActive === false ? 'text-[#EB1515]' : 'text-[#008000]'}`}>
+                      {isActive === false ? 'Inactive' : 'Active'}
+                    </span>
+                  ),
+                }, {
+                  title: 'Actions',
+                  key: 'actions',
+                  render: (_, admin) => (
+                    admin.isActive === false ? (
+                      <button
+                        onClick={() => toggleAdminStatus(admin.id, admin.isActive)}
+                        className='text-[#008000] transition-colors'
+                      >
+                        Activate
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => toggleAdminStatus(admin.id, admin.isActive)}
+                        className='text-[#EB1515] transition-colors'
+                      >
+                        Deactivate
+                      </button>
+                    )
+                  ),
+                }]}
+                dataSource={admins}
+                rowKey='id'
+                pagination={{ pageSize: 10 }}
+              />
             </div>
           )}
         </div>

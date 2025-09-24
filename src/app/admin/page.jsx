@@ -5,6 +5,7 @@ import AdminLayout from "../../components/layouts/AdminLayout";
 import MentorStatCard from "../../components/cards/MentorStatCard";
 import firebase_app from "../../firebase/config";
 import { getFirestore, collection, getDocs, query, where } from "firebase/firestore";
+import { Table } from "antd";
 
 const db = getFirestore(firebase_app);
 
@@ -29,13 +30,24 @@ const Mentor = () => {
     const adminSnapshot = await getDocs(adminQuery);
     const mentorsList = adminSnapshot.docs.map(doc => doc.data());
 
+    // Fetch users with role 'user' from 'users' collection
+    const usersQuery = query(collection(db, "users"), where("role", "==", "user"));
+    const usersSnapshot = await getDocs(usersQuery);
+    const usersList = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    // Combine students from usersProd and users with role 'user'
+    const allStudents = [
+      ...citySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })),
+      ...usersList
+    ];
+
     setStats((prevStats) => ({
       ...prevStats,
-      totalStudents: userList.length,
+      totalStudents: allStudents.length,
       totalCourses: totalCourses.length,
       totalMentors: mentorsList.length
     }));
-    setStudents(citySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    setStudents(allStudents);
   }
 
 
@@ -81,26 +93,32 @@ const Mentor = () => {
 
           <a href="/admin/students" className="text-purple underline">View All Students</a>
         </div>
-        <div className="overflow-x-auto bg-white rounded-lg shadow mb-8">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-purple/10">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-purple uppercase">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-purple uppercase">Email</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-purple uppercase">Status</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {students.slice(0, 5).map(student => (
-                <tr key={student.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">{student.username || "-"}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{student.email || "-"}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{student.status || "Active"}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
+        <div className="bg-white rounded-lg shadow mb-8">
+          <Table
+            columns={[
+              {
+                title: "Name",
+                dataIndex: "username",
+                key: "username",
+                render: (text) => text || "-",
+              },
+              {
+                title: "Email",
+                dataIndex: "email",
+                key: "email",
+                render: (text) => text || "-",
+              },
+              {
+                title: "Status",
+                dataIndex: "status",
+                key: "status",
+                render: (text) => text || "Active",
+              },
+            ]}
+            dataSource={students.slice(0, 5)}
+            rowKey="id"
+            pagination={false}
+          />
         </div>
       </section>
     </AdminLayout>
