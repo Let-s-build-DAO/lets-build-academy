@@ -48,7 +48,7 @@ const CoursePage = () => {
               <FaSpinner className="animate-spin text-purple text-4xl mb-2" />
             </div>
           ) : !course ? (
-            <p className="text-center text-red-500">Course not found</p>
+            <p className="text-center text-[#EB1515]">Course not found</p>
           ) : (
             <>
               <div className="w-full overflow-hidden mb-6">

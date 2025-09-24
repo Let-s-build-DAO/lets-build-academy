@@ -170,10 +170,10 @@ const Admins = () => {
     <AdminLayout>
       <section className='my-8'>
         <div className='flex justify-between items-center mb-6'>
-          <h1 className='text-4xl font-bold'>Admin Management</h1>
+          <h1 className='lg:text-4xl text-2xl font-bold'>Admin Management</h1>
           <button
             onClick={() => setShowAddForm(true)}
-            className='bg-purple p-3 rounded-full px-6 text-white hover:bg-purple/90 transition-colors'
+            className='bg-purple p-3 rounded-full lg:px-6 text-white hover:bg-purple/90 transition-colors'
           >
             Add New Admin
           </button>

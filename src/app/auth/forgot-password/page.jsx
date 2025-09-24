@@ -47,7 +47,7 @@ const ForgotPassword = () => {
         </div>
       </div>
       {message && <p className="text-green-500 text-sm my-2">{message}</p>}
-      {error && <p className="text-red-500 text-sm my-2">{error}</p>}
+      {error && <p className="text-[#EB1515] text-sm my-2">{error}</p>}
       <div className="my-6">
         <button
           onClick={handlePasswordReset}
