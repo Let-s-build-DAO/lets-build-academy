@@ -199,7 +199,7 @@ const AdminSideNav = ({ setShowBar, collapsed, setCollapsed }) => {
             <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M20 12H4M12 20l-8-8 8-8" /></svg>
           )}
         </button>
-        <img src="/academylogo.png" className={`mb-10 transition-all duration-300 ${collapsed ? 'w-10 mx-auto' : 'w-40'}`} alt="Academy Logo" />
+        <img src="/logo-1.png" className={`mb-10 transition-all duration-300 ${collapsed ? 'w-10 mx-auto' : 'w-40'}`} alt="Academy Logo" />
         {nav?.map((item, idx) => (
           <Link onClick={() => setShowBar()} href={item.href} key={idx}>
             <div

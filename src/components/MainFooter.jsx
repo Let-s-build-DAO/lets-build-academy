@@ -11,7 +11,7 @@ const MainFooter = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* Logo */}
           <div>
-            <img className="w-36 mb-4" src="/academylogo.png" alt="Academy Logo" />
+            <img className="w-36 mb-4" src="/logo-1.png" alt="Academy Logo" />
             <p className="text-sm text-gray-600">Empowering builders through self-paced learning.</p>
           </div>
 

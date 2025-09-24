@@ -35,7 +35,7 @@ export default function Home() {
       icon: '🎯',
       title: 'Interactive Learning',
       description: 'Hands-on coding exercises, real-world projects, and interactive simulations that make learning Web3 engaging and practical.',
-      image: '/images/abt1.png',
+      image: '/images/DSC00087.jpg',
       bgGradient: 'from-purple/20 to-purple/40'
     },
 
@@ -52,7 +52,7 @@ export default function Home() {
       icon: '🤝',
       title: 'Community Support',
       description: 'Join a vibrant community of builders, get help when stuck, and collaborate on exciting Web3 projects.',
-      image: '/images/user.png',
+      image: '/images/DSC09870.jpg',
       bgGradient: 'from-purple/20 to-purple/40'
     },
 
@@ -86,38 +86,26 @@ export default function Home() {
   return (
     <MainLayout>
       <>
-        <section className='max-w-7xl mx-auto py-20 lg:py-40 px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center'>
-          <div className='sm:mt-10'>
-            <h1 className='text-3xl md:text-4xl lg:text-5xl font-bold leading-tight'>
-              Unlock the <span className='text-purple'>Future</span> of Learning with <span className='text-purple'>Web3 Technology</span>
+        <section className="max-w-7xl mx-auto py-40 px-6 flex flex-col items-center justify-center">
+          <div className="text-center w-full max-w-3xl mx-auto">
+            <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-6 text-gray-900">
+              Build Your <span className="text-purple">Web3 Career</span> &amp; Join the <span className="text-purple">Global Builder Community</span>
             </h1>
-            <p className='my-4 text-base lg:text-lg text-gray/80 max-w-xl'>
-              Empower yourself with knowledge of Decentralized Web and Blockchain
+            <p className="my-4 text-lg md:text-xl text-gray-700 max-w-2xl mx-auto">
+              Empower yourself with knowledge of Decentralized Web and Blockchain. Join thousands of builders learning the future of technology.
             </p>
-
-            <div className='flex flex-row sm:flex-col gap-4 mt-8'>
+            <div className="flex sm:flex-col flex-row gap-4 mt-10 justify-center items-center">
               <Link href={'/auth'}>
-                <button className='p-3 rounded-full flex gap-2 items-center justify-center bg-purple text-white px-6 hover:bg-purple/90 transition-colors'>
+                <button className="p-4 rounded-full flex gap-2 items-center justify-center bg-purple text-white px-8 text-lg font-semibold shadow-lg hover:bg-purple/90 transition-colors">
                   Start Learning
-                  <ArrowRight size={20} />
+                  <ArrowRight size={24} />
                 </button>
               </Link>
               <Link href={'/courses'}>
-                <button className='p-3 rounded-full flex gap-2 items-center justify-center border-2 text-purple border-purple font-semibold px-6 hover:bg-purple hover:text-white transition-colors'>
+                <button className="p-4 rounded-full flex gap-2 items-center justify-center border-2 text-purple border-purple font-semibold px-8 text-lg hover:bg-purple hover:text-white transition-colors">
                   Explore Courses
                 </button>
               </Link>
-            </div>
-          </div>
-
-          {/* Hero Image/Visual */}
-          <div className=''>
-            <div className='bg-gradient-to-br from-purple/10 to-blue-50 rounded-2xl p-8 lg:p-12 text-center'>
-              <div className='w-24 h-24 lg:w-32 lg:h-32 bg-purple rounded-full mx-auto mb-6 flex items-center justify-center'>
-                <span className='text-white text-2xl lg:text-3xl font-bold'>🚀</span>
-              </div>
-              <h3 className='text-lg lg:text-xl font-semibold text-gray mb-2'>Start Your Web3 Journey</h3>
-              <p className='text-sm lg:text-base text-gray/70'>Join thousands of builders learning the future of technology</p>
             </div>
           </div>
         </section>
@@ -241,19 +229,19 @@ export default function Home() {
 
               {/* Feature Image Display */}
               <div className='relative'>
-                <div className='bg-white/10 backdrop-blur-sm rounded-2xl p-8 h-96 flex items-center justify-center overflow-hidden'>
+                <div className='bg-white/10 backdrop-blur-sm rounded-2xl h-96 flex items-center justify-center overflow-hidden'>
                   <div className='relative w-full h-full'>
                     {/* Background Gradient */}
                     <div className={`absolute inset-0 bg-gradient-to-br ${features[activeFeature].bgGradient} rounded-xl opacity-30`}></div>
 
                     {/* Feature Image */}
                     <div className='relative z-10 w-full h-full flex items-center justify-center'>
-                      <Image
+                      <img
                         src={features[activeFeature].image}
                         alt={features[activeFeature].title}
-                        width={300}
-                        height={300}
-                        className='max-w-full max-h-full object-contain transition-all duration-500 ease-in-out transform'
+                        // width={300}
+                        // height={300}
+                        className='w-full h-96 object-cover transition-all duration-500 ease-in-out transform'
                         style={{
                           filter: 'brightness(1.1) contrast(1.1)',
                         }}

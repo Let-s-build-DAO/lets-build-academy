@@ -36,8 +36,8 @@ const MainHeader = () => {
             {/* Logo */}
             <Link href="/" className="flex-shrink-0">
               <img 
-                src="/academylogo.png" 
-                className="h-10 w-auto" 
+                src="/logo-1.png" 
+                className="h-14 w-auto" 
                 alt="Let's Build Academy" 
               />
             </Link>
