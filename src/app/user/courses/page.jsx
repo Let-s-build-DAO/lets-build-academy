@@ -2,7 +2,8 @@
 
 import CoursesCard from "@/src/components/cards/CoursesCard";
 import React, { useEffect, useState } from "react";
-import AdminLayout from "@/src/layouts/AdminLayout";
+import AdminLayout from "@/src/components/layouts/AdminLayout";
+
 import Link from "next/link";
 import { collection, query, getDocs, getFirestore, where  } from "firebase/firestore";
 import firebase_app from "../../../firebase/config";
@@ -51,8 +52,7 @@ const Courses = () => {
         <div className="lg:w-96">
           <h1 className="text-4xl font-bold">Hey {user?.username} 👋 </h1>
           <p className="text-sm">
-            To gain access to all courses purchase our NFT’s and enjoy premium
-            learning experience
+            All our premium courses
           </p>
         </div>
         {/* <button className='bg-purple p-3 sm:mt-4 rounded-md text-white flex my-auto'>
@@ -61,7 +61,7 @@ const Courses = () => {
         </button> */}
       </section>
       <section>
-        <div className="flex flex-wrap justify-between">
+        <div className="grid grid-cols-3 gap-4">
           {courses.map((course, index) => (
             <CoursesCard key={index} course={course} userId={userId} />
           ))}

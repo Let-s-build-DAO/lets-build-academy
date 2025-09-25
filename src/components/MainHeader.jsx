@@ -1,92 +1,106 @@
 "use client";
 import Link from "next/link";
-/* eslint-disable @next/next/no-img-element */
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { Menu, X } from "lucide-react";
 
 const MainHeader = () => {
-  const [open, setOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 80);
+      setIsScrolled(window.scrollY > 20);
     };
 
     window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const navLinks = [
+    { href: "/", label: "Home" },
+    { href: "/courses", label: "Courses" },
+    { href: "mailto:hello@lbdao.xyz", label: "Contact" },
+  ];
 
   return (
     <>
       <header
-        className={`z-50 fixed top-0 w-full lg:px-16 px-4 py-4 ${
-          isScrolled ? "bg-white" : "bg-transparent"
+        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+          isScrolled 
+            ? "bg-white/95 backdrop-blur-sm border-b border-gray/10 shadow-sm" 
+            : "bg-transparent"
         }`}
       >
-        <div className="flex justify-between items-center xxl:container mx-auto">
-          <img src="/academylogo.png" className="w-40" alt="" />
-          <nav className="lg:flex hidden justify-between">
-            <ul className="flex my-auto">
-              <li className="mr-6 text-black">
-                {" "}
-                <Link href={"/"}>Home</Link>{" "}
-              </li>
-              <li className="mr-6">
-                <Link href={"/courses"}> Courses</Link>
-              </li>
-              <li className="mr-6">
-                <Link href={"/about"}>About Us</Link>
-              </li>
-              <li>
-                <Link href={"/contact"}>Contact Us</Link>
-              </li>
-            </ul>
-          </nav>
-          <Link className="sm:hidden" href={"/auth"}>
-            <button className="bg-purple flex text-white font-medium p-3 px-8 rounded-full ml-5">
-              Start Learning
-              <img className="ml-3" src="/east.png" alt="" />
+        <div className="content mx-auto px-6 lg:px-12">
+          <div className="flex justify-between items-center h-20">
+            {/* Logo */}
+            <Link href="/" className="flex-shrink-0">
+              <img 
+                src="/logo-1.png" 
+                className="h-14 w-auto" 
+                alt="Let's Build Academy" 
+              />
+            </Link>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center space-x-8">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`font-medium transition-colors hover:text-purple`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
+
+            {/* Desktop CTA Button */}
+            <Link href="/auth" className="hidden lg:block">
+              <button className="bg-purple text-white px-6 py-3 rounded-full font-medium hover:bg-purple/90 transition-all duration-200 hover:scale-105">
+                Start Learning
+              </button>
+            </Link>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="lg:hidden p-2 text-gray hover:text-purple transition-colors"
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
-          </Link>
-          <button
-            onClick={() => setOpen(!open)}
-            className="lg:hidden block bg-primary h-10 w-10 my-auto"
-          >
-            <img
-              src="/images/icons/menu.png"
-              className="w-8 h-8 mx-auto"
-              alt=""
-            />
-          </button>
+          </div>
         </div>
       </header>
-      {open && (
-        <div className="fixed z-50 top-24 left-0 right-0 p-6 bg-purple text-white w-[90%] mx-auto rounded-md">
-          <p
-            onClick={() => setOpen(!open)}
-            className="float-right text-4xl cursor-pointer"
-          >
-            &times;
-          </p>
-          <p className="my-4 mt-20 font-bold">
-            <Link href={"/"}>Home</Link>
-          </p>
-          <p className="my-4 font-bold">
-            <Link href={"/about"}>About Us</Link>
-          </p>
-          <p className="my-4 font-bold">
-            <Link href={"/courses"}>Courses</Link>
-          </p>
-          <p className="my-4 font-bold">
-            <Link href={"/contact"}>Contact</Link>
-          </p>
-          <button className="bg-white text-purple font-medium p-2 px-8 rounded-full w-full">
-            Start Learning
-          </button>
-        </div>
+
+      {/* Mobile Menu Overlay */}
+      {isMenuOpen && (
+        <>
+          <div 
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            onClick={() => setIsMenuOpen(false)}
+          />
+          <div className="fixed top-20 left-0 right-0 z-50 bg-white border-b border-gray/10 shadow-xl lg:hidden">
+            <nav className="px-6 py-8 space-y-6">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-lg font-medium text-gray hover:text-purple transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <Link className="mt-4" href="/auth" onClick={() => setIsMenuOpen(false)}>
+                <button className="w-full bg-purple text-white py-3 rounded-full font-medium hover:bg-purple/90 transition-colors">
+                  Start Learning
+                </button>
+              </Link>
+            </nav>
+          </div>
+        </>
       )}
     </>
   );

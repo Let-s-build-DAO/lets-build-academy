@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const defaultColors = require('tailwindcss/colors');
+
 module.exports = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -17,6 +19,11 @@ module.exports = {
         72: "72px",
         223: "223px",
       },
+      colors: {
+        white: "#fff",
+        purple: "#40196C",
+        gray: "#5C555E",
+      },
     },
     screens: {
       sm: { max: "700px" },
@@ -25,11 +32,7 @@ module.exports = {
       xl: "1280px",
       xxl: "1500px",
     },
-    colors: {
-      white: "#F8F8F8",
-      purple: "#40196C",
-      gray: "#5C555E",
-    },
+    colors: defaultColors,
   },
 
   plugins: [],

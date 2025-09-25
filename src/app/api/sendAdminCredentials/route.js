@@ -49,7 +49,7 @@ export const POST = async (req) => {
               <p><strong>Important:</strong> Please change your password after your first login.</p>
             </div>
             <div style="text-align: center; margin-top: 30px;">
-              <a href="https://academy.letsbuilddao.org/auth/login" style="background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 25px; font-weight: bold;">
+              <a href="https://academy.lbdao.xyz/auth/login" style="background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 25px; font-weight: bold;">
                 Login to Your Account
               </a>
             </div>

@@ -1,35 +1,56 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import AdminLayout from "../../layouts/AdminLayout";
+import AdminLayout from "../../components/layouts/AdminLayout";
 import MentorStatCard from "../../components/cards/MentorStatCard";
 import firebase_app from "../../firebase/config";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getFirestore, collection, getDocs, query, where } from "firebase/firestore";
+import { Table } from "antd";
 
 const db = getFirestore(firebase_app);
 
 const Mentor = () => {
   const [stats, setStats] = useState({
     totalStudents: 0,
-    graduated: 0,
-    ongoing: 0,
-    notActive: 0,
     totalMentors: 0,
     totalCourses: 0,
-    topRatedMentor: "",
   });
 
+  const [students, setStudents] = useState([]);
   async function getData() {
     const usercol = collection(db, "usersProd");
     const citySnapshot = await getDocs(usercol);
-
     const courseList = collection(db, "courses");
     const courses = await getDocs(courseList);
     const totalCourses = courses.docs.map((doc) => doc.data());
     const userList = citySnapshot.docs.map((doc) => doc.data());
 
-    setStats((prevStats) => ({ ...prevStats, totalStudents: userList.length, totalCourses: totalCourses.length }));
+    // Fetch admins (mentors)
+    const adminQuery = query(collection(db, "users"), where("role", "==", "admin"));
+    const adminSnapshot = await getDocs(adminQuery);
+    const mentorsList = adminSnapshot.docs.map(doc => doc.data());
+
+    // Fetch users with role 'user' from 'users' collection
+    const usersQuery = query(collection(db, "users"), where("role", "==", "user"));
+    const usersSnapshot = await getDocs(usersQuery);
+    const usersList = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    // Combine students from usersProd and users with role 'user'
+    const allStudents = [
+      ...citySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })),
+      ...usersList
+    ];
+
+    setStats((prevStats) => ({
+      ...prevStats,
+      totalStudents: allStudents.length,
+      totalCourses: totalCourses.length,
+      totalMentors: mentorsList.length
+    }));
+    setStudents(allStudents);
   }
+
+
 
   useEffect(() => {
     getData();
@@ -42,7 +63,7 @@ const Mentor = () => {
           <h1 className="text-4xl font-bold">Hey Admin 👋 </h1>
           <p className="mt-5">Keep track of your courses!</p>
         </div>
-        <section className="grid lg:grid-cols-2 mt-8 gap-4">
+        <section className="grid lg:grid-cols-3 mt-8 gap-4">
           <MentorStatCard
             text={"Total Students"}
             count={stats.totalStudents}
@@ -51,54 +72,54 @@ const Mentor = () => {
             bg={"bg-[#E9CFF1]"}
           />
           <MentorStatCard
-            text={"Graduated"}
-            count={stats.graduated}
-            img={"#22A845"}
-            color={"text-[#22A845]"}
-            bg={"bg-[#22A8451A]"}
-          />
-          <MentorStatCard
-            text={"Ongoing"}
-            count={stats.ongoing}
-            img={"#302C8B"}
-            color={"text-[#302C8B]"}
-            bg={"bg-[#302C8B1A]"}
-          />
-          <MentorStatCard
-            text={"Not Active"}
-            count={stats.notActive}
-            img={"#EB1C1C"}
-            color={"text-[#EB1C1C]"}
-            bg={"bg-[#EB1C1C1A]"}
-          />
-          <MentorStatCard
             text={"Total Mentors"}
             count={stats.totalMentors}
-            img={"#302C8B"}
-            color={"text-[#302C8B]"}
-            bg={"bg-[#302C8B1A]"}
+            img={"#23a14dff"}
+            color={"text-[#23a14dff]"}
+            bg={"bg-[#1ceb61ff]/20"}
           />
           <MentorStatCard
             text={"Total Courses"}
             count={stats.totalCourses}
-            img={"#40196C"}
-            color={"text-[#40196C]"}
-            bg={"bg-[#E9CFF1]"}
+            img={"#3d196cff"}
+            color={"text-[#3d196cff]"}
+            bg={"bg-[#E9CFF1]/20"}
           />
         </section>
-        {/* <div className="lg:flex justify-between mt-4">
-         
 
-           <div className="lg:w-[49%] flex justify-between bg-[#22A8451A] rounded-md p-4 sm:my-3">
-            <div>
-              <p className="text-[#22A845]">Top Rated Mentor</p>
-              <p className="text-2xl my-6 font-bold text-[#22A845]">
-                Great Adams
-              </p>
-            </div>
-            <img src="/images/user.png" className="w-20 h-20 my-auto" alt="" />
-          </div> 
-        </div> */}
+        <hr className="my-10 border-purple/20" />
+        <div className="flex justify-between mb-4 mt-8">
+          <h2 className="text-xl font-bold">Students Overview</h2>
+
+          <a href="/admin/students" className="text-purple underline">View All Students</a>
+        </div>
+        <div className="bg-white rounded-lg shadow mb-8">
+          <Table
+            columns={[
+              {
+                title: "Name",
+                dataIndex: "username",
+                key: "username",
+                render: (text) => text || "-",
+              },
+              {
+                title: "Email",
+                dataIndex: "email",
+                key: "email",
+                render: (text) => text || "-",
+              },
+              {
+                title: "Status",
+                dataIndex: "status",
+                key: "status",
+                render: (text) => text || "Active",
+              },
+            ]}
+            dataSource={students.slice(0, 5)}
+            rowKey="id"
+            pagination={false}
+          />
+        </div>
       </section>
     </AdminLayout>
   );

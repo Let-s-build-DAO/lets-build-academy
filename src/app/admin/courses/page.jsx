@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import AdminLayout from '@/src/layouts/AdminLayout';
+import AdminLayout from '@/src/components/layouts/AdminLayout';
 import Link from 'next/link';
 import { collection, query, getDocs } from "firebase/firestore";
 import firebase_app from "../../../firebase/config";
