@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-// import { getAnalytics } from "firebase/analytics";
+import { getAnalytics, isSupported, logEvent as firebaseLogEvent } from "firebase/analytics";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -13,5 +13,20 @@ const firebaseConfig = {
 
 // Initialize Firebase
 let firebase_app = initializeApp(firebaseConfig);
-// const analytics = getAnalytics(firebase_app);
 export default firebase_app;
+
+let analytics;
+
+if (typeof window !== "undefined") {
+  isSupported().then((yes) => {
+    if (yes) {
+      analytics = getAnalytics(app);
+    }
+  });
+}
+
+export const logPageEvent = (eventName, params = {}) => {
+  if (analytics) {
+    firebaseLogEvent(analytics, eventName, params);
+  }
+};
