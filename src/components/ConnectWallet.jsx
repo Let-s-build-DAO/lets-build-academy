@@ -1,13 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { useWeb3Modal, } from '@web3modal/wagmi/react'
-import { useAccount, useReadContract } from 'wagmi'
+import React, { useEffect } from 'react';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useAccount } from 'wagmi'
 import { setCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation'
 import Link from 'next/link';
+import {
+  useConnectModal,
+  useAccountModal,
+  useChainModal,
+} from '@rainbow-me/rainbowkit';
 
 const ConnectWallet = () => {
-  const { open } = useWeb3Modal()
   const account = useAccount()
+  const { openConnectModal } = useConnectModal();
   const router = useRouter()
 
   useEffect(() => {
@@ -17,6 +22,7 @@ const ConnectWallet = () => {
       router.push('/auth/personal-info')
     }
   }, [account, router])
+
   return (
     <>
       <div className="w-full bg-gray-200 justify-start items-center flex">
@@ -31,10 +37,22 @@ const ConnectWallet = () => {
             </p>
 
           </div>
+          {openConnectModal && (
+            <button onClick={openConnectModal} type="button" className="bg-purple w-full my-4 rounded-full text-white p-4">
+              Connect Wallet
+            </button>
+          )}
 
-          <button onClick={() => open()} className="bg-purple w-full my-4 p-4 rounded-full text-white flex justify-center">
-            <p className="my-auto">Connect Wallet</p>
-          </button>
+          {/* <div className="bg-purple w-full my-4 rounded-full"> */}
+          {/* <ConnectButton
+              chainStatus="icon"
+              showBalance={false}
+              accountStatus={{
+                smallScreen: 'avatar',
+                largeScreen: 'full',
+              }}
+            /> */}
+          {/* </div> */}
 
           <div className='my-6'>
             <p>Already have an account? <Link className='text-purple' href={'/auth/login'}>Login</Link></p>
