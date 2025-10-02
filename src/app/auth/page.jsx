@@ -18,10 +18,9 @@ if (!projectId) throw new Error('Project ID is not defined')
 // });
 
 const Auth = () => {
-  const initialState = cookieToInitialState(config)
 
   return (
-    <WagmiProvider config={config} initialState={initialState}>
+    <WagmiProvider config={config} >
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider coolMode>
           <ConnectWallet />

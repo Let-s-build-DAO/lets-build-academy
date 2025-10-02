@@ -7,6 +7,7 @@ const inter = Inter({ subsets: ['latin'] })
 import { Provider } from 'jotai';
 
 export const metadata = {
+    metadataBase: new URL("https://academy.lbdao.xyz"), // change to real domain
   title: "Let's Build Academy | Learn Web3, Blockchain & Decentralized Tech",
   description:
     "Empower yourself with the knowledge of Web3, Blockchain, and the Decentralized Web. Learn from curated courses, events, and real-world builder projects at Let's Build Academy.",

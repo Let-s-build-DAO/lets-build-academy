@@ -5,7 +5,8 @@ const nextConfig = {
     domains: ["firebasestorage.googleapis.com", "res.cloudinary.com"],
   },
   webpack: (config) => {
-    config.externals.push('pino-pretty', 'lokijs', 'encoding');
+    // Don’t bundle undici in the browser
+    config.resolve.alias["undici"] = false;
     return config;
   },
 };

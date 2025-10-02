@@ -1,5 +1,5 @@
 import { cookieStorage, createStorage } from 'wagmi'
-import { mainnet, sepolia, liskSepolia } from 'wagmi/chains'
+import { mainnet, sepolia, liskSepolia, lisk } from 'wagmi/chains'
 import { getDefaultConfig } from '@rainbow-me/rainbowkit'
 import { connectorsForWallets } from '@rainbow-me/rainbowkit';
 import { walletConnectWallet, metaMaskWallet, rainbowWallet, phantomWallet, trustWallet } from '@rainbow-me/rainbowkit/wallets';
@@ -17,7 +17,7 @@ const metadata = {
 }
 
 // Create wagmiConfig with RainbowKit
-const chains = [liskSepolia, mainnet]
+const chains = [liskSepolia, lisk]
 export const config = getDefaultConfig({
   appName: metadata.name,
   projectId,
