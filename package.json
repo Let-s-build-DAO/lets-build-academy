@@ -17,6 +17,8 @@
     "@stablelib/chacha20poly1305": "^2.0.1",
     "@stablelib/hkdf": "^2.0.1",
     "@stablelib/random": "^2.0.1",
+    "@stablelib/sha256": "^2.0.1",
+    "@stablelib/x25519": "^2.0.1",
     "@tanstack/react-query": "^5.45.1",
     "acorn": "^8.15.0",
     "antd": "^5.12.1",
@@ -48,6 +50,7 @@
     "styled-components": "^6.1.8",
     "swiper": "^11.1.0",
     "tailwindcss": "3.3.5",
+    "unfetch": "^5.0.0",
     "viem": "2.x",
     "wagmi": "^2.10.2"
   },
