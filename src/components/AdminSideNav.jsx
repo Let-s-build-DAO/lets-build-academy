@@ -186,7 +186,7 @@ const AdminSideNav = ({ setShowBar, collapsed, setCollapsed }) => {
         onClick={() => setShowBar()}
         className="bg-[#000] lg:hidden opacity-20 w-full h-screen sm:fixed top-0 right-0 left-0"
       ></div>
-      <aside className={`p-6 bg-white h-screen fixed z-10 transition-all duration-300 ${collapsed ? 'lg:w-[80px] w-[80px]' : 'lg:w-[20%] w-[70%]'}`}>
+      <aside className={`p-6 bg-white h-screen fixed z-50 transition-all duration-300 ${collapsed ? 'lg:w-[80px] w-[80px]' : 'lg:w-[20%] w-[70%]'}`}>
         {/* Collapse/Expand Button */}
         <button
           onClick={() => setCollapsed(!collapsed)}
