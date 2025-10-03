@@ -355,7 +355,7 @@ const Dashboard = () => {
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center py-4 bg-white rounded-lg shadow-lg">
+              <div className="flex flex-col items-center justify-center p-4 bg-white rounded-lg shadow-lg">
                 <p className="text-lg font-semibold mb-4">You have not enrolled in any courses yet.</p>
                 <Link href="/user/courses">
                   <button className="bg-purple text-white px-6 py-3 rounded-full font-medium shadow hover:bg-purple/90 transition">
