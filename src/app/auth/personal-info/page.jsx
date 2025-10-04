@@ -33,7 +33,8 @@ const PersonalInfo = () => {
           wallet: address,
           info: info,
           role: 'user',
-          id: user.uid
+          id: user.uid,
+          createdAt: new Date().toISOString()
         });
         toast("Account Created successfully!")
         setLoading(false)
