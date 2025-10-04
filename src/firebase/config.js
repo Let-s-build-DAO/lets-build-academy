@@ -20,7 +20,7 @@ let analytics;
 if (typeof window !== "undefined") {
   isSupported().then((yes) => {
     if (yes) {
-      analytics = getAnalytics(app);
+      analytics = getAnalytics(firebase_app);
     }
   });
 }
