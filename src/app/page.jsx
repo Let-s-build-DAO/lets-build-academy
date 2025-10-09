@@ -86,7 +86,7 @@ export default function Home() {
   return (
     <MainLayout>
       <>
-        <section className="max-w-7xl mx-auto py-40 px-6 flex flex-col items-center justify-center">
+        <section className="max-w-7xl mt-20 mx-auto py-40 px-6 flex flex-col items-center justify-center">
           <div className="text-center w-full max-w-3xl mx-auto">
             <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-6 text-gray-900">
               Build Your <span className="text-purple">Web3 Career</span> &amp; Join the <span className="text-purple">Global Builder Community</span>
