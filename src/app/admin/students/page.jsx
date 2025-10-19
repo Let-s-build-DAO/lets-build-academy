@@ -28,7 +28,16 @@ const StudentsPage = () => {
         .filter(user => user.role === "user");
 
       // Combine both lists
-      setStudents([...prodStudents, ...usersStudents]);
+      const allStudents = [...prodStudents, ...usersStudents];
+
+      // Sort by createdAt (newest first)
+      const sortedStudents = allStudents.sort((a, b) => {
+        const dateA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(a.createdAt || 0);
+        const dateB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(b.createdAt || 0);
+        return dateB - dateA; // descending order
+      });
+
+      setStudents(sortedStudents);
     }
     fetchStudents();
   }, []);
@@ -52,6 +61,24 @@ const StudentsPage = () => {
       dataIndex: "status",
       key: "status",
       render: (text) => text || "Active",
+    },
+    {
+      title: "Joined At",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (createdAt) => {
+        if (!createdAt) return "-";
+        const date =
+          createdAt.toDate?.() || // Firestore Timestamp
+          new Date(createdAt);   // fallback if it's already a string or number
+        return date.toLocaleString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      },
     },
     {
       title: "Actions",
