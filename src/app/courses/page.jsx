@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import MainLayout from '../../components/layouts/MainLayout'
 import { ArrowRight } from 'lucide-react'
 import Link from "next/link";
-
+import { FaSpinner } from "react-icons/fa";
 import { collection, query, getDocs, getFirestore, where } from "firebase/firestore";
 import firebase_app from "../../firebase/config";
 
@@ -97,10 +97,11 @@ const CoursesPage = () => {
         <section className="p-6 bg-white" id="featured-courses">
           <div className='max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
             {loading ? (
-              <div className="col-span-3 text-center py-12 text-lg text-gray">Loading courses...</div>
-            ) : filteredCourses.length === 0 ? (
-              <div className="col-span-3 text-center py-12 text-lg text-gray">No courses found.</div>
-            ) : (
+              <div className="flex items-center col-span-3 justify-center w-full h-64">
+                <FaSpinner className="animate-spin text-purple text-4xl mb-2" />
+              </div>) : filteredCourses.length === 0 ? (
+                <div className="col-span-3 text-center py-12 text-lg text-gray">No courses found.</div>
+              ) : (
               filteredCourses.map(course => (
                 <div key={course.id} className='rounded-xl p-6 border border-purple/10 hover:border-purple/30 transition-all duration-300 hover:shadow-lg group'>
                   <div className='relative mb-6'>

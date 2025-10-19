@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { collection, query, getDocs, getFirestore, where, limit } from "firebase/firestore";
 import firebase_app from "../firebase/config";
+import { FaSpinner } from "react-icons/fa";
 
 export default function Home() {
   const [activeFeature, setActiveFeature] = useState(0);
@@ -123,10 +124,11 @@ export default function Home() {
             </div>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
               {loading ? (
-                <div className="col-span-3 text-center py-12 text-gray-400">Loading courses...</div>
-              ) : courses.length === 0 ? (
-                <div className="col-span-3 text-center py-12 text-gray-400">No enabled courses found.</div>
-              ) : (
+                <div className="flex items-center col-span-3 justify-center w-full h-64">
+                  <FaSpinner className="animate-spin text-purple text-4xl mb-2" />
+                </div>) : courses.length === 0 ? (
+                  <div className="col-span-3 text-center py-12 text-gray-400">No enabled courses found.</div>
+                ) : (
                 courses.slice(0, 3).map(course => (
                   <div key={course.id} className='rounded-xl p-6 border border-purple/10 hover:border-purple/30 transition-all duration-300 hover:shadow-lg group'>
                     <div className='relative mb-6'>

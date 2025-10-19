@@ -8,6 +8,7 @@ import MainLayout from "@/src/components/layouts/MainLayout";
 import { FaSpinner } from "react-icons/fa";
 import Image from "next/image";
 import { UserCircle2, PlayCircle } from "lucide-react";
+import Link from "next/link";
 
 const db = getFirestore(firebase_app);
 
@@ -66,6 +67,7 @@ const CoursePage = () => {
                   </div>
                 </div>
               </div>
+
               <p className="text-gray-700 text-lg mb-4">{course.description}</p>
               <div className="flex gap-6 mb-6">
                 <div className="flex items-center gap-2 text-purple font-semibold">
@@ -77,8 +79,17 @@ const CoursePage = () => {
                   <span>{course.timeframe || "N/A"}</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-600">
-                  <span className="font-semibold">🏅</span>
-                  <span>{course.skill || "N/A"}</span>
+                  <span className="font-semibold my-auto">🏅</span>
+                  <span className="my-auto capitalize">{course.skill || "N/A"}</span>
+                </div>
+                <div className="mt-4">
+                  <Link href={'/auth'}>
+                    <button
+                      className="bg-purple hover:bg-purple/90 text-white font-semibold py-2 px-6 rounded-full shadow-md transition-all duration-200"
+                    >
+                      Enroll
+                    </button>
+                  </Link>
                 </div>
               </div>
               <div className="mt-8">
