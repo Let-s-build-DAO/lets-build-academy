@@ -3,21 +3,22 @@
 import React, { useEffect, useState } from "react";
 import AdminSideNav from "../AdminSideNav";
 import { usePathname, useRouter } from "next/navigation";
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import { userAtom } from "../../store";
 import Image from "next/image";
 import { FaSpinner } from "react-icons/fa";
 
 const AdminLayout = ({ children, collapsedProps }) => {
   const [showBar, setShowBar] = useState(true);
-  const [collapsed, setCollapsed] = useState(collapsedProps ? true : false);
-  const [user] = useAtom(userAtom);
+  const [collapsed, setCollapsed] = useState(!!collapsedProps);
+  const user = useAtomValue(userAtom);
   const pathname = usePathname();
   const router = useRouter();
 
   const [isMobile, setIsMobile] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [hydrated, setHydrated] = useState(false);
 
+  // ✅ Detect mobile layout
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
     handleResize();
@@ -25,10 +26,15 @@ const AdminLayout = ({ children, collapsedProps }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // ✅ Wait for Jotai hydration before checking auth
   useEffect(() => {
-    // Still waiting for userAtom hydration
-    if (user === undefined) {
-      setIsLoading(true);
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) return; // Wait until atom is ready
+    if (user === null) {
+      router.replace("/auth/login");
       return;
     }
 
@@ -36,14 +42,11 @@ const AdminLayout = ({ children, collapsedProps }) => {
     const isUserAdmin = user?.role === "admin";
 
     if (isAdminRoute && !isUserAdmin) {
-      // only redirect if we know user is NOT admin
       router.replace("/auth/login");
-    } else {
-      setIsLoading(false);
     }
-  }, [user, pathname, router]);
+  }, [hydrated, user, pathname, router]);
 
-  if (isLoading) {
+  if (!hydrated || user === undefined) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <FaSpinner className="animate-spin text-purple text-4xl" />

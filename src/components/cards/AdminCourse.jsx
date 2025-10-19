@@ -26,7 +26,7 @@ const AdminCourse = ({ course, getData }) => {
         ...doc.data()
       }));
 
-      console.log("Enrolled students:", enrolledList);
+      // console.log("Enrolled students:", enrolledList);
       return enrolledList;
     } catch (error) {
       console.error("Error fetching enrolled students:", error);

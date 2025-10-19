@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import { deleteCookie, getCookie } from 'cookies-next';
 import { toast } from 'react-toastify';
 import Spinner from '@/src/components/Spinner';
+import Link from 'next/link'
 
 const auth = getAuth(firebase_app);
 const db = getFirestore(firebase_app);
@@ -72,6 +73,9 @@ const PersonalInfo = () => {
           </div>
           <div className="my-6">
             <button onClick={() => signUp()} className="bg-purple rounded-full w-full text-white p-3">{loading ? <Spinner /> : 'Sign Up'}</button>
+          </div>
+          <div className='my-6'>
+            <p>Already have an account? <Link className='text-purple' href={'/auth/login'}>Login</Link></p>
           </div>
         </div>
 

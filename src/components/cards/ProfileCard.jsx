@@ -7,11 +7,11 @@ const ProfileCard = ({ user }) => {
       <img src="/images/user.png" className="mx-auto w-20" alt="" />
       <p className="flex justify-center my-4 text-black font-bold text-sm">
         {user?.username}{" "}
-        <img
+        {/* <img
           className="w-4 h-4 my-auto mx-2"
           src="./images/icons/verified.svg"
           alt=""
-        />
+        /> */}
       </p>
     </div>
   );

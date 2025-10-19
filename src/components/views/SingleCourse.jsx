@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import Spinner from "../Spinner";
 import Image from "next/image";
 import { FaSpinner } from "react-icons/fa";
+import ShareAndReviewModal from "../ShareAndReviewModal";
 
 const db = getFirestore(firebase_app);
 
@@ -34,6 +35,7 @@ const SingleCourse = ({ data, userId, courseId }) => {
   const [isNavigating, setIsNavigating] = useState(false);
   const router = useRouter();
   const codeEditorRef = useRef(null);
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     const fetchProgress = async () => {
@@ -140,7 +142,8 @@ const SingleCourse = ({ data, userId, courseId }) => {
         await updateCourseProgress(courseId, nextLesson);
       } else {
         toast.success("Congratulations! You have completed the course.");
-        router.push("/user/courses");
+        // router.push("/user/courses");
+        setOpen(true)
       }
     } catch (error) {
       console.error("Error navigating to next lesson:", error);
@@ -293,6 +296,8 @@ const SingleCourse = ({ data, userId, courseId }) => {
           )}
         </>
       ) : null}
+
+      <ShareAndReviewModal open={open} userId={userId} onClose={() => setOpen(false)} title={data?.title} courseId={courseId} />
     </>
   );
 };
