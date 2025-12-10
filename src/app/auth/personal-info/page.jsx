@@ -28,15 +28,16 @@ const PersonalInfo = () => {
       .then(async (userCredential) => {
         // Signed up 
         const user = userCredential.user;
-        await setDoc(doc(db, "usersProd", user.uid), {
+        const userData = {
           username: username,
           email: email,
-          wallet: address,
           info: info,
           role: 'user',
           id: user.uid,
           createdAt: new Date().toISOString()
-        });
+        };
+        if (address) userData.wallet = address;
+        await setDoc(doc(db, "usersProd", user.uid), userData);
         toast("Account Created successfully!")
         setLoading(false)
         deleteCookie('address')
