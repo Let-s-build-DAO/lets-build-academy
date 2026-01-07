@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, collection, getDocs } from "firebase/firestore";
 import firebase_app from "../../../firebase/config";
 import MainLayout from "@/src/components/layouts/MainLayout";
 import { FaSpinner } from "react-icons/fa";
@@ -26,7 +26,18 @@ const CoursePage = () => {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-          setCourse({ id: docSnap.id, ...docSnap.data() });
+          const baseCourse = { id: docSnap.id, ...docSnap.data() };
+          // enrolled count from subcollection: courses/{courseId}/enrolledStudents
+          let enrolledCount = 0;
+          try {
+            const enrolledRef = collection(db, `courses/${docSnap.id}/enrolledStudents`);
+            const enrolledSnap = await getDocs(enrolledRef);
+            enrolledCount = enrolledSnap.size;
+          } catch (e) {
+            enrolledCount = 0;
+          }
+
+          setCourse({ ...baseCourse, enrolledCount });
         } else {
           console.error("Course not found");
         }
@@ -73,6 +84,10 @@ const CoursePage = () => {
                 <div className="flex items-center gap-2 text-purple font-semibold">
                   <PlayCircle size={20} />
                   <span>{course.lessons?.length || 0} Lessons</span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <span className="font-semibold">👥</span>
+                  <span>{course.enrolledCount ?? 0} Enrolled</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-600">
                   <span className="font-semibold">⏱️</span>

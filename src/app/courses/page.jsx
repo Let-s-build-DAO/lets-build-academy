@@ -20,8 +20,22 @@ const CoursesPage = () => {
       try {
         const q = query(collection(db, "courses"), where("enabled", "==", true));
         const snapshot = await getDocs(q);
-        const courseList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setCourses(courseList);
+        const baseCourses = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+        // Attach enrolled count from subcollection: courses/{courseId}/enrolledStudents
+        const withCounts = await Promise.all(
+          baseCourses.map(async (course) => {
+            try {
+              const enrolledRef = collection(db, `courses/${course.id}/enrolledStudents`);
+              const enrolledSnap = await getDocs(enrolledRef);
+              return { ...course, enrolledCount: enrolledSnap.size };
+            } catch (e) {
+              return { ...course, enrolledCount: 0 };
+            }
+          })
+        );
+
+        setCourses(withCounts);
       } catch (err) {
         setCourses([]);
       }
@@ -132,8 +146,11 @@ const CoursesPage = () => {
                         📚 {course.lessons ? `${course.lessons.length} Lessons` : 'N/A'}
                       </span>
                       <span className='flex items-center gap-1'>
-                        ⏱️ {course.timeframe ? course.timeframe : 'Duration N/A'}
+                        👥 {course.enrolledCount ?? 0} Enrolled
                       </span>
+                      {/* <span className='flex items-center gap-1'>
+                        ⏱️ {course.timeframe ? course.timeframe : 'Duration N/A'}
+                      </span> */}
                       <span className='flex items-center gap-1'>
                         🏅 {course.skill ? course.skill : 'Skill N/A'}
                       </span>
