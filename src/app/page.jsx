@@ -150,7 +150,7 @@ export default function Home() {
             {/* Left Content (Text & CTA) */}
             <div className="w-full lg:w-5/12 flex flex-col items-start text-left z-10">
               <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-black tracking-tighter text-black leading-tight mb-6">
-                learn by <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple to-black inline-block pb-4 lg:pb-6">thinking.</span>
+                Learn by <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple to-black inline-block pb-4 lg:pb-6">thinking.</span>
               </h1>
               <p className="text-lg sm:text-xl md:text-2xl text-gray-700 mb-8 max-w-lg font-medium leading-relaxed">
                 Guided interactive problem solving for Web3 and Smart Contracts. Master the logic behind blockchain architecture.
@@ -228,7 +228,7 @@ export default function Home() {
           <div className='mx-auto px-6 lg:px-[7%]' style={{ maxWidth: '1440px' }}>
             <div className='max-w-3xl mb-12'>
               <h3 className='text-purple font-bold tracking-wide text-sm mb-3'>
-                Web3 & Smart Contract Development
+                Blockchain & Web3 Development
               </h3>
               <h2 className='text-3xl md:text-5xl font-black text-gray-900 mb-6'>
                 What is Let&apos;s Build Academy?
