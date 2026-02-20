@@ -101,34 +101,93 @@ export default function Home() {
   return (
     <MainLayout>
       <>
-        <section className="max-w-7xl mt-20 mx-auto py-40 px-6 flex flex-col items-center justify-center">
-          <div className="text-center w-full max-w-3xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-extrabold leading-tight mb-6 text-gray-900">
-              Build Your <span className="text-purple">Web3 Career</span> &amp; Join the <span className="text-purple">Global Builder Community</span>
-            </h1>
-            <p className="my-4 text-lg md:text-xl text-gray-700 max-w-2xl mx-auto">
-              Empower yourself with knowledge of Decentralized Web and Blockchain. Join thousands of builders learning the future of technology.
-            </p>
-            <div className="flex sm:flex-col flex-row gap-4 mt-10 justify-center items-center">
+        {/* Brilliant-Style Hero Section */}
+        <section className="relative w-full min-h-[100svh] flex items-center bg-gradient-to-b from-white to-purple/5 overflow-hidden border-b border-gray-200">
+          <div 
+            className="w-full mx-auto flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-10 px-6 pt-32 pb-16 lg:px-[7%] lg:py-[9.563rem]"
+            style={{ maxWidth: '1440px' }}
+          >
+            
+            {/* Left Content (Text & CTA) */}
+            <div className="w-full lg:w-5/12 flex flex-col items-start text-left z-10">
+              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-black tracking-tighter text-black leading-tight mb-6">
+                learn by <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple to-black inline-block pb-4 lg:pb-6">thinking.</span>
+              </h1>
+              <p className="text-lg sm:text-xl md:text-2xl text-gray-700 mb-8 max-w-lg font-medium leading-relaxed">
+                Guided interactive problem solving for Web3 and Smart Contracts. Master the logic behind blockchain architecture.
+              </p>
+              
               <Link href={'/auth'}>
-                <button className="p-4 rounded-full flex gap-2 items-center justify-center bg-purple text-white px-8 text-lg font-semibold shadow-lg hover:bg-purple/90 transition-colors">
-                  Start Learning
-                  <ArrowRight size={24} />
+                <button className="px-10 py-5 bg-purple hover:bg-purple/90 text-white rounded-full font-bold text-xl transition-all duration-300 shadow-[0_8px_16px_rgba(64,25,108,0.3)] hover:shadow-[0_12px_24px_rgba(64,25,108,0.4)] hover:-translate-y-1 flex items-center justify-center gap-2 group">
+                  <span>Start learning now</span>
+                  <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
                 </button>
               </Link>
-              <Link href={'/courses'}>
-                <button className="p-4 rounded-full flex gap-2 items-center justify-center border-2 text-purple border-purple font-semibold px-8 text-lg hover:bg-purple hover:text-white transition-colors">
-                  Explore Courses
-                </button>
-              </Link>
+              
+              <div className="mt-8 flex items-center gap-4 text-sm font-semibold text-gray-500 uppercase tracking-wide">
+                 <div className="flex -space-x-2">
+                    <div className="w-8 h-8 rounded-full bg-purple/10 border-2 border-white flex items-center justify-center text-xs">👨‍💻</div>
+                    <div className="w-8 h-8 rounded-full bg-black/10 border-2 border-white flex items-center justify-center text-xs">🚀</div>
+                    <div className="w-8 h-8 rounded-full bg-purple/20 border-2 border-white flex items-center justify-center text-xs">⚡</div>
+                 </div>
+                 <span>Join 10k+ Web3 Builders</span>
+              </div>
+            </div>
+
+            {/* Right Content (Stylized Graphic / Interactive Cards) */}
+            <div className="w-full lg:w-5/12 relative h-[300px] sm:h-[400px] lg:h-[400px] flex items-center justify-center lg:justify-end z-10">
+               {/* Abstract background blobs */}
+               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-purple/20 via-white to-purple/10 rounded-full blur-3xl opacity-60 pointer-events-none"></div>
+               
+               {/* Floating Interface elements mimicking Brilliant's clean vector style */}
+               <div className="relative w-full max-w-[280px] sm:max-w-sm lg:max-w-md aspect-square flex items-center justify-center lg:mt-0">
+                  
+                  {/* Central Concept Node */}
+                  <div className="absolute z-20 w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 bg-white rounded-2xl shadow-xl border border-purple/10 flex flex-col items-center justify-center gap-1 lg:gap-2 hover:scale-105 transition-transform cursor-default">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-12 lg:h-12 bg-purple/10 text-purple rounded-xl flex items-center justify-center text-xl sm:text-2xl lg:text-2xl">🔗</div>
+                    <span className="font-bold text-[10px] sm:text-xs lg:text-sm text-black">Smart Contract</span>
+                  </div>
+                  
+                  {/* Surrounding Nodes */}
+                  <div className="absolute z-10 top-2 right-2 sm:top-4 sm:right-4 w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 bg-white rounded-2xl shadow-lg border border-gray-100 flex flex-col items-center justify-center gap-1 lg:gap-2 animate-[float_4s_ease-in-out_infinite]">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-10 lg:h-10 bg-black/5 text-black rounded-xl flex items-center justify-center text-lg sm:text-xl lg:text-xl">🛡️</div>
+                    <span className="font-bold text-[9px] sm:text-[10px] lg:text-xs text-black">Security</span>
+                  </div>
+
+                  <div className="absolute z-10 bottom-2 left-2 sm:bottom-4 sm:left-4 w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 bg-white rounded-2xl shadow-lg border border-gray-100 flex flex-col items-center justify-center gap-1 lg:gap-2 animate-[float_5s_ease-in-out_infinite_0.5s]">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-10 lg:h-10 bg-purple/5 text-purple rounded-xl flex items-center justify-center text-lg sm:text-xl lg:text-xl">⚙️</div>
+                    <span className="font-bold text-[9px] sm:text-[10px] lg:text-xs text-black">Logic</span>
+                  </div>
+
+                  <div className="absolute z-10 top-1/2 -left-4 sm:-left-6 lg:-left-8 -translate-y-1/2 w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-white rounded-2xl shadow-lg border border-gray-100 flex flex-col items-center justify-center gap-1 lg:gap-2 animate-[float_6s_ease-in-out_infinite_1s]">
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 lg:w-8 lg:h-8 bg-black/5 text-black rounded-xl flex items-center justify-center text-base sm:text-lg lg:text-lg">💡</div>
+                    <span className="font-bold text-[8px] sm:text-[9px] lg:text-[10px] text-black">Design</span>
+                  </div>
+
+                  {/* Connecting SVG Lines (Decorative) */}
+                  <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M200 200 L300 100" stroke="#E5E7EB" strokeWidth="3" className="animate-[pulse_2s_infinite] sm:stroke-4" strokeDasharray="8 8" />
+                    <path d="M200 200 L100 300" stroke="#E5E7EB" strokeWidth="3" className="animate-[pulse_2s_infinite_0.5s] sm:stroke-4" strokeDasharray="8 8" />
+                    <path d="M200 200 L60 200" stroke="#E5E7EB" strokeWidth="3" className="animate-[pulse_2s_infinite_1s] sm:stroke-4" strokeDasharray="8 8" />
+                  </svg>
+
+               </div>
+
             </div>
           </div>
+          
+          <style jsx>{`
+            @keyframes float {
+              0%, 100% { transform: translateY(0px); }
+              50% { transform: translateY(-10px); }
+            }
+          `}</style>
         </section>
 
         {/* Featured Courses Section */}
-        <section className='bg-white py-16 px-6 my-8'>
-          <div className='max-w-7xl mx-auto'>
-            <div className='text-center mb-12'>
+        <section className='bg-white pt-8 pb-12 lg:py-16 mt-0 lg:mt-4 mb-4'>
+          <div className='mx-auto px-6 lg:px-[7%]' style={{ maxWidth: '1440px' }}>
+            <div className='text-center mb-10'>
               <h2 className='text-3xl md:text-4xl font-bold mb-4'>
                 Featured Courses
               </h2>
@@ -206,10 +265,10 @@ export default function Home() {
           </div>
         </section>
 
-        <section className='bg-purple py-20'>
-          <div className='max-w-7xl mx-auto px-6'>
+        <section className='bg-purple py-12 lg:py-20'>
+          <div className='mx-auto px-6 lg:px-[7%]' style={{ maxWidth: '1440px' }}>
             {/* Section Header */}
-            <div className='text-center mb-16'>
+            <div className='text-center mb-12'>
               <h2 className='text-3xl md:text-4xl font-bold text-white mb-4'>
                 Why Choose <span className='text-white/80'>Let&apos;s Build Academy?</span>
               </h2>
@@ -273,9 +332,9 @@ export default function Home() {
           </div>
         </section>
 
-        <section className='bg-gradient-to-br from-gray-50 to-white py-20'>
-          <div className='max-w-7xl mx-auto px-6'>
-            <div className='text-center mb-16'>
+        <section className='bg-gradient-to-br from-gray-50 to-white py-16'>
+          <div className='mx-auto px-6 lg:px-[7%]' style={{ maxWidth: '1440px' }}>
+            <div className='text-center mb-12'>
               <div className='inline-flex items-center gap-2 bg-purple/10 text-purple px-4 py-2 rounded-full text-sm font-semibold mb-6'>
                 <span className='w-2 h-2 bg-purple rounded-full animate-pulse'></span>
                 More Amazing Features
