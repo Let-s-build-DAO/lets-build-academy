@@ -30,7 +30,7 @@ const CommunitySection = () => {
                 <MessageSquare size={20} />
                 Join Discord
               </a>
-              <a href="https://t.me/letsbuilddaocommunity" target="_blank" rel="noopener noreferrer" className='flex items-center gap-2 bg-white/10 text-white font-bold rounded-xl px-6 py-4 border border-white/20 hover:bg-white/20 hover:-translate-y-1 transition-all backdrop-blur-sm'>
+              <a href="https://t.me/lbdaocommunity" target="_blank" rel="noopener noreferrer" className='flex items-center gap-2 bg-white/10 text-white font-bold rounded-xl px-6 py-4 border border-white/20 hover:bg-white/20 hover:-translate-y-1 transition-all backdrop-blur-sm'>
                 <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
                 Join Telegram
               </a>
