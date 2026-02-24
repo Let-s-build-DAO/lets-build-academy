@@ -1,4 +1,33 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Let's Build Academy
+
+**Code is cheap. Thinking is expensive.**
+
+Let's Build Academy is a gamified, "first-principles" learning engine specifically tailored for Web3 and Smart Contract development. We move developers from confused learners to globally competitive innovators by shifting the focus away from typing syntax and memorizing boilerplate, instead training them to think in high-level architecture, spot vulnerabilities, and optimize gas before a single line of code is written.
+
+## The Three-Layer Learning Engine
+
+Rather than offering passive video tutorials, the academy is engineered as an interactive, hands-on system:
+
+### 1. Layer 1: The Visual Canvas
+A highly interactive environment where users drag, drop, and connect smart contract logic blocks to solve puzzles. Master the architecture and skip the syntax.
+
+### 2. Layer 2: The Agentic Co-Pilot
+An AI tutor that acts as a translator, turning the user's high-level architectural intent ("vibe coding") into clean, production-ready code while explaining the *why* behind the *how*. It's your personal AI tutor guiding you through production-ready structure in real-time.
+
+### 3. Layer 3: The Zero-Setup Sandbox
+A frictionless, in-browser execution environment where users can compile, test, and deploy their contracts instantly without wrestling with local environments. Prove your logic by shipping immediately.
+
+## The Global Vision
+
+Let's Build Academy is designed as a tool for **borderless innovation**. It serves as a high-fidelity "filter" for the global Web3 ecosystem. It removes the noise of AI-generated boilerplate and forces users to focus on high-level architecture and smart contract strategy capable of scaling across borders.
+
+## Tech Stack
+
+We utilize a modern, high-performance tech stack built for a premium aesthetic and seamless user experience:
+
+- **Framework:** [Next.js](https://nextjs.org/) (React)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/) with highly polished, premium aesthetics, smooth gradients, and interactive micro-animations.
+- **Backend/Database:** [Firebase](https://firebase.google.com/) (Firestore) to securely and quickly handle dynamic course content, user enrollment states, authentication, and reviews. 
 
 ## Getting Started
 
@@ -10,25 +39,8 @@ npm run dev
 yarn dev
 # or
 pnpm dev
+# or
+bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
