@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
+import InteractiveHeroGraph from '../components/InteractiveHeroGraph';
 import { collection, query, getDocs, getFirestore, where, limit, doc, getDoc, orderBy } from "firebase/firestore";
 import firebase_app from "../firebase/config";
 import { FaSpinner } from "react-icons/fa";
@@ -178,49 +179,12 @@ export default function Home() {
                {/* Abstract background blobs */}
                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-tr from-purple/20 via-white to-purple/10 rounded-full blur-3xl opacity-60 pointer-events-none"></div>
                
-               {/* Floating Interface elements mimicking Brilliant's clean vector style */}
-               <div className="relative w-full max-w-[280px] sm:max-w-sm lg:max-w-md aspect-square flex items-center justify-center lg:mt-0">
-                  
-                  {/* Central Concept Node */}
-                  <div className="absolute z-20 w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 bg-white rounded-2xl shadow-xl border border-purple/10 flex flex-col items-center justify-center gap-1 lg:gap-2 hover:scale-105 transition-transform cursor-default">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 lg:w-12 lg:h-12 bg-purple/10 text-purple rounded-xl flex items-center justify-center text-xl sm:text-2xl lg:text-2xl">🔗</div>
-                    <span className="font-bold text-[10px] sm:text-xs lg:text-sm text-black">Smart Contract</span>
-                  </div>
-                  
-                  {/* Surrounding Nodes */}
-                  <div className="absolute z-10 top-2 right-2 sm:top-4 sm:right-4 w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 bg-white rounded-2xl shadow-lg border border-gray-100 flex flex-col items-center justify-center gap-1 lg:gap-2 animate-[float_4s_ease-in-out_infinite]">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-10 lg:h-10 bg-black/5 text-black rounded-xl flex items-center justify-center text-lg sm:text-xl lg:text-xl">🛡️</div>
-                    <span className="font-bold text-[9px] sm:text-[10px] lg:text-xs text-black">Security</span>
-                  </div>
-
-                  <div className="absolute z-10 bottom-2 left-2 sm:bottom-4 sm:left-4 w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 bg-white rounded-2xl shadow-lg border border-gray-100 flex flex-col items-center justify-center gap-1 lg:gap-2 animate-[float_5s_ease-in-out_infinite_0.5s]">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-10 lg:h-10 bg-purple/5 text-purple rounded-xl flex items-center justify-center text-lg sm:text-xl lg:text-xl">⚙️</div>
-                    <span className="font-bold text-[9px] sm:text-[10px] lg:text-xs text-black">Logic</span>
-                  </div>
-
-                  <div className="absolute z-10 top-1/2 -left-4 sm:-left-6 lg:-left-8 -translate-y-1/2 w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-white rounded-2xl shadow-lg border border-gray-100 flex flex-col items-center justify-center gap-1 lg:gap-2 animate-[float_6s_ease-in-out_infinite_1s]">
-                    <div className="w-6 h-6 sm:w-8 sm:h-8 lg:w-8 lg:h-8 bg-black/5 text-black rounded-xl flex items-center justify-center text-base sm:text-lg lg:text-lg">💡</div>
-                    <span className="font-bold text-[8px] sm:text-[9px] lg:text-[10px] text-black">Design</span>
-                  </div>
-
-                  {/* Connecting SVG Lines (Decorative) */}
-                  <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M200 200 L300 100" stroke="#E5E7EB" strokeWidth="3" className="animate-[pulse_2s_infinite] sm:stroke-4" strokeDasharray="8 8" />
-                    <path d="M200 200 L100 300" stroke="#E5E7EB" strokeWidth="3" className="animate-[pulse_2s_infinite_0.5s] sm:stroke-4" strokeDasharray="8 8" />
-                    <path d="M200 200 L60 200" stroke="#E5E7EB" strokeWidth="3" className="animate-[pulse_2s_infinite_1s] sm:stroke-4" strokeDasharray="8 8" />
-                  </svg>
-
-               </div>
+               {/* Floating Interface elements mimicking Brilliant's clean vector style (now interactive) */}
+               <InteractiveHeroGraph />
 
             </div>
           </div>
           
-          <style jsx>{`
-            @keyframes float {
-              0%, 100% { transform: translateY(0px); }
-              50% { transform: translateY(-10px); }
-            }
-          `}</style>
         </section>
 
         {/* About Academy & Stats Section */}
