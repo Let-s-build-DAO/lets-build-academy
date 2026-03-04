@@ -35,7 +35,7 @@ const ConnectWallet = () => {
         <div className="lg:w-1/2 sm:my-10 lg:p-10 p-4">
           <div className="">
             <h1 className="text-gray-900 text-4xl md:text-5xl font-extrabold font-['Poppins'] leading-tight mb-4">
-              Connect Your <span className="text-purple">Web3 Wallet</span>
+              Connect Your <span className="text-purple">Wallet</span> or create an <span className="text-purple">Account</span>
             </h1>
             <p className="text-gray-700 text-base md:text-lg font-normal mb-2">
               Link your wallet to unlock exclusive courses, earn NFT certificates, and join our global builder community.
