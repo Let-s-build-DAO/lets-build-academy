@@ -360,7 +360,15 @@ const CodeEditor = forwardRef(({ editors, task }, ref) => {
         return validateCode(editorType, codeStates[editorType]);
       });
     },
-  }), [editors, task, validateCode, codeStates]);
+    updateCode: (language, newCode) => {
+      setCodeStates((prev) => ({
+        ...prev,
+        [language]: newCode,
+      }));
+      // Manually trigger validation for the updated code
+      debouncedValidate(language, newCode);
+    },
+  }), [editors, task, validateCode, codeStates, debouncedValidate]);
 
   const handleCodeChange = useCallback((language, value) => {
     const newCode = value || "";

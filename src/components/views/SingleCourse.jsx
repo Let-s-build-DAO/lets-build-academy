@@ -23,6 +23,8 @@ import Spinner from "../Spinner";
 import Image from "next/image";
 import { FaSpinner } from "react-icons/fa";
 import ShareAndReviewModal from "../ShareAndReviewModal";
+import VisualCanvas from "../VisualCanvas";
+import { translateLogicToCode } from "../../utils/logicTranslator";
 
 const db = getFirestore(firebase_app);
 
@@ -35,7 +37,11 @@ const SingleCourse = ({ data, userId, courseId }) => {
   const [isNavigating, setIsNavigating] = useState(false);
   const router = useRouter();
   const codeEditorRef = useRef(null);
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
+  const [visualLogic, setVisualLogic] = useState({ nodes: [], edges: [] });
+  const [showCanvas, setShowCanvas] = useState(true);
+  const [aiFeedback, setAiFeedback] = useState("Architectural canvas ready. Start connecting nodes to define your logic.");
+  const [isAiThinking, setIsAiThinking] = useState(false);
 
   useEffect(() => {
     const fetchProgress = async () => {
@@ -124,8 +130,14 @@ const SingleCourse = ({ data, userId, courseId }) => {
     setIsNavigating(true);
 
     try {
+      // Validate visual logic if present
+      if (active?.handsOn && showCanvas && visualLogic.edges.length === 0) {
+        toast.warning("Please connect some logic nodes in the Visual Canvas before proceeding.");
+        return;
+      }
+
       // Validate hands-on tasks if present
-      if (active?.task && codeEditorRef.current) {
+      if (active?.task && codeEditorRef.current && !showCanvas) {
         const isValid = codeEditorRef.current.hasCorrectSolution();
         if (!isValid) {
           toast.error(
@@ -151,6 +163,33 @@ const SingleCourse = ({ data, userId, courseId }) => {
     } finally {
       setIsNavigating(false);
     }
+  };
+
+  const handleLogicChange = (nodes, edges) => {
+    setVisualLogic({ nodes, edges });
+    const translated = translateLogicToCode(nodes, edges);
+    
+    // Proactively update the code editor boilerplate
+    if (codeEditorRef.current) {
+        // For MVP, we'll primary update the 'solidity' or first available editor
+        const primaryLang = data?.lessons[lesson - 1]?.editor[0] || 'solidity';
+        if (translated[primaryLang]) {
+            codeEditorRef.current.updateCode(primaryLang, translated[primaryLang]);
+        }
+    }
+
+    // AI Feedback Simulation
+    setIsAiThinking(true);
+    setTimeout(() => {
+        setIsAiThinking(false);
+        if (edges.length === 0) {
+            setAiFeedback("Empty architecture. Try connecting an 'Input' node to a 'Process' node.");
+        } else if (edges.length < 3) {
+            setAiFeedback("Good start. The logic flow is forming, but you need a 'Value Sink' to ensure economic stability.");
+        } else {
+            setAiFeedback("Architecture looks robust! The generated Solidity reflects your intent. Proceed to the Code Editor to finalize.");
+        }
+    }, 1500);
   };
 
   const handlePreviousLesson = async () => {
@@ -183,8 +222,8 @@ const SingleCourse = ({ data, userId, courseId }) => {
         <>
           {hasProgress && lesson > 0 ? (
             <section className="mt-4">
-              <div className="lg:flex justify-between">
-                <div className={`${active?.handsOn ? "lg:w-1/2" : "w-full"}`}>
+              <div className="lg:flex justify-between gap-6">
+                <div className={`${active?.handsOn ? "lg:w-[45%]" : "w-full"}`}>
                   <div className="flex my-3 justify-between">
                     <button
                       onClick={handlePreviousLesson}
@@ -221,12 +260,57 @@ const SingleCourse = ({ data, userId, courseId }) => {
                   <MdPreview editorId={id} modelValue={active?.body} />
                 </div>
                 {active?.handsOn ? (
-                  <div className="w-full lg:w-[38%] relative lg:fixed lg:right-5 top-15">
-                    <CodeEditor
-                      ref={codeEditorRef}
-                      editors={data?.lessons[lesson - 1]?.editor || []}
-                      task={data?.lessons[lesson - 1]?.task || {}}
-                    />
+                  <div className="w-full lg:w-[52%] flex flex-col gap-4">
+                    {/* Layer Toggles */}
+                    <div className="flex gap-2">
+                      <button 
+                        onClick={() => setShowCanvas(true)}
+                        className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${showCanvas ? 'bg-purple text-white shadow-lg' : 'bg-gray-100 text-gray-500 hover:bg-purple/10'}`}
+                      >
+                         Layer 1: Visual Canvas
+                      </button>
+                      <button 
+                        onClick={() => setShowCanvas(false)}
+                        className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${!showCanvas ? 'bg-purple text-white shadow-lg' : 'bg-gray-100 text-gray-500 hover:bg-purple/10'}`}
+                      >
+                         Layer 2: Code Editor
+                      </button>
+                    </div>
+
+                    <div className="relative min-h-[500px]">
+                      {showCanvas ? (
+                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                          <VisualCanvas 
+                            initialNodes={active?.visualNodes || []} 
+                            onLogicChange={handleLogicChange} 
+                          />
+                        </div>
+                      ) : (
+                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                          <CodeEditor
+                            ref={codeEditorRef}
+                            editors={data?.lessons[lesson - 1]?.editor || []}
+                            task={data?.lessons[lesson - 1]?.task || {}}
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Agentic Co-Pilot / AI Feedback */}
+                    <div className="bg-white border-2 border-purple/10 rounded-2xl p-4 shadow-sm relative overflow-hidden">
+                       <div className="absolute top-0 right-0 p-2">
+                          <div className={`w-2 h-2 rounded-full ${isAiThinking ? 'bg-purple animate-pulse' : 'bg-gray-200'}`}></div>
+                       </div>
+                       <div className="flex items-start gap-3">
+                          <div className="w-10 h-10 rounded-full bg-purple/10 flex items-center justify-center text-xl shrink-0">🤖</div>
+                          <div>
+                             <div className="text-[10px] font-bold text-purple uppercase tracking-widest mb-1">Agentic Co-Pilot</div>
+                             <p className="text-sm text-gray-700 font-medium leading-relaxed italic">
+                                {isAiThinking ? "Analyzing architectural topology..." : aiFeedback}
+                             </p>
+                          </div>
+                       </div>
+                    </div>
                   </div>
                 ) : null}
               </div>

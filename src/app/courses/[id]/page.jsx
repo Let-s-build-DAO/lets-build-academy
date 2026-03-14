@@ -9,6 +9,8 @@ import { FaSpinner } from "react-icons/fa";
 import Image from "next/image";
 import { UserCircle2, PlayCircle } from "lucide-react";
 import Link from "next/link";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
 const db = getFirestore(firebase_app);
 
@@ -16,6 +18,10 @@ const CoursePage = () => {
   const { id } = useParams();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const auth = getAuth(firebase_app);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -49,7 +55,35 @@ const CoursePage = () => {
     };
 
     fetchCourse();
-  }, [id]);
+
+    const unsubscribe = onAuthStateChanged(auth, (u) => {
+      setUser(u);
+      if (u && id) {
+        // Check if enrolled
+        const checkEnrollment = async () => {
+          const enrollRef = doc(db, `courses/${id}/enrolledStudents`, u.uid);
+          const enrollSnap = await getDoc(enrollRef);
+          setIsEnrolled(enrollSnap.exists());
+        };
+        checkEnrollment();
+      }
+    });
+
+    return () => unsubscribe();
+  }, [id, auth]);
+
+  const handleCTA = () => {
+    if (!user) {
+      router.push('/auth');
+      return;
+    }
+    if (isEnrolled) {
+      router.push(`/user/courses/${id}`);
+    } else {
+      // Direct enrollment simulation for MVP if already logged in
+      router.push(`/user/courses/${id}`);
+    }
+  };
 
   return (
     <MainLayout>
@@ -98,13 +132,12 @@ const CoursePage = () => {
                   <span className="my-auto capitalize">{course.skill || "N/A"}</span>
                 </div>
                 <div className="mt-4">
-                  <Link href={'/auth'}>
-                    <button
-                      className="bg-purple hover:bg-purple/90 text-white font-semibold py-2 px-6 rounded-full shadow-md transition-all duration-200"
-                    >
-                      Enroll
-                    </button>
-                  </Link>
+                  <button
+                    onClick={handleCTA}
+                    className="bg-purple hover:bg-purple/90 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all duration-300 hover:-translate-y-1"
+                  >
+                    {user ? (isEnrolled ? "Continue Learning" : "Start Course Now") : "Login to Enroll"}
+                  </button>
                 </div>
               </div>
               <div className="mt-8">
