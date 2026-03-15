@@ -8,8 +8,8 @@ import { userAtom } from "../../store";
 import Image from "next/image";
 import { FaSpinner } from "react-icons/fa";
 
-const AdminLayout = ({ children, collapsedProps }) => {
-  const [showBar, setShowBar] = useState(true);
+const AdminLayout = ({ children, collapsedProps, hideSidebar }) => {
+  const [showBar, setShowBar] = useState(!hideSidebar);
   const [collapsed, setCollapsed] = useState(!!collapsedProps);
   const user = useAtomValue(userAtom);
   const pathname = usePathname();
@@ -25,6 +25,11 @@ const AdminLayout = ({ children, collapsedProps }) => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // ✅ Keep sidebar state in sync with prop
+  useEffect(() => {
+    setShowBar(!hideSidebar);
+  }, [hideSidebar]);
 
   // ✅ Wait for Jotai hydration before checking auth
   useEffect(() => {
@@ -56,29 +61,33 @@ const AdminLayout = ({ children, collapsedProps }) => {
 
   return (
     <div className="lg:flex w-full">
-      <div className={`${showBar ? "block" : "hidden"} transition-all duration-300`}>
-        <AdminSideNav
-          setShowBar={() => isMobile && setShowBar(false)}
-          collapsed={collapsed}
-          setCollapsed={setCollapsed}
-        />
-      </div>
+      {!hideSidebar && showBar && (
+        <div className="transition-all duration-300">
+          <AdminSideNav
+            setShowBar={() => isMobile && setShowBar(false)}
+            collapsed={collapsed}
+            setCollapsed={setCollapsed}
+          />
+        </div>
+      )}
       <section
-        className={`${collapsed ? "lg:w-[94%]" : "lg:w-[80%]"} transition-all duration-300 lg:ml-auto lg:p-6 p-4`}
+        className={`${hideSidebar ? "w-full lg:p-0" : collapsed ? "lg:w-[94%] lg:ml-auto lg:p-6" : "lg:w-[80%] lg:ml-auto lg:p-6"} transition-all duration-300 p-4`}
       >
         <div className="sm:flex w-full justify-between">
-          <button
-            onClick={() => setShowBar(true)}
-            className="lg:hidden block bg-white h-10 w-10 mr-3 my-auto"
-          >
-            <Image
-              src="/images/icons/menu.png"
-              className="w-8 h-8 mx-auto"
-              alt="Menu"
-              width={32}
-              height={32}
-            />
-          </button>
+          {!hideSidebar && (
+            <button
+              onClick={() => setShowBar(true)}
+              className="lg:hidden block bg-white h-10 w-10 mr-3 my-auto"
+            >
+              <Image
+                src="/images/icons/menu.png"
+                className="w-8 h-8 mx-auto"
+                alt="Menu"
+                width={32}
+                height={32}
+              />
+            </button>
+          )}
         </div>
         <div>{children}</div>
       </section>

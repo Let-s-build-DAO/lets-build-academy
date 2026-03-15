@@ -38,6 +38,8 @@ const NewCourse = () => {
     handsOn: false,
     editor: [],
     task: {},
+    pureVisual: false,
+    instruction: "",
   };
 
   // Load initial state from localStorage if available
@@ -172,7 +174,7 @@ const NewCourse = () => {
           [field]: Array.isArray(value) ? value : [], // Ensure it's an array
         };
       }
-      // For everything else (title, category, description), just assign directly
+      // For everything else (title, category, description, pureVisual, instruction), just assign directly
       else {
         updatedLessons[index] = {
           ...updatedLessons[index],
@@ -503,9 +505,9 @@ const NewCourse = () => {
                         </div>
                       </div>}
                     </div>
-                    <div className="mb-4">
-                      <label className="font-semibold text-sm text-gray-700">Hands On</label>
-                      <div className="mt-2">
+                    <div className="flex gap-10 mb-4">
+                      <div>
+                        <label className="font-semibold text-sm text-gray-700 block mb-2">Hands On</label>
                         <label className="switch">
                           <input
                             type="checkbox"
@@ -515,7 +517,30 @@ const NewCourse = () => {
                           <span className="slider round"></span>
                         </label>
                       </div>
+                      <div>
+                        <label className="font-semibold text-sm text-gray-700 block mb-2 text-purple font-bold uppercase tracking-tighter">Pure Visual Mode 🎨</label>
+                        <label className="switch">
+                          <input
+                            type="checkbox"
+                            checked={single.pureVisual}
+                            onChange={(e) => handleLessonInputChange(index, "pureVisual", e.target.checked)}
+                          />
+                          <span className="slider round"></span>
+                        </label>
+                      </div>
                     </div>
+                    {single.pureVisual && (
+                      <div className="mb-6 animate-in fade-in slide-in-from-top-2">
+                        <label className="font-semibold text-sm text-purple block mb-2 uppercase tracking-tight">Visual Architectural Instructions</label>
+                        <textarea
+                          placeholder="Design the architectural flow by connecting nodes..."
+                          onChange={(e) => handleLessonInputChange(index, "instruction", e.target.value)}
+                          value={single.instruction}
+                          className="w-full p-3 rounded-md h-24 border-2 border-purple/20 focus:border-purple focus:outline-none bg-purple/5 text-purple-900 font-medium"
+                        ></textarea>
+                        <p className="text-[10px] text-gray-500 mt-1 italic font-medium">* This text will appear in a floating card over the Visual Canvas.</p>
+                      </div>
+                    )}
                     {single.editor.map((lang, idx) => (
                       <div key={idx} className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-4">
                         <div>

@@ -17,6 +17,41 @@ const Single = () => {
   const page = useSearchParams().get("id");
   const [user] = useAtom(userAtom);
   const getCourse = async () => {
+    if (page === "consensus-demo") {
+      const demoData = {
+        id: "consensus-demo",
+        title: "Consensus Bridge (Demo)",
+        description: "Master blockchain technology through active learning, first-principles reasoning, and interactive simulations. Designed for deep conceptual mastery.",
+        author: "Academy",
+        timeframe: "1.5 Hours",
+        skill: "Beginner",
+        imgUrl: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=400&q=80",
+        enabled: true,
+        lessons: [
+          {
+            title: "Primal Cryptography",
+            subtitle: "The Hashing Engine",
+            simulationType: "hash",
+            handsOn: true,
+            challengePrefix: "00",
+            body: "# The One-Way Function\n\nBegin your journey with the **Hash**. It is the DNA of the blockchain. As you type, the engine computes a 256-bit fingerprint. \n\nChanging a single character completely alters the output—this is called the *Avalanche Effect*.",
+            instruction: "Experiment with the hashing engine below. **Your First Challenge:** Find any input that results in a hash starting with the characters '00'.",
+            tags: ["Hashing", "SHA-256", "PoW"]
+          },
+          {
+            title: "The Immutable Ledger",
+            subtitle: "Why Blockchains Don't Break",
+            simulationType: "blockchain",
+            handsOn: true,
+            body: "# Linking the Blocks\n\nEach block contains the hash of the previous block. This creates a chain of integrity.",
+            instruction: "Try editing the data in Block #1. Notice how the subsequent blocks turn RED. This demonstrates why even a tiny change renders a blockchain invalid.",
+            tags: ["Immutability", "Chaining", "Security"]
+          }
+        ]
+      };
+      setData(demoData);
+      return;
+    }
     const docRef = doc(db, "courses", page);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
@@ -35,7 +70,7 @@ const Single = () => {
     console.log(page);
   }, [user]);
   return (
-    <AdminLayout>
+    <AdminLayout hideSidebar={true}>
       <SingleCourse data={data} userId={user.id} courseId={page} />
     </AdminLayout>
   );

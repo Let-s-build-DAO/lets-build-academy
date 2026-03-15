@@ -2,7 +2,7 @@
 
 const nextConfig = {
   images: {
-    domains: ["firebasestorage.googleapis.com", "res.cloudinary.com"],
+    domains: ["firebasestorage.googleapis.com", "res.cloudinary.com", "images.unsplash.com"],
   },
   webpack: (config) => {
     // Don’t bundle undici in the browser
