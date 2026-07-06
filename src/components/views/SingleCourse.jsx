@@ -412,7 +412,7 @@ const SingleCourse = ({ data, userId, courseId }) => {
                               <X className="w-4 h-4 text-gray-400" />
                             </button>
                          </div>
-                         <p className="text-sm text-gray-700 leading-relaxed font-medium italic">"{hint}"</p>
+                         <p className="text-sm text-gray-700 leading-relaxed font-medium italic">&ldquo;{hint}&rdquo;</p>
                          <div className="absolute -bottom-2 right-8 w-4 h-4 bg-white rotate-45 border-r border-b border-purple/5"></div>
                       </div>
                     )}

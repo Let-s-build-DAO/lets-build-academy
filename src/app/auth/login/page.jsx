@@ -96,7 +96,7 @@ const Login = () => {
           <div className="my-6">
             <input
               onChange={(e) => setEmail(e.target.value)}
-              type="text"
+              type="email"
               placeholder="Email Address"
               className="p-3 rounded-md w-full"
             />

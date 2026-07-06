@@ -3,9 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { SHA256 } from "@stablelib/sha256";
 import { encode } from "@stablelib/utf8";
-import { Link, Unlock, Lock, AlertTriangle } from 'lucide-react';
+import { Link, Unlock, Lock, AlertTriangle, ArrowRight } from 'lucide-react';
 
-const BlockChainVisual = () => {
+const BlockChainVisual = ({ onComplete, dark = false }) => {
   const [blocks, setBlocks] = useState([
     { id: 1, data: "Genesis Block", prevHash: "0".repeat(64), hash: "", isValid: true },
     { id: 2, data: "Tx: Alice -> Bob (10 LMN)", prevHash: "", hash: "", isValid: true },
@@ -46,8 +46,12 @@ const BlockChainVisual = () => {
 
   const allValid = processedBlocks.every(b => b.isValid);
 
+  const shell = dark
+    ? "bg-[#18181f] border-white/[0.06]"
+    : "bg-white border-gray-100";
+
   return (
-    <div className="w-full bg-white rounded-[2.5rem] p-10 border border-gray-100 shadow-2xl relative overflow-hidden">
+    <div className={`w-full rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 border shadow-2xl relative overflow-hidden ${shell}`}>
       <div className={`absolute top-0 left-0 w-full h-2 transition-colors duration-700 ${allValid ? 'bg-green-500' : 'bg-red-500 animate-pulse'}`}></div>
       
       <div className="flex justify-between items-end mb-12">
@@ -128,6 +132,18 @@ const BlockChainVisual = () => {
           </div>
         ))}
       </div>
+
+      {onComplete && (
+        <div className="mt-10 flex justify-center">
+          <button
+            type="button"
+            onClick={onComplete}
+            className="lesson-focus flex items-center gap-2 bg-purple hover:bg-purple/90 text-white px-8 py-4 rounded-2xl font-bold min-h-[52px] transition-colors shadow-md shadow-purple/20"
+          >
+            I understand — continue <ArrowRight className="w-5 h-5" />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

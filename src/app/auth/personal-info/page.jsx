@@ -64,7 +64,7 @@ const PersonalInfo = () => {
             <input onChange={e => setUsername(e.target.value)} value={username} type="text" placeholder="Username" className="p-3 rounded-md w-full" />
           </div>
           <div className="my-6">
-            <input onChange={e => setEmail(e.target.value)} type="text" placeholder="Email Address" className="p-3 rounded-md w-full" />
+            <input onChange={e => setEmail(e.target.value)} type="email" placeholder="Email Address" className="p-3 rounded-md w-full" />
           </div>
           <div className="my-6">
             <input onChange={e => setPassword(e.target.value)} type="password" placeholder="Password" className="p-3 rounded-md w-full" />

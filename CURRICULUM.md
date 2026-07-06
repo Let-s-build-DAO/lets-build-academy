@@ -6,20 +6,22 @@
 >
 > **On real-world history:** Real events, exploits, and case studies are used as *illustration tools* throughout — not as the starting point. A real exploit lands much harder after a user already understands the primitives being abused.
 
+> **On the learning model (V2.1+):** Every lesson is a problem to solve — not a passage to read. The user sees a broken or incomplete system, selects how to fix it, and witnesses the consequence of their choice before any explanation is given. Explanation is the *reward* for committing to a position.
+
 ---
 
 ## Lesson Unit Template *(every lesson must follow this shape)*
 
 ```
-1. Hook       — one sentence that creates productive tension or curiosity
-2. Situation  — the problem to be solved
-3. Decision   — the user must choose, rank, identify, or reason before receiving the answer
-4. Reveal     — what is correct, or what the right reasoning is
-5. The Why    — the concept explained after the user has committed to a position
-6. Follow-up  — one deeper decision or simulation that extends the concept
+1. Scene        — a visual of a real system in a specific state (wallet, contract, block, network)
+2. The Problem  — a code block representing the system's logic, with a gap, flaw, or decision point
+3. The Options  — three code snippets (A / B / C); only one correctly solves the problem
+4. Execution    — the user clicks "Run Code"; the visual animates the consequence of their choice
+5. Reveal       — what the correct reasoning is and why each wrong option fails
+6. Follow-up    — one deeper scenario or simulation that extends the concept
 ```
 
-No lesson ships without this structure. If a concept can't be turned into a decision, it is not ready to be built.
+No lesson ships without this structure. The failure animation for wrong answers is mandatory — it is not optional polish. If a concept cannot be turned into an executable scenario, it is not ready to be built.
 
 ---
 
@@ -557,9 +559,12 @@ No lesson ships without this structure. If a concept can't be turned into a deci
 
 1. **First principles always.** Start with the problem, not the solution.
 2. **No skipped steps.** Every lesson maps its prerequisites explicitly.
-3. **Interactive before explanatory.** Users make a decision before receiving the answer.
-4. **Chain-agnostic.** Draw from whichever chain best illustrates the concept.
-5. **Real events as illustrations, not starting points.** History enriches understanding — it doesn't replace building it.
-6. **Tradeoffs over answers.** Every design choice trades something for something else.
-7. **Failure is the teacher.** The most powerful lessons come from what broke and why.
-8. **No passive consumption.** If a user can read through a lesson without responding, the lesson is not ready.
+3. **Execution before explanation.** Users run the code and see the outcome before receiving any explanation. The failure is the lesson.
+4. **Code is the medium.** Even non-programmers are shown code snippets they must analyze logically. The point is not syntax — it is reasoning about consequences.
+5. **Chain-agnostic.** Draw from whichever chain best illustrates the concept.
+6. **Real events as illustrations, not starting points.** History enriches understanding — it doesn't replace building it.
+7. **Tradeoffs over answers.** Every design choice trades something for something else.
+8. **Failure is the teacher.** Wrong answer animations must show the real consequence — funds draining, chain breaking, attacker succeeding.
+9. **No passive consumption.** If a user can complete a lesson without selecting and running code, the lesson is not ready.
+10. **The visual is mandatory.** Every lesson must have a diagram showing the system being manipulated. A lesson without a visual is a reading exercise.
+

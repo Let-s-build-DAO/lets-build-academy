@@ -4,8 +4,9 @@ import MainLayout from '../../components/layouts/MainLayout'
 import { ArrowRight } from 'lucide-react'
 import Link from "next/link";
 import { FaSpinner } from "react-icons/fa";
-import { collection, query, getDocs, getFirestore, where } from "firebase/firestore";
+import { collection, getDocs, getFirestore } from "firebase/firestore";
 import firebase_app from "../../firebase/config";
+import { fetchEnabledCourses } from "@/src/data/courses";
 
 const db = getFirestore(firebase_app);
 
@@ -18,23 +19,18 @@ const CoursesPage = () => {
     const fetchCourses = async () => {
       setLoading(true);
       try {
-        const q = query(collection(db, "courses"), where("enabled", "==", true));
-        const snapshot = await getDocs(q);
-        const baseCourses = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-        // Attach enrolled count from subcollection: courses/{courseId}/enrolledStudents
+        const baseCourses = await fetchEnabledCourses(db);
         const withCounts = await Promise.all(
           baseCourses.map(async (course) => {
             try {
               const enrolledRef = collection(db, `courses/${course.id}/enrolledStudents`);
               const enrolledSnap = await getDocs(enrolledRef);
               return { ...course, enrolledCount: enrolledSnap.size };
-            } catch (e) {
+            } catch {
               return { ...course, enrolledCount: 0 };
             }
           })
         );
-
         setCourses(withCounts);
       } catch (err) {
         setCourses([]);

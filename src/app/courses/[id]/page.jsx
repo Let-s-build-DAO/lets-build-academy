@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { getFirestore, doc, getDoc, collection, getDocs } from "firebase/firestore";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
 import firebase_app from "../../../firebase/config";
 import MainLayout from "@/src/components/layouts/MainLayout";
 import { FaSpinner } from "react-icons/fa";
@@ -11,6 +11,7 @@ import { UserCircle2, PlayCircle } from "lucide-react";
 import Link from "next/link";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import { fetchCourseById } from "@/src/data/courses";
 
 const db = getFirestore(firebase_app);
 
@@ -28,24 +29,17 @@ const CoursePage = () => {
       if (!id) return;
 
       try {
-        const docRef = doc(db, "courses", id);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          const baseCourse = { id: docSnap.id, ...docSnap.data() };
-          // enrolled count from subcollection: courses/{courseId}/enrolledStudents
+        const baseCourse = await fetchCourseById(db, id);
+        if (baseCourse) {
           let enrolledCount = 0;
           try {
-            const enrolledRef = collection(db, `courses/${docSnap.id}/enrolledStudents`);
+            const enrolledRef = collection(db, `courses/${id}/enrolledStudents`);
             const enrolledSnap = await getDocs(enrolledRef);
             enrolledCount = enrolledSnap.size;
-          } catch (e) {
+          } catch {
             enrolledCount = 0;
           }
-
           setCourse({ ...baseCourse, enrolledCount });
-        } else {
-          console.error("Course not found");
         }
       } catch (error) {
         console.error("Error fetching course:", error);

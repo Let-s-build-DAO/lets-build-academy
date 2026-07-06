@@ -171,7 +171,7 @@ export default function InteractiveHeroGraph() {
               {/* Draggable/Animated Node */}
               <div
                 onPointerDown={(e) => handlePointerDown(node.id, e)}
-                className={`${node.sizeClasses} bg-white rounded-2xl shadow-xl border ${node.borderClasses} flex flex-col items-center justify-center gap-1 lg:gap-2 cursor-grab active:cursor-grabbing transition-transform duration-200 select-none touch-none ${draggingId === node.id ? 'scale-110 shadow-2xl rotate-[3deg]' : `hover:scale-105 ${node.animClasses}`}`}
+                className={`${node.sizeClasses} bg-white rounded-2xl shadow-xl ${node.borderClasses} flex flex-col items-center justify-center gap-1 lg:gap-2 cursor-grab active:cursor-grabbing transition-transform duration-200 select-none touch-none ${draggingId === node.id ? 'scale-110 shadow-2xl rotate-[3deg]' : `hover:scale-105 ${node.animClasses}`}`}
                 style={{
                   // Stop the float animation completely when dragging to ensure immediate response
                   animation: draggingId === node.id ? 'none' : undefined,

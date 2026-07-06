@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 
-import { Progress } from "antd";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import {
@@ -21,16 +20,11 @@ import { CheckCircle } from "lucide-react";
 
 const db = getFirestore(firebase_app);
 
-
 const CoursesCard = ({ course, userId }) => {
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [isEnrolling, setIsEnrolling] = useState(false);
-
-  const twoColors = { "0%": "#40196C", "100%": "#40196C" };
-
-
   useEffect(() => {
     const checkEnrollment = async () => {
       setIsLoading(true);
@@ -65,6 +59,10 @@ const CoursesCard = ({ course, userId }) => {
 
   const enrollUser = async () => {
     if (isEnrolling) return;
+    if (!userId) {
+      toast.info("Please log in to enroll in a course.");
+      return;
+    }
     setIsEnrolling(true);
     try {
       const courseRef = doc(
@@ -123,15 +121,26 @@ const CoursesCard = ({ course, userId }) => {
         {/* Progress Indicator for Enrolled Users */}
         {isEnrolled && (
           <div className="absolute top-4 right-4 z-20">
-            <div className="bg-white backdrop-blur-sm rounded-full p-3">
-              <Progress
-                type="circle"
-                percent={progress}
-                strokeColor={twoColors}
-                size={50}
-                className="custom-progress"
-                strokeWidth={4}
-              />
+            <div className="bg-white backdrop-blur-sm rounded-full p-2 shadow-sm">
+              <div className="relative w-[50px] h-[50px] flex items-center justify-center">
+                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                  <circle cx="18" cy="18" r="16" fill="none" className="stroke-gray-200" strokeWidth="3"></circle>
+                  <circle 
+                    cx="18" 
+                    cy="18" 
+                    r="16" 
+                    fill="none" 
+                    className="stroke-purple transition-all duration-500 ease-in-out" 
+                    strokeWidth="3" 
+                    strokeDasharray="100" 
+                    strokeDashoffset={100 - (progress || 0)}
+                    strokeLinecap="round"
+                  ></circle>
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center text-[11px] font-bold text-gray-700">
+                  {progress}%
+                </div>
+              </div>
             </div>
           </div>
         )}
