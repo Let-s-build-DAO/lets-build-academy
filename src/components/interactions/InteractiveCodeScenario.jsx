@@ -346,7 +346,7 @@ const InteractiveCodeScenario = ({ lesson, onComplete, onPrevious, lessonIndex =
               >
                 <div className={`rounded-3xl p-6 border ${isSuccess ? "bg-green-500/10 border-green-500/20" : "bg-amber-500/10 border-amber-500/20"}`}>
                   <h3 className={`text-lg font-bold mb-3 ${isSuccess ? "text-green-400" : "text-amber-400"}`}>
-                    Here's why
+                    Here&apos;s why
                   </h3>
                   <p className={`text-sm leading-relaxed mb-4 ${isSuccess ? "text-green-100" : "text-amber-100"}`}>
                     {correctOption?.successExplanation}

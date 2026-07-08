@@ -1,47 +1,101 @@
-# Let's Build Academy
+# LB Academy
 
-**Code is cheap. Thinking is expensive.**
+> **The world's first interactive blockchain learning operating system.**
 
-Let's Build Academy is a high-fidelity, interactive learning platform designed to teach blockchain technology from first principles, inspired by the pedagogical style of Brilliant.org. We move developers from confused learners to globally competitive innovators by shifting the focus away from typing syntax and memorizing boilerplate, instead training them to think in high-level architecture, spot vulnerabilities, and optimize gas before a single line of code is written.
+Not a course platform. Not a bootcamp. Not a certification website.
 
-## The Three-Layer Learning Engine
+An operating system for developing blockchain intuition.
 
-Rather than offering passive video tutorials or "copy this code" tutorials, the academy is engineered as an interactive, hands-on system:
+---
 
-### Layer 1 — Interactive Lessons
-Small, scenario-driven lessons focused on visual explanations, quizzes, simulations, and decision making. 
-*Example:* Instead of explaining the EVM technically, we pose a scenario: "Gas prices spike. What happens?" and walk through the systemic outcomes.
+## What Makes It Different
 
-### Layer 2 — Thinking Modules
-This is where the "Code is cheap. Thinking is expensive" philosophy lives. Deep-dive modules focused on theory, tradeoff analysis, security assumptions, and system thinking. See [CURRICULUM.md](./CURRICULUM.md) for examples.
+| YouTube / Generic Platforms | LB Academy |
+|---|---|
+| Videos | Interactive simulations |
+| Generic AI | Atlas — contextual Socratic mentor |
+| Passive watching | Active experimentation |
+| Isolated learning | Builder Pods + peer reviews |
+| Tutorials | First-principles thinking |
+| Quizzes | Real-world build challenges |
+| Completion certificates | Portfolio, contributions, demonstrated capability |
+| Content-first | Transformation-first |
 
-### Layer 3 — Build Challenges
-High-level system design scenarios. Instead of "Copy this code," we pose a challenge like "Design an escrow system," complete with edge-case questions. Users must architect a solution and compare it with an expert approach.
+---
 
-## The Global Vision
+## The Learning Philosophy
 
-Let's Build Academy is designed as a tool for **borderless innovation**. It serves as a high-fidelity "filter" for the global Web3 ecosystem. It removes the noise of AI-generated boilerplate and forces users to focus on high-level architecture and smart contract strategy capable of scaling across borders.
+### 1. Think Before You're Taught
+Every lesson begins with a problem, never a definition. The learner discovers the need before learning the name.
 
-## Tech Stack
+### 2. Learn by Experimentation
+Every concept is interactive — not optional, mandatory. Learners operate live simulations to discover how systems behave.
 
-We utilize a modern, high-performance tech stack built for a premium aesthetic and seamless user experience:
+### 3. Build Every Week
+Every world ends with a build challenge: design a protocol, write a governance proposal, model token economics, implement a contract.
 
-- **Framework:** [Next.js](https://nextjs.org/) (React)
-- **Styling:** [Tailwind CSS](https://tailwindcss.com/) with highly polished, premium aesthetics, smooth gradients, and interactive micro-animations.
-- **Backend/Database:** [Firebase](https://firebase.google.com/) (Firestore) to securely and quickly handle dynamic course content, user enrollment states, authentication, and reviews. 
+### 4. AI Should Teach, Not Answer
+Atlas is a Socratic mentor. It improves thinking, never gives the solution directly.
 
-## Getting Started
+---
 
-First, run the development server:
+## The Tech Stack
+
+- **Framework:** Next.js 14 (App Router)
+- **Database:** Firestore
+- **Auth:** Firebase Auth
+- **Animations:** Framer Motion
+- **Crypto primitives:** `@stablelib/sha256`, `@noble/curves`
+- **State:** Jotai
+- **Styling:** Tailwind CSS
+
+---
+
+## Local Development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+App runs at `http://localhost:3000`.
+
+Seed the first World: navigate to `/seed-v2` and click **Seed**.
+
+---
+
+## Project Structure
+
+```
+src/
+  app/                    # Next.js App Router pages
+  components/
+    engine/               # LessonJourneyEngine — the core learning loop
+    steps/                # Step components: HookStep, SimulationStep, ExplanationStep…
+    widgets/              # Live interactive widgets: HashLiveInput, NonceScrubber…
+    lesson/               # Shell chrome: LessonPlayerShell, progress bar
+    views/                # V2CourseEngine (legacy), WorldMap
+    simulations/          # Standalone simulations
+    interactions/         # Legacy interaction types (being migrated)
+  hooks/
+  store/
+  firebase/
+```
+
+---
+
+## Curriculum
+
+See [CURRICULUM.md](./CURRICULUM.md) for the full World-based curriculum.
+
+See [INTERACTIVITY.md](./INTERACTIVITY.md) for the widget library and interaction design spec.
+
+---
+
+## Builder Progression
+
+```
+Explorer → Apprentice → Builder → Architect → Protocol Designer → Research Fellow → Mentor
+```
+
+XP earned through: simulation completion, first-attempt Final Challenges, Micro Builds, Atlas engagement, Builder Pod peer reviews.

@@ -1,6 +1,7 @@
 'use client'
 
 import V2CourseEngine from '@/src/components/views/V2CourseEngine';
+import LessonJourneyEngine from '@/src/components/engine/LessonJourneyEngine';
 import AdminLayout from '../../../../components/layouts/AdminLayout';
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
@@ -79,9 +80,17 @@ const CoursePlayerPage = () => {
     );
   }
 
+  // Use the new step-based LessonJourneyEngine for courses with `steps` data,
+  // fall back to the legacy V2CourseEngine for older courses.
+  const hasStepBasedLessons = data?.lessons?.some((l) => Array.isArray(l.steps));
+
   return (
     <AdminLayout collapsedProps={true} hideSidebar={true}>
-      <V2CourseEngine data={data} userId={userId} courseId={slug} />
+      {hasStepBasedLessons ? (
+        <LessonJourneyEngine data={data} userId={userId} courseId={slug} />
+      ) : (
+        <V2CourseEngine data={data} userId={userId} courseId={slug} />
+      )}
     </AdminLayout>
   );
 };

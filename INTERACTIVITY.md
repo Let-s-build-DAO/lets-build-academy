@@ -1,183 +1,171 @@
-# Let's Build Academy — Interactivity Design System
+# LB Academy — Interactivity Design System
 
-> **Core principle:** The interaction type is not decoration — it *is* the lesson. The format must be chosen because it is the most natural way for a human to discover that specific concept.
-
----
-
-## The Pivot: From Reading to Problem-Solving
-
-The original V2.1 model was too text-heavy. Users were still reading instead of doing. The new trajectory is a full pivot to a **Problem-Solving Scenario** model.
-
-Instead of explaining concepts, we drop users into a broken system and force them to fix it.
-
-**The core loop:**
-1. See a visual of a real system (wallet, contract, block, network)
-2. See the code that represents the system's logic
-3. Select the code snippet that correctly patches, fixes, or attacks it
-4. Click "Run Code" — see the consequences play out visually
-5. Explanation reveals only after the user has committed to a choice and seen the result
-
-This eliminates passive reading entirely. The user is always doing.
+> **Core principle:** The interaction IS the lesson. The format must be the most natural way for a human to discover that specific concept. Multiple choice is never the answer.
 
 ---
 
-## V1 (Legacy App)
-The existing "Web3 for Everyone" course. Untouched.
+## What Brilliant Does (and Why We Must Match It)
 
-## V2.1 — The Code Scenario MVP
-**Goal:** Prove the new Problem-Solving Scenario model works. Ship the highest-impact topics first.
+Brilliant does not ask you what happens. They make you *do* it.
+- They give you a slider. You move it. The system reacts. You discover the concept.
+- They give you a live cell. You type. The output changes. You feel the relationship.
+- They give you a puzzle. You solve it by operating a system — not by selecting an option.
 
-### What Ships in V2.1
-| Layer | Topics |
+**We must do the same for blockchain.**
+
+---
+
+## What We Had (And Why It Failed)
+
+Our previous `InteractiveCodeScenario` engine was a **multiple-choice engine** dressed up with a dark UI. Asking a user to click Option A/B/C is passive. It tests memorisation, not intuition.
+
+The only component that was truly Brilliant-style: `HashAvalancheLab.jsx` — where you press "Tamper one letter" and physically watch the hash explode. That pattern is the entire engine. We extend it to every concept.
+
+---
+
+## The Journey Engine
+
+Every lesson is a journey through **steps**. Each step is a full-screen component.
+
+| Step | Type | What Happens |
+|------|------|--------------|
+| 1 | `hook` | Large narrative drop. Learner is placed in a scenario. Free text response to commit to a position. |
+| 2 | `challenge` | Unguided problem. No hints. Learner must attempt before continuing. |
+| 3 | `prediction` | Before running the simulation — "What do you predict?" |
+| 4 | `simulation` | **The core step.** A live widget the learner directly manipulates. |
+| 5 | `observation` | "Describe in your own words what just happened." |
+| 6 | `reflection` | Atlas asks one Socratic question. |
+| 7 | `explanation` | Concept is named and explained — AFTER discovery. |
+| 8 | `micro-build` | Apply it. Constrained build task. |
+| 9 | `final-challenge` | Strict gate. Must pass to unlock next lesson. |
+
+---
+
+## The Widget Library
+
+The `simulation` step mounts a **widget** — a bespoke interactive system. No multiple choice. No static diagrams.
+
+### Widget: `hash-live-input`
+**What:** A text input field. Below it, a live SHA-256 hash visualisation that updates on every keystroke.
+**Task given to learner:** "Change exactly one character. Watch the fingerprint."
+**Success condition:** `inputChanged` — learner has edited the input and observed the avalanche.
+**Concept taught:** Avalanche Effect, determinism, one-way functions.
+**Source:** Converted from `HashAvalancheLab.jsx`.
+
+### Widget: `nonce-scrubber`
+**What:** A slider (or scrubbable number) controlling a nonce. Block data is fixed. Hash output is displayed live. Hash turns green when it meets the difficulty target.
+**Task given to learner:** "Drag the nonce until the hash starts with `0000`."
+**Success condition:** `hashMeetsTarget` — learner has found a valid nonce.
+**Concept taught:** Proof of Work — there is no shortcut, only trial and error.
+
+### Widget: `block-chain-visual`
+**What:** A chain of 3 blocks. Learner edits the data in block 2. All subsequent hashes cascade-update and turn red.
+**Task given to learner:** "Change one word in block 2. What happens to blocks 3 and 4?"
+**Success condition:** `observedCascade` — learner has seen the chain break.
+**Concept taught:** Blockchain immutability — why altering one block invalidates all subsequent blocks.
+
+### Widget: `commit-reveal`
+**What:** A two-phase drag-and-drop. Phase 1: hash a bid. Phase 2: drag the hash (not the raw bid) to the blockchain. Phase 3: reveal the original.
+**Task given to learner:** "Submit your bid to the auction without revealing the amount."
+**Success condition:** `sequenceCompleted` — learner completes all three phases.
+**Concept taught:** Cryptographic commitment schemes — binding and hiding.
+
+### Widget: `gas-auction`
+**What:** 50 simulated users bid on the next block. Learner sets their gas price. The network confirms. Learner sees their transaction included or not.
+**Task given to learner:** "Set your gas price. Get your transaction confirmed before the others."
+**Success condition:** `transactionIncluded`.
+**Concept taught:** Gas fees, MEV, transaction ordering.
+
+### Widget: `ecc-point-add`
+**What:** Two draggable points on an elliptic curve. Line drawn through them, intersects curve, reflects — showing point addition geometrically.
+**Task given to learner:** "Drag the points. Watch where their sum lands."
+**Concept taught:** Elliptic curve point addition — the geometric operation behind ECC.
+
+### Widget: `merkle-builder`
+**What:** 8 data blocks. Learner pairs and hashes them up to a Merkle root. Then tampers with one leaf and watches the root change.
+**Task given to learner:** "Build the Merkle tree. Then tamper with leaf 3 and see what breaks."
+**Concept taught:** Merkle trees, tamper evidence, efficient membership proofs.
+
+---
+
+## The Data Model
+
+Each lesson in Firestore is a `steps` array, not an `options` array.
+
+```js
+{
+  id: "world-3-lesson-1",
+  title: "The Fingerprint Machine",
+  world: 3,
+  steps: [
+    {
+      type: "hook",
+      prompt: "You need to prove a document wasn't altered — without sending the document. How?",
+    },
+    {
+      type: "simulation",
+      widget: "hash-live-input",
+      config: {
+        initialText: "Transfer $100 to Alice",
+        task: "Change exactly one character. Watch the fingerprint.",
+        successCondition: "inputChanged"
+      }
+    },
+    {
+      type: "explanation",
+      title: "The Avalanche Effect",
+      body: "One bit changes in the input → ~128 of 256 output bits flip. This is deliberate. It makes hash outputs unpredictable and tamper-evident."
+    },
+    {
+      type: "final-challenge",
+      widget: "hash-live-input",
+      config: {
+        task: "Find any input that produces a hash starting with the letter 'a'.",
+        successCondition: "hashStartsWith:a"
+      }
+    }
+  ]
+}
+```
+
+---
+
+## Deprecated
+
+The following are **removed from all new lessons**:
+
+| Removed | Replaced By |
 |---|---|
-| **Layer 0** | Trust Assumptions, Adversarial Incentives, Finality, Byzantine Generals |
-| **Layer 1 Track A** | Large Numbers, Binary/Hex, Randomness, One-Way Functions |
-| **Layer 1 Track B** | Hash Functions, Hash Properties, Commitment Schemes, Proof of Work |
-| **Layer 2 Track B** | Block Structure, Blockchain Immutability, Transaction Lifecycle |
+| `options: [A, B, C]` data model | `steps: [...]` with `widget` config |
+| `InteractiveCodeScenario.jsx` | `LessonJourneyEngine.jsx` + step components |
+| `ScenarioMultipleChoice.jsx` | `SimulationStep.jsx` + widgets |
+| `ProgressiveReveal.jsx` | `ExplanationStep.jsx` |
+| ICS multiple-choice format | Direct manipulation widgets |
 
-**Every lesson in V2.1 uses the `InteractiveCodeScenario` engine.** No passive reveals. No plain text steps. Every lesson is a problem to solve.
-
-## V2.2 — Cryptography Depth
-Track C (Key Exchange), Track D (Elliptic Curves), Track E (Digital Signatures).
-
-## V2.3 — Protocol Mechanics
-Layer 2 Tracks A, C, D (Networks, Consensus, EVM, MEV).
-
-## V2.4 — Application Stack & Advanced Crypto
-Layer 3 (DeFi, Oracles, Bridges), Layer 1 Track G (ZKPs, SNARKs, VRFs), Layer 4 Build Challenges.
+`HashAvalancheLab.jsx` is **preserved and converted** into the `hash-live-input` widget.
 
 ---
 
-## The Interaction Type Library
+## Atlas Integration
+
+Atlas is available at any step via a floating panel (bottom-right).
+
+- Context-aware: knows lesson, step, learner history, mistakes, mastery
+- Socratic: always responds with a question or hint, never the direct answer
+- Hint escalation: learner presses "I still don't get it" to go deeper
+- API route: `/api/atlas` — LLM call with Socratic system prompt + lesson context
+- Conversation stored per lesson per user in Firestore
 
 ---
 
-### Type 0 — Interactive Code Scenario (ICS) ⭐ PRIMARY FORMAT
-**What it is:** The flagship interaction type for Let's Build Academy. A real blockchain system is presented through a 4-part layout. The user must identify the correct code snippet to solve the problem, then execute it to see the outcome.
+## LB Academy vs. Brilliant
 
-**The 4-Part Layout:**
-1. **Visual Context** — An SVG diagram or illustration showing the current state of the system (e.g., Alice's wallet, a treasury contract, two miners competing, a mempool filling up).
-2. **The Code Block** — A beautifully syntax-highlighted code block (Solidity, JavaScript, or pseudocode) showing the relevant function or protocol logic. It may have a gap, a flaw, or a missing piece.
-3. **The Options (A / B / C)** — Three code snippets. Only one correctly solves the problem. The wrong ones are plausible — they *look* right but will fail or introduce a vulnerability.
-4. **The Execution Engine** — The user selects a snippet and clicks "Run Code":
-   - **Wrong choice:** The visual diagram animates the failure (funds drain, chain breaks, attacker wins).
-   - **Correct choice:** The visual resolves successfully. The explanation is then revealed.
-
-**Cognitive job:** Forces active analysis of code logic before committing. Creates visceral understanding of consequences. The failure animation is the lesson — not the text.
-
-**When to use:** Every lesson in V2.1+. This is the default format.
-
-**Example:**
-> **Scene:** Alice's contract holds 10 ETH. An attacker is calling `withdraw()`.
-> ```solidity
-> function withdraw(uint amount) public {
->   require(balance[msg.sender] >= amount);
->   // ← INSERT CODE HERE
->   balance[msg.sender] -= amount;
-> }
-> ```
-> **Option A:** `msg.sender.transfer(amount);`
-> **Option B:** `(bool sent,) = msg.sender.call{value: amount}("");`
-> **Option C:** `payable(msg.sender).send(amount);`
->
-> *[User selects B and clicks Run. The visual shows the attacker calling withdraw() recursively, draining the contract before the balance is updated.]*
->
-> *Reveal: Option B enables reentrancy. Options A and C are safer — but the real lesson is why the balance must be updated BEFORE the call, not after.*
-
----
-
-### Type 1 — Scenario Multiple Choice (SMC)
-**What it is:** A real-world situation is described. The user selects one answer from 3–5 options. Wrong answers are plausible. The reveal explains why each is right or wrong.
-
-**Cognitive job:** Forces commitment before explanation. Good for governance decisions, adversarial thinking, and design trade-offs where there is no code to write.
-
-**When to use:** Supplementary to ICS. Used when the problem is a strategic decision, not a code-execution problem. Maximum 1 SMC per lesson.
-
-**When NOT to use:** Any concept that can be demonstrated through code execution. Never use SMC as a substitute for a proper ICS.
-
----
-
-### Type 2 — Live Simulation Input
-**What it is:** The user types or adjusts an input and sees the output change in real time. No submit button.
-
-**Cognitive job:** Builds intuition through direct manipulation. Best for hash avalanche effect, binary-to-hex conversion, gas cost estimation.
-
-**When to use:** Supplementary to ICS. Used for building raw intuition before the scenario is introduced.
-
-**When NOT to use:** Conceptual or strategic questions.
-
----
-
-### Type 3 — Visual Manipulation
-**What it is:** The user drags, clicks, or moves elements on an interactive visual. Used for elliptic curve point addition, Merkle tree construction, network topology.
-
-**When to use:** V2.2+ (ECC, Merkle Trees). Where the concept is inherently spatial.
-
----
-
-### Type 4 — Step-Through Debugger
-**What it is:** A process is broken into discrete steps. The user advances through each step, answering a micro-question before seeing the next.
-
-**When to use:** V2.2+ (ECDSA signing, validator attestation sequences, transaction lifecycle deep-dives). Where the sequence itself is the insight.
-
----
-
-### Type 5 — Ordering & Ranking
-**When to use:** Supplementary. For comparing consensus mechanisms, ordering protocol steps before the step-through debugger covers them.
-
----
-
-### Type 6 — Tradeoff Mapper
-**When to use:** V2.3+ (PoW vs PoS, Optimistic vs ZK Rollup, UTXO vs Accounts). Where there is no single right answer and the tradeoff is the lesson.
-
----
-
-### Type 7 — Spot the Flaw
-**When to use:** Layer 4 Build Challenges. For auditing protocol designs. Variant of ICS where the flaw is already deployed — the user finds it rather than choosing the fix.
-
----
-
-### Type 8 — Experiential Puzzle
-**When to use:** Very sparingly. Maximum once per track. For mining a toy block, factoring a small prime, solving a discrete log by hand. Only when "doing it by hand" creates irreplaceable intuition.
-
----
-
-### Type 9 — Progressive Reveal with Checkpoints
-**Deprecated as primary format.** Replaced by the Interactive Code Scenario for V2.1+. May be used within an ICS as the "explanation reveal" phase after execution.
-
----
-
-### Type 10 — Open Design Challenge with Expert Reveal
-**When to use:** Layer 4 Build Challenges exclusively. The capstone format.
-
----
-
-## Interaction Consistency Rules
-
-1. **ICS is the default.** Every V2.1+ lesson starts with an Interactive Code Scenario. Other types are supplementary.
-2. **Consistency within a module.** If a module is about Proof of Work, every lesson in that module uses an ICS framed around mining, hashing, or block validation. Do not switch the scenario universe mid-module.
-3. **Form follows function.** The code language in the ICS matches what is actually used on-chain. Solidity for EVM topics, pseudocode for protocol-level topics.
-4. **The failure animation is mandatory.** Wrong answers must visually demonstrate *why* they fail. A static error message is not enough.
-5. **Explanation follows execution.** Never show the explanation before the user has run their chosen code.
-
----
-
-## What Brilliant Does vs. What We Do
-
-| Brilliant | Let's Build Academy |
+| Brilliant | LB Academy |
 |---|---|
-| Multiple choice with explanations | Interactive Code Scenarios with animated execution outcomes |
-| Interactive formula cells | Live hash simulators, binary togglers |
-| Step-by-step proofs | Step-Through Debuggers for protocol lifecycles |
-| No passive video | No passive reading — every lesson requires execution |
-| Explanation after commitment | Explanation ONLY after code execution |
-
-## What We Add That No One Else Has
-
-| Addition | Reason |
-|---|---|
-| Animated failure states | The failure teaches more than the success |
-| Code-execution as the primary format | Users must analyze logic, not just read it |
-| Real exploit teardowns as lesson endings | Connects every concept to a real financial consequence |
-| Chain-agnostic cross-comparison | Most platforms are EVM-only |
-| Spot the Flaw auditing format | Nobody teaches security thinking this way |
+| Sliders, live formula cells | Hash scrubbers, nonce sliders, chain visualisers |
+| Step-by-step proofs | Step-through transaction lifecycle debuggers |
+| Interactive geometry | ECC point addition on a real curve |
+| No passive video | No passive reading — every lesson requires operating a simulation |
+| Generic AI hint | Atlas — context-aware Socratic mentor with escalation levels |
+| Math and science domains | Blockchain and distributed systems |
+| World-class UX | World-class UX + builder community + real portfolio output |

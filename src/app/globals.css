@@ -5,9 +5,32 @@
 @tailwind utilities;
 
 body {
-  background-color: #f3f3f3 !important;
+  background-color: #f3f3f3;
   overflow-x: hidden;
-  font-family: "Poppins" !important;
+  font-family: "Poppins", sans-serif;
+}
+
+/* ── Journey Engine dark mode override ──
+   The LessonJourneyEngine is fixed/fullscreen and dark.
+   Ensure all text inside defaults to white so it's readable
+   regardless of the light body background. */
+.journey-engine {
+  background-color: #0b0b0f;
+  color: #ffffff;
+  font-family: "Inter", "Poppins", sans-serif;
+}
+
+.journey-engine * {
+  color: inherit;
+}
+
+/* Shake animation for hash mismatch feedback */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
 }
 
 .content {
