@@ -1,37 +1,26 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import AdminSideNav from "../AdminSideNav";
+import TopNav from "../TopNav";
 import { usePathname, useRouter } from "next/navigation";
 import { useAtomValue } from "jotai";
 import { userAtom } from "../../store";
-import Image from "next/image";
 import { FaSpinner } from "react-icons/fa";
 
-const AdminLayout = ({ children, collapsedProps, hideSidebar }) => {
-  const [showBar, setShowBar] = useState(!hideSidebar);
-  const [collapsed, setCollapsed] = useState(!!collapsedProps);
+const AdminLayout = ({ children, hideSidebar }) => {
+  const [showNav, setShowNav] = useState(!hideSidebar);
   const user = useAtomValue(userAtom);
   const pathname = usePathname();
   const router = useRouter();
 
-  const [isMobile, setIsMobile] = useState(false);
   const [hydrated, setHydrated] = useState(false);
 
-  // ✅ Detect mobile layout
+  // Keep nav state in sync with prop
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 768);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  // ✅ Keep sidebar state in sync with prop
-  useEffect(() => {
-    setShowBar(!hideSidebar);
+    setShowNav(!hideSidebar);
   }, [hideSidebar]);
 
-  // ✅ Wait for Jotai hydration before checking auth
+  // Wait for Jotai hydration before checking auth
   useEffect(() => {
     setHydrated(true);
   }, []);
@@ -53,44 +42,23 @@ const AdminLayout = ({ children, collapsedProps, hideSidebar }) => {
 
   if (!hydrated || user === undefined) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <FaSpinner className="animate-spin text-purple text-4xl" />
+      <div className="min-h-screen flex items-center justify-center bg-[#111113]">
+        <FaSpinner className="animate-spin text-indigo-500 text-4xl" />
       </div>
     );
   }
 
   return (
-    <div className="lg:flex w-full">
-      {!hideSidebar && showBar && (
-        <div className="transition-all duration-300">
-          <AdminSideNav
-            setShowBar={() => isMobile && setShowBar(false)}
-            collapsed={collapsed}
-            setCollapsed={setCollapsed}
-          />
-        </div>
-      )}
-      <section
-        className={`${hideSidebar ? "w-full lg:p-0" : collapsed ? "lg:w-[94%] lg:ml-auto lg:p-6" : "lg:w-[80%] lg:ml-auto lg:p-6"} transition-all duration-300 p-4`}
-      >
-        <div className="sm:flex w-full justify-between">
-          {!hideSidebar && (
-            <button
-              onClick={() => setShowBar(true)}
-              className="lg:hidden block bg-white h-10 w-10 mr-3 my-auto"
-            >
-              <Image
-                src="/images/icons/menu.png"
-                className="w-8 h-8 mx-auto"
-                alt="Menu"
-                width={32}
-                height={32}
-              />
-            </button>
-          )}
-        </div>
-        <div>{children}</div>
-      </section>
+    <div className="min-h-screen flex flex-col bg-[#111113] w-full text-white">
+      {!hideSidebar && showNav && <TopNav />}
+      
+      {/* 
+        The main content area now spans the full width without any side margins, 
+        making it perfect for our new centered layout system.
+      */}
+      <main className="flex-1 w-full transition-all duration-300">
+        {children}
+      </main>
     </div>
   );
 };

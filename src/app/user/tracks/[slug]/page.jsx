@@ -65,15 +65,15 @@ const CoursePlayerPage = () => {
     return (
       <AdminLayout collapsedProps={true} hideSidebar={true}>
         <div className="flex flex-col items-center justify-center min-h-screen gap-4 p-6 text-center">
-          <h1 className="text-2xl font-bold text-gray-900">Course not found</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Track not found</h1>
           <p className="text-gray-500 max-w-sm">
-            This course may have been removed or the link is incorrect.
+            This track may have been removed or the link is incorrect.
           </p>
           <Link
-            href="/user/courses"
+            href="/user/tracks"
             className="bg-purple text-white px-8 py-3 rounded-full font-bold hover:bg-purple/90"
           >
-            Browse courses
+            Browse tracks
           </Link>
         </div>
       </AdminLayout>

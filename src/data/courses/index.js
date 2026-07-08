@@ -2,7 +2,7 @@ import { v2MvpCourses } from "./v2-mvp-courses";
 import { consensusBridgeCourse } from "./consensus-bridge";
 import { collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 
-const BUILTIN_COURSES = [consensusBridgeCourse, ...v2MvpCourses];
+const BUILTIN_COURSES = [consensusBridgeCourse, ...v2MvpCourses].filter(Boolean);
 
 const SIMULATION_TYPE_MAP = {
   hash: "hash",
