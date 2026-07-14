@@ -101,19 +101,25 @@ export default function Home() {
       <nav className="fixed top-0 left-0 right-0 z-40 bg-[#FDFDFD]/90 backdrop-blur-md border-b border-transparent">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12 h-24 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group">
-             <img src="/logo-1.png" alt="Let's Build Logo" className="h-8 w-auto object-contain" />
+             <img src="/logo-1.png" alt="Let's Build Logo" className="h-8 md:h-12 w-auto object-contain" />
           </Link>
-          <button 
-            className="flex flex-col gap-[5px] p-2 hover:opacity-70 transition-opacity relative z-50"
-            onClick={() => setMobileMenuOpen(true)}
-            aria-label="Menu"
-          >
-            <div className="w-[26px] h-[2px] bg-[#111111] rounded-full"></div>
-            <div className="w-[26px] h-[2px] bg-[#111111] rounded-full"></div>
-            <div className="h-[2px] bg-[#111111] rounded-full self-end w-[16px]"></div>
-          </button>
         </div>
       </nav>
+
+      {/* FLOATING MENU BUTTON (Elevated z-index to stay above the drawer) */}
+      <div className="fixed top-0 left-0 right-0 z-[60] pointer-events-none">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-12 h-24 flex items-center justify-end">
+          <button 
+            className="p-2 hover:opacity-70 transition-all relative w-12 h-12 pointer-events-auto"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Menu"
+          >
+            <div className={`h-[2px] rounded-full transition-all duration-300 absolute right-3 top-1/2 -mt-[1px] ${mobileMenuOpen ? 'w-[26px] rotate-45 bg-white' : 'w-[26px] -translate-y-[8px] bg-[#111111]'}`}></div>
+            <div className={`h-[2px] rounded-full transition-all duration-300 absolute right-3 top-1/2 -mt-[1px] ${mobileMenuOpen ? 'w-[26px] opacity-0 bg-white' : 'w-[26px] opacity-100 bg-[#111111]'}`}></div>
+            <div className={`h-[2px] rounded-full transition-all duration-300 absolute right-3 top-1/2 -mt-[1px] ${mobileMenuOpen ? 'w-[26px] -rotate-45 bg-white' : 'w-[16px] translate-y-[8px] bg-[#111111]'}`}></div>
+          </button>
+        </div>
+      </div>
 
       <main className="pt-24">
         
@@ -394,40 +400,77 @@ export default function Home() {
       </main>
 
       {/* FOOTER */}
-      <footer className="bg-white border-t border-gray-100 pt-20 pb-10">
+      <footer className="bg-[#1C1C1C] text-white pt-24 pb-12">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-12">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-10 mb-20">
-            <div>
-              <Link href="/" className="flex items-center gap-2 group mb-6">
-                <div className="w-8 h-8 bg-[#111111] rounded-lg flex items-center justify-center text-white font-bold text-xl group-hover:bg-purple transition-colors">
-                  L
-                </div>
-                <span className="font-bold text-2xl tracking-tight">Let's Build.</span>
-              </Link>
-              <p className="text-gray-500 font-medium max-w-sm">
-                The premier learning engine for Web3 architecture and smart contract development.
-              </p>
-            </div>
+          
+          <div className="flex flex-col lg:flex-row justify-between items-start gap-16 mb-32">
             
-            <div className="flex gap-16">
-              <div className="flex flex-col gap-4">
-                <h4 className="font-bold text-[#111111] mb-2">Platform</h4>
-                <Link href="/courses" className="text-gray-500 hover:text-[#111111] font-medium transition-colors">Courses</Link>
-                <Link href="/about" className="text-gray-500 hover:text-[#111111] font-medium transition-colors">About</Link>
-                <Link href="/pricing" className="text-gray-500 hover:text-[#111111] font-medium transition-colors">Pricing</Link>
+            {/* Left Section: Get in touch */}
+            <div className="flex flex-col gap-3">
+              <p className="text-[#888888] text-sm">Get in touch</p>
+              <a href="mailto:hello@lbdao.xyz" className="text-2xl md:text-3xl font-bold tracking-tight hover:text-gray-300 transition-colors">
+                hello@lbdao.xyz
+              </a>
+            </div>
+
+            {/* Right Section: Navigation Links */}
+            <div className="flex flex-col sm:flex-row gap-16 sm:gap-24 lg:gap-32">
+              
+              {/* Menu Column */}
+              <div className="flex flex-col gap-5">
+                <p className="text-[#888888] text-sm mb-1">Menu</p>
+                <Link href="/courses" className="text-white font-bold text-lg hover:text-gray-300 transition-colors">Courses (9)</Link>
+                <Link href="/pricing" className="text-white font-bold text-lg hover:text-gray-300 transition-colors underline decoration-2 underline-offset-[6px]">Pricing</Link>
+                <Link href="/about" className="text-white font-bold text-lg hover:text-gray-300 transition-colors">About</Link>
+                <Link href="/blog" className="text-white font-bold text-lg hover:text-gray-300 transition-colors">Blog</Link>
+                <Link href="/support" className="text-white font-bold text-lg hover:text-gray-300 transition-colors">Support</Link>
               </div>
-              <div className="flex flex-col gap-4">
-                <h4 className="font-bold text-[#111111] mb-2">Legal</h4>
-                <Link href="/privacy" className="text-gray-500 hover:text-[#111111] font-medium transition-colors">Privacy Policy</Link>
-                <Link href="/terms" className="text-gray-500 hover:text-[#111111] font-medium transition-colors">Terms of Service</Link>
+
+              {/* Legal Column */}
+              <div className="flex flex-col gap-5">
+                <p className="text-[#888888] text-sm mb-1">Legal</p>
+                <Link href="/terms" className="text-white font-bold text-lg hover:text-gray-300 transition-colors">Terms & Conditions</Link>
+                <Link href="/privacy" className="text-white font-bold text-lg hover:text-gray-300 transition-colors">Privacy Policy</Link>
               </div>
+
             </div>
           </div>
           
-          <div className="pt-8 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-400 font-medium text-sm">
-            <p>&copy; {new Date().getFullYear()} Let's Build DAO. All rights reserved.</p>
-            <p>Designed with precision.</p>
+          {/* Bottom Row */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+            
+            <div className="flex items-center gap-8">
+              {/* Social Icons (X logo) */}
+              <div className="flex flex-col gap-4 text-[#888888]">
+                <a href="#" className="hover:text-white transition-colors" aria-label="X / Twitter">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                  </svg>
+                </a>
+              </div>
+
+              {/* Creator Info */}
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  {/* Let's Build Avatar */}
+                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-black font-black text-lg overflow-hidden">
+                    <img src="/logo-1.png" alt="Logo" className="w-full h-full object-cover" onError={(e) => { e.target.style.display='none'; e.target.nextSibling.style.display='block'; }} />
+                    <span style={{display: 'none'}}>LB</span>
+                  </div>
+                  {/* PRO Badge */}
+                  <div className="absolute -top-1 -right-4 bg-black border border-[#333333] text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full tracking-wider">
+                    PRO
+                  </div>
+                </div>
+                <p className="text-[#888888] text-sm">
+                  Created by <span className="text-white font-medium">Let's Build DAO</span>
+                </p>
+              </div>
+            </div>
+
+            <p className="text-[#555555] text-sm font-medium">© 2026 Let's Build DAO. All rights reserved.</p>
           </div>
+
         </div>
       </footer>
 
@@ -441,13 +484,7 @@ export default function Home() {
         className={`fixed top-4 bottom-4 w-[340px] max-w-[calc(100vw-2rem)] bg-[#282828] rounded-[2rem] p-10 flex flex-col text-white shadow-[0_20px_40px_rgba(0,0,0,0.25)] z-50 transition-all duration-[400ms] ease-[cubic-bezier(0.25,1,0.5,1)]
         ${mobileMenuOpen ? 'right-4 opacity-100' : '-right-full opacity-0'}`}
       >
-        {/* Close button visible on all screens */}
-        <button 
-          onClick={() => setMobileMenuOpen(false)} 
-          className="absolute top-8 right-8 text-gray-400 hover:text-white transition-colors"
-        >
-          <X size={24} strokeWidth={1.5} />
-        </button>
+        {/* Close button handled by the animated navbar menu icon */}
 
         <div className="flex flex-col gap-[22px] mt-16 mb-auto">
           <Link href="/" onClick={() => setMobileMenuOpen(false)} className="text-[24px] font-medium tracking-tight text-white hover:text-gray-300 transition-colors">Home</Link>

@@ -36,11 +36,11 @@ const FakeCursor = ({ x, y, clicked, name, fillClass, borderClass, bgClass, dura
 );
 
 // Window A (Top Left)
-function WindowA({ reorderActive, toggleActive }) {
+function WindowA({ reorderActive, toggleActive, isMobile }) {
   return (
     <div 
-      className="absolute w-[130px] md:w-[160px] bg-white rounded-[1rem] shadow-[0_12px_32px_rgba(0,0,0,0.08)] border border-gray-100 p-3 select-none z-30 flex flex-col"
-      style={{ left: '-15%', top: '-25%', transform: 'rotate(-5deg)' }}
+      className="absolute w-[130px] md:w-[160px] bg-white rounded-[1rem] shadow-[0_12px_32px_rgba(0,0,0,0.08)] p-3 select-none z-30 flex flex-col"
+      style={isMobile ? { left: '5%', top: '5%', transform: 'rotate(-5deg)' } : { left: '-15%', top: '-25%', transform: 'rotate(-5deg)' }}
     >
        <div className="flex gap-1.5 mb-3">
          <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
@@ -71,11 +71,11 @@ function WindowA({ reorderActive, toggleActive }) {
 }
 
 // Window B (Bottom Right)
-function WindowB({ sliderActive, cardSwiped }) {
+function WindowB({ sliderActive, cardSwiped, isMobile }) {
   return (
     <div 
-      className="absolute w-[140px] md:w-[170px] bg-white rounded-[1rem] shadow-[0_16px_40px_rgba(0,0,0,0.1)] border border-gray-100 p-3 select-none z-30 flex flex-col"
-      style={{ left: '85%', top: '65%', transform: 'rotate(6deg)' }}
+      className="absolute w-[140px] md:w-[170px] bg-white rounded-[1rem] shadow-[0_16px_40px_rgba(0,0,0,0.1)] p-3 select-none z-30 flex flex-col"
+      style={isMobile ? { left: '45%', top: '55%', transform: 'rotate(6deg)' } : { left: '85%', top: '65%', transform: 'rotate(6deg)' }}
     >
        <div className="flex gap-1.5 mb-3">
          <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
@@ -102,30 +102,19 @@ function WindowB({ sliderActive, cardSwiped }) {
   );
 }
 
-export default function HeroSection() {
-  const [tick, setTick] = useState(0);
+// Extracted Interactive Scene to allow dual-rendering for responsive layout
+function InteractiveScene({ tick, isMobile }) {
+  // Mobile targets are shifted to match the new Window positions on mobile screens
+  const targetA_item1      = isMobile ? { x: 14, y: 12 } : { x: -6, y: -18 }; 
+  const targetA_item2      = isMobile ? { x: 14, y: 27 } : { x: -6, y: -3 }; 
+  const targetA_toggle_off = isMobile ? { x: 10, y: 37 } : { x: -10, y: 7 }; 
+  const targetA_toggle_on  = isMobile ? { x: 16, y: 37 } : { x: -4, y: 7 }; 
 
-  // Staggered Tick Engine (runs every 500ms for extremely precise sequence timing)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTick(t => (t + 1) % 31);
-    }, 500);
-    return () => clearInterval(interval);
-  }, []);
+  const targetB_slider_start = isMobile ? { x: 48, y: 64 } : { x: 88, y: 74 };  
+  const targetB_slider_end   = isMobile ? { x: 64, y: 64 } : { x: 104, y: 74 }; 
+  const targetB_card_start   = isMobile ? { x: 55, y: 82 } : { x: 95, y: 92 }; 
+  const targetB_card_end     = isMobile ? { x: 85, y: 82 } : { x: 125, y: 92 }; 
 
-  // Precise coordinates for dragging elements
-  const targetA_item1      = { x: -6, y: -18 }; 
-  const targetA_item2      = { x: -6, y: -3 }; 
-  const targetA_toggle_off = { x: -10, y: 7 }; 
-  const targetA_toggle_on  = { x: -4, y: 7 }; 
-
-  // Window B was shifted up by 20%, so these targets are adjusted -20% on the Y axis
-  const targetB_slider_start = { x: 88, y: 74 };  
-  const targetB_slider_end   = { x: 104, y: 74 }; 
-  const targetB_card_start   = { x: 95, y: 92 }; 
-  const targetB_card_end     = { x: 125, y: 92 }; 
-
-  // Initialize cursor state
   let o_pos = targetA_item1;
   let b_pos = targetB_slider_start;
   let o_duration = 2000;
@@ -136,77 +125,89 @@ export default function HeroSection() {
   // --- BOMA Logic Timeline ---
   if (tick >= 4 && tick < 11) {
     b_pos = targetB_slider_end;
-    if (tick === 4) b_duration = 1000; // Dragging slider
+    if (tick === 4) b_duration = 1000;
   } else if (tick >= 11 && tick < 19) {
     b_pos = targetA_toggle_off;
-    if (tick === 11) b_duration = 2000; // Traveling to Window A
+    if (tick === 11) b_duration = 2000;
   } else if (tick >= 19 && tick < 25) {
     b_pos = targetA_toggle_on;
-    if (tick === 19) b_duration = 1000; // Dragging toggle
+    if (tick === 19) b_duration = 1000;
   } else if (tick >= 25) {
     b_pos = targetB_slider_start;
-    if (tick === 25) b_duration = 2000; // Fleeing back home!
+    if (tick === 25) b_duration = 2000;
   }
   
-  if (tick >= 3 && tick <= 5) b_click = true; // Slider grab
-  if (tick >= 18 && tick <= 20) b_click = true; // Toggle grab
+  if (tick >= 3 && tick <= 5) b_click = true;
+  if (tick >= 18 && tick <= 20) b_click = true;
 
   // --- OVUNDAH Logic Timeline ---
   if (tick >= 8 && tick < 13) {
     o_pos = targetA_item2;
-    if (tick === 8) o_duration = 1000; // Dragging list item
+    if (tick === 8) o_duration = 1000;
   } else if (tick >= 13 && tick < 19) {
-    // Ovundah gets scared and flees exactly when Boma gets close! (Tick 13)
     o_pos = targetB_card_start;
-    if (tick === 13) o_duration = 2000; // Traveling to Window B
+    if (tick === 13) o_duration = 2000;
   } else if (tick >= 19 && tick < 23) {
     o_pos = targetB_card_end;
-    if (tick === 19) o_duration = 1000; // Swiping card
+    if (tick === 19) o_duration = 1000;
   } else if (tick >= 23) {
     o_pos = targetA_item1;
-    if (tick === 23) o_duration = 2000; // Fleeing back home!
+    if (tick === 23) o_duration = 2000;
   }
 
-  if (tick >= 7 && tick <= 9) o_click = true; // Reorder grab
-  if (tick >= 18 && tick <= 20) o_click = true; // Card grab
+  if (tick >= 7 && tick <= 9) o_click = true;
+  if (tick >= 18 && tick <= 20) o_click = true;
 
-  // UI state bindings (Synced exactly to cursor drags and presence)
   const sliderActive = (tick >= 4 && tick < 11);
   const reorderActive = (tick >= 8 && tick < 13);
   const toggleActive = (tick >= 19 && tick < 25);
   const cardSwiped = (tick >= 19 && tick < 23);
 
   return (
-    <section className="relative pt-10 pb-40 px-6 flex flex-col items-center text-center" style={{ minHeight: '80vh' }}>
-      <div className="relative z-20 max-w-5xl mx-auto flex flex-col items-center pointer-events-none mt-12">
+    <>
+      <WindowA reorderActive={reorderActive} toggleActive={toggleActive} isMobile={isMobile} />
+      <WindowB sliderActive={sliderActive} cardSwiped={cardSwiped} isMobile={isMobile} />
+      <FakeCursor 
+        x={o_pos.x} y={o_pos.y} clicked={o_click} duration={o_duration}
+        name="Ovundah" fillClass="fill-violet-500" borderClass="border-violet-500" bgClass="bg-violet-500"
+      />
+      <FakeCursor 
+        x={b_pos.x} y={b_pos.y} clicked={b_click} duration={b_duration}
+        name="Boma" fillClass="fill-emerald-500" borderClass="border-emerald-500" bgClass="bg-emerald-500"
+      />
+    </>
+  );
+}
+
+export default function HeroSection() {
+  const [tick, setTick] = useState(0);
+
+  // Unified global tick engine running at 500ms
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTick(t => (t + 1) % 31);
+    }, 500);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <section className="relative pt-4 md:pt-10 pb-10 md:pb-40 px-6 flex flex-col items-center text-center" style={{ minHeight: '80vh' }}>
+      <div className="relative z-20 max-w-5xl mx-auto flex flex-col items-center pointer-events-none mt-0 md:mt-12 w-full">
         
-        {/* Container for text, windows, and multiplayer cursors */}
-        <div className="relative inline-block mb-10 pointer-events-auto">
-          
-          <WindowA reorderActive={reorderActive} toggleActive={toggleActive} />
-          
+        {/* Desktop Title & Interactive Scene Container */}
+        <div className="relative inline-block mb-6 md:mb-10 pointer-events-auto">
           <h1 className="text-5xl md:text-7xl lg:text-[7.5rem] font-black tracking-[-0.04em] text-[#111111] leading-[0.95] relative z-20 px-8 py-4">
             Learn by<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#40196c] to-[#2d124c]">thinking.</span>
           </h1>
           
-          <WindowB sliderActive={sliderActive} cardSwiped={cardSwiped} />
-
-          {/* Multiplayer Cursors */}
-          <FakeCursor 
-            x={o_pos.x} y={o_pos.y} clicked={o_click} duration={o_duration}
-            name="Ovundah" 
-            fillClass="fill-violet-500" borderClass="border-violet-500" bgClass="bg-violet-500"
-          />
-          <FakeCursor 
-            x={b_pos.x} y={b_pos.y} clicked={b_click} duration={b_duration}
-            name="Boma" 
-            fillClass="fill-emerald-500" borderClass="border-emerald-500" bgClass="bg-emerald-500"
-          />
-          
+          {/* Desktop Interactive Scene (Hidden on mobile) */}
+          <div className="hidden md:block absolute inset-0 z-30">
+            <InteractiveScene tick={tick} isMobile={false} />
+          </div>
         </div>
 
-        <p className="text-xl md:text-2xl text-gray-500 font-medium max-w-2xl mb-12 leading-relaxed pointer-events-auto relative z-20">
+        <p className="text-lg md:text-2xl text-gray-500 font-medium max-w-2xl mb-8 md:mb-12 leading-relaxed pointer-events-auto relative z-20">
           Guided interactive problem solving for Web3 and Smart Contracts. Master the logic behind blockchain architecture.
         </p>
 
@@ -227,6 +228,11 @@ export default function HeroSection() {
               Start Learning
             </button>
           </Link>
+        </div>
+
+        {/* Mobile Interactive Scene (Hidden on desktop, placed below button) */}
+        <div className="block md:hidden relative mt-8 w-full max-w-[320px] h-[260px] pointer-events-auto z-30 mx-auto">
+          <InteractiveScene tick={tick} isMobile={true} />
         </div>
         
       </div>
