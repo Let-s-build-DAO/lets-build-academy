@@ -75,7 +75,7 @@ function WindowB({ sliderActive, cardSwiped }) {
   return (
     <div 
       className="absolute w-[140px] md:w-[170px] bg-white rounded-[1rem] shadow-[0_16px_40px_rgba(0,0,0,0.1)] border border-gray-100 p-3 select-none z-30 flex flex-col"
-      style={{ left: '85%', top: '85%', transform: 'rotate(6deg)' }}
+      style={{ left: '85%', top: '65%', transform: 'rotate(6deg)' }}
     >
        <div className="flex gap-1.5 mb-3">
          <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
@@ -108,7 +108,7 @@ export default function HeroSection() {
   // Staggered Tick Engine (runs every 500ms for extremely precise sequence timing)
   useEffect(() => {
     const interval = setInterval(() => {
-      setTick(t => (t + 1) % 27);
+      setTick(t => (t + 1) % 31);
     }, 500);
     return () => clearInterval(interval);
   }, []);
@@ -119,10 +119,11 @@ export default function HeroSection() {
   const targetA_toggle_off = { x: -10, y: 7 }; 
   const targetA_toggle_on  = { x: -4, y: 7 }; 
 
-  const targetB_slider_start = { x: 88, y: 94 };  
-  const targetB_slider_end   = { x: 104, y: 94 }; 
-  const targetB_card_start   = { x: 95, y: 112 }; 
-  const targetB_card_end     = { x: 125, y: 112 }; 
+  // Window B was shifted up by 20%, so these targets are adjusted -20% on the Y axis
+  const targetB_slider_start = { x: 88, y: 74 };  
+  const targetB_slider_end   = { x: 104, y: 74 }; 
+  const targetB_card_start   = { x: 95, y: 92 }; 
+  const targetB_card_end     = { x: 125, y: 92 }; 
 
   // Initialize cursor state
   let o_pos = targetA_item1;
@@ -132,50 +133,51 @@ export default function HeroSection() {
   let o_click = false;
   let b_click = false;
 
-  // Boma Logic Timeline (Effect 1 & 3a)
+  // --- BOMA Logic Timeline ---
   if (tick >= 4 && tick < 11) {
     b_pos = targetB_slider_end;
-    if (tick === 4 || tick === 5) b_duration = 1000; // Dragging slider
-  } else if (tick >= 11 && tick < 16) {
+    if (tick === 4) b_duration = 1000; // Dragging slider
+  } else if (tick >= 11 && tick < 19) {
     b_pos = targetA_toggle_off;
-    if (tick >= 11 && tick <= 14) b_duration = 2000; // Traveling to Window A
-  } else if (tick >= 16 && tick < 19) {
+    if (tick === 11) b_duration = 2000; // Traveling to Window A
+  } else if (tick >= 19 && tick < 25) {
     b_pos = targetA_toggle_on;
-    if (tick === 16 || tick === 17) b_duration = 1000; // Dragging toggle
-  } else if (tick >= 19) {
+    if (tick === 19) b_duration = 1000; // Dragging toggle
+  } else if (tick >= 25) {
     b_pos = targetB_slider_start;
-    b_duration = 2000; // Resetting home
+    if (tick === 25) b_duration = 2000; // Fleeing back home!
   }
   
-  if (tick === 3 || tick === 4 || tick === 5) b_click = true; // Slider drag
-  if (tick === 15 || tick === 16 || tick === 17) b_click = true; // Toggle drag
+  if (tick >= 3 && tick <= 5) b_click = true; // Slider grab
+  if (tick >= 18 && tick <= 20) b_click = true; // Toggle grab
 
-  // Ovundah Logic Timeline (Effect 2 & 3b)
-  if (tick >= 8 && tick < 11) {
+  // --- OVUNDAH Logic Timeline ---
+  if (tick >= 8 && tick < 13) {
     o_pos = targetA_item2;
-    if (tick === 8 || tick === 9) o_duration = 1000; // Dragging list item
-  } else if (tick >= 11 && tick < 16) {
+    if (tick === 8) o_duration = 1000; // Dragging list item
+  } else if (tick >= 13 && tick < 19) {
+    // Ovundah gets scared and flees exactly when Boma gets close! (Tick 13)
     o_pos = targetB_card_start;
-    if (tick >= 11 && tick <= 14) o_duration = 2000; // Traveling to Window B
-  } else if (tick >= 16 && tick < 19) {
+    if (tick === 13) o_duration = 2000; // Traveling to Window B
+  } else if (tick >= 19 && tick < 23) {
     o_pos = targetB_card_end;
-    if (tick === 16 || tick === 17) o_duration = 1000; // Swiping card
-  } else if (tick >= 19) {
+    if (tick === 19) o_duration = 1000; // Swiping card
+  } else if (tick >= 23) {
     o_pos = targetA_item1;
-    o_duration = 2000; // Resetting home
+    if (tick === 23) o_duration = 2000; // Fleeing back home!
   }
 
-  if (tick === 7 || tick === 8 || tick === 9) o_click = true; // Reorder drag
-  if (tick === 15 || tick === 16 || tick === 17) o_click = true; // Card drag
+  if (tick >= 7 && tick <= 9) o_click = true; // Reorder grab
+  if (tick >= 18 && tick <= 20) o_click = true; // Card grab
 
-  // UI state bindings (Synced exactly to cursor drags)
-  const sliderActive = (tick >= 4 && tick < 19);
-  const reorderActive = (tick >= 8 && tick < 19);
-  const toggleActive = (tick >= 16 && tick < 19);
-  const cardSwiped = (tick >= 16 && tick < 19);
+  // UI state bindings (Synced exactly to cursor drags and presence)
+  const sliderActive = (tick >= 4 && tick < 11);
+  const reorderActive = (tick >= 8 && tick < 13);
+  const toggleActive = (tick >= 19 && tick < 25);
+  const cardSwiped = (tick >= 19 && tick < 23);
 
   return (
-    <section className="relative pt-32 pb-40 px-6 flex flex-col items-center text-center" style={{ minHeight: '80vh' }}>
+    <section className="relative pt-10 pb-40 px-6 flex flex-col items-center text-center" style={{ minHeight: '80vh' }}>
       <div className="relative z-20 max-w-5xl mx-auto flex flex-col items-center pointer-events-none mt-12">
         
         {/* Container for text, windows, and multiplayer cursors */}
@@ -185,7 +187,7 @@ export default function HeroSection() {
           
           <h1 className="text-5xl md:text-7xl lg:text-[7.5rem] font-black tracking-[-0.04em] text-[#111111] leading-[0.95] relative z-20 px-8 py-4">
             Learn by<br />
-            <span>thinking.</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#40196c] to-[#2d124c]">thinking.</span>
           </h1>
           
           <WindowB sliderActive={sliderActive} cardSwiped={cardSwiped} />
@@ -209,15 +211,22 @@ export default function HeroSection() {
         </p>
 
         <div className="flex justify-center w-full pointer-events-auto relative z-20">
-          <div className="relative w-3/4 sm:w-[220px]">
-            {/* Heartbeat impulse ring */}
-            <div className="absolute inset-0 bg-[#222222] rounded-[1.25rem] animate-ping opacity-25" style={{ animationDuration: '2s' }} />
-            <Link href="/auth" className="relative block w-full">
-              <button className="w-full px-8 py-5 bg-[#222222] hover:bg-black text-white rounded-[1.25rem] font-bold text-lg transition-all shadow-[0_8px_16px_rgba(0,0,0,0.1)] hover:shadow-[0_16px_32px_rgba(0,0,0,0.15)] hover:-translate-y-0.5">
-                Start Learning
-              </button>
-            </Link>
-          </div>
+          <style>{`
+            @keyframes shadow-pulse {
+              0% { box-shadow: 0 0 0 0 rgba(64, 25, 108, 0.6); }
+              70% { box-shadow: 0 0 0 12px rgba(64, 25, 108, 0); }
+              100% { box-shadow: 0 0 0 0 rgba(64, 25, 108, 0); }
+            }
+          `}</style>
+          
+          <Link href="/auth" className="inline-block">
+            <button 
+              className="px-8 py-3.5 bg-[#40196c] hover:bg-[#2d124c] text-white rounded-full font-bold text-base transition-all hover:-translate-y-0.5"
+              style={{ animation: 'shadow-pulse 1.5s infinite' }}
+            >
+              Start Learning
+            </button>
+          </Link>
         </div>
         
       </div>
